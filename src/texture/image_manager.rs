@@ -4,7 +4,8 @@ use std::path::Path;
 
 use image::{GenericImageView, ImageError};
 
-use gl::Gl;
+use crate::gl::Gl;
+use crate::gl;
 
 pub struct ImageManager {
     gl: Gl,
