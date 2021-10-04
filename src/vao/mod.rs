@@ -4,7 +4,7 @@ use std::os::raw::c_void;
 use crate::gl;
 use crate::gl::types::{GLenum, GLfloat, GLint, GLsizei, GLsizeiptr};
 use crate::gl::Gl;
-use crate::shader::Program;
+use crate::shader::{Program, UniformVariables};
 
 pub mod vao_builder;
 
@@ -73,16 +73,17 @@ impl Vao {
         }
     }
 
-    pub fn draw(&self, draw_mode: GLenum) {
+    pub fn draw(&self, uniforms: &UniformVariables, draw_mode: GLenum) {
         unsafe {
             self.program.set_used();
+            self.program.set_uniforms(uniforms);
             self.gl.BindVertexArray(self.vao);
             self.gl.DrawArrays(draw_mode, 0, self.vertex_num);
             self.gl.BindVertexArray(0);
         }
     }
 
-    pub fn draw_triangles(&self) {
-        self.draw(gl::TRIANGLES);
+    pub fn draw_triangles(&self, uniforms: &UniformVariables) {
+        self.draw(uniforms, gl::TRIANGLES);
     }
 }
