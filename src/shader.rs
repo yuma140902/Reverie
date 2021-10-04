@@ -2,6 +2,7 @@ use crate::gl;
 use crate::gl::types::*;
 use crate::gl::Gl;
 
+use std::collections::HashMap;
 use std::ffi::{CStr, CString};
 use std::fs::File;
 use std::io::Read;
@@ -59,6 +60,23 @@ impl Program {
     pub fn set_used(&self) {
         unsafe {
             self.gl.UseProgram(self.id);
+        }
+    }
+
+    pub unsafe fn set_uniforms<'a>(&self, uniforms: &UniformVariables<'a>) {
+        for (name, uniform) in uniforms.map.iter() {
+            self.set_uniform(*name, uniform);
+        }
+    }
+
+    pub unsafe fn set_uniform<'a>(&self, name: &CStr, value: &Uniform<'a>) {
+        match *value {
+            Uniform::Bool(b) => self.set_bool(name, b),
+            Uniform::Int(i) => self.set_int(name, i),
+            Uniform::Float(f) => self.set_float(name, f),
+            Uniform::Vector3(v) => self.set_vector3(name, v),
+            Uniform::TripleFloat(f1, f2, f3) => self.set_vec3(name, f1, f2, f3),
+            Uniform::Matrix4(m) => self.set_mat4(name, m),
         }
     }
 
@@ -178,4 +196,30 @@ fn create_whitespace_cstring_with_len(len: usize) -> CString {
     let mut buffer: Vec<u8> = Vec::with_capacity(len + 1);
     buffer.extend([b' '].iter().cycle().take(len));
     unsafe { CString::from_vec_unchecked(buffer) }
+}
+
+pub enum Uniform<'a> {
+    Bool(bool),
+    Int(i32),
+    Float(f32),
+    Vector3(&'a nalgebra::Vector3<f32>),
+    TripleFloat(f32, f32, f32),
+    Matrix4(&'a nalgebra::Matrix4<f32>),
+}
+
+pub struct UniformVariables<'a> {
+    map: HashMap<&'a CStr, Uniform<'a>>,
+}
+
+impl<'a> UniformVariables<'a> {
+    pub fn new() -> UniformVariables<'a> {
+        Self {
+            map: HashMap::new(),
+        }
+    }
+
+    pub fn add(&mut self, name: &'a CStr, value: Uniform<'a>) -> &mut Self {
+        self.map.insert(name, value);
+        self
+    }
 }
