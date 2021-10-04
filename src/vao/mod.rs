@@ -4,6 +4,7 @@ use std::os::raw::c_void;
 use crate::gl;
 use crate::gl::types::{GLenum, GLfloat, GLint, GLsizei, GLsizeiptr};
 use crate::gl::Gl;
+use crate::shader::Program;
 
 pub mod vao_builder;
 
@@ -12,6 +13,7 @@ pub struct Vao {
     vao: u32,
     _vbo: u32,
     vertex_num: i32,
+    program: Program,
 }
 
 impl Vao {
@@ -25,6 +27,7 @@ impl Vao {
         attribute_size_vec: std::vec::Vec<GLint>,
         stride: GLsizei,
         vertex_num: i32,
+        program: Program,
     ) -> Vao {
         assert!(num_attributes == attribute_type_vec.len());
         assert!(num_attributes == attribute_size_vec.len());
@@ -66,11 +69,13 @@ impl Vao {
             vao,
             _vbo: vbo,
             vertex_num,
+            program,
         }
     }
 
     pub fn draw(&self, draw_mode: GLenum) {
         unsafe {
+            self.program.set_used();
             self.gl.BindVertexArray(self.vao);
             self.gl.DrawArrays(draw_mode, 0, self.vertex_num);
             self.gl.BindVertexArray(0);

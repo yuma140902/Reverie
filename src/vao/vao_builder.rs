@@ -3,6 +3,7 @@ use std::mem;
 use super::Vao;
 use crate::gl;
 use crate::gl::{types::GLfloat, Gl};
+use crate::shader::Program;
 use crate::texture::texture_atlas::TextureUV;
 
 type Point3 = nalgebra::Point3<f32>;
@@ -10,6 +11,7 @@ type Point3 = nalgebra::Point3<f32>;
 pub struct VaoBuilder {
     buffer: Vec<f32>,
     vertex_num: i32,
+    program: Option<Program>,
 }
 
 impl VaoBuilder {
@@ -17,6 +19,7 @@ impl VaoBuilder {
         Self {
             buffer: Vec::<f32>::new(),
             vertex_num: 0,
+            program: None,
         }
     }
 
@@ -24,6 +27,7 @@ impl VaoBuilder {
         Self {
             buffer: Vec::<f32>::with_capacity(capacity),
             vertex_num: 0,
+            program: None,
         }
     }
 
@@ -103,6 +107,13 @@ impl VaoBuilder {
         self.buffer.append(&mut v);
     }
 
+    pub fn attatch_program(&mut self, program: Program) {
+        if self.program.is_some() {
+            panic!("Cannot attatch multiple shader program");
+        }
+        self.program = Some(program)
+    }
+
     pub fn build(self, gl: &Gl) -> Vao {
         Vao::new(
             gl.clone(),
@@ -114,6 +125,7 @@ impl VaoBuilder {
             vec![3, 3, 2],
             ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
             self.vertex_num,
+            self.program.unwrap(),
         )
     }
 }
