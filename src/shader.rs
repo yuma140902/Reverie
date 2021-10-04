@@ -134,8 +134,16 @@ pub struct Shader {
 }
 
 impl Shader {
-    pub fn from_code(gl: Gl, code: CString, kind: GLenum) -> Result<Shader, String> {
+    pub fn from_file(gl: Gl, path: &str, kind: GLenum) -> Result<Shader, String> {
         let id = unsafe { gl.CreateShader(kind) };
+
+        let mut file = File::open(path)
+            .unwrap_or_else(|err| panic!("ERROR: {} : Failed to open file '{}'", err, path));
+        let mut code = String::new();
+        file.read_to_string(&mut code)
+            .unwrap_or_else(|err| panic!("ERROR: {} : Failed to read file '{}'", err, path));
+
+        let code = CString::new(code.as_bytes()).unwrap();
 
         unsafe {
             gl.ShaderSource(id, 1, &code.as_ptr(), std::ptr::null());
@@ -163,36 +171,12 @@ impl Shader {
         Ok(Shader { gl, id })
     }
 
-    pub fn from_file(gl: Gl, path: &str, kind: GLenum) -> Result<Shader, String> {
-        let mut file = File::open(path)
-            .unwrap_or_else(|err| panic!("ERROR: {} : Failed to open file '{}'", err, path));
-        let mut code = String::new();
-        file.read_to_string(&mut code)
-            .unwrap_or_else(|err| panic!("ERROR: {} : Failed to read file '{}'", err, path));
-
-        let code = CString::new(code.as_bytes()).unwrap();
-
-        Shader::from_code(gl, code, kind)
-    }
-
     pub fn from_vert_file(gl: Gl, path: &str) -> Result<Shader, String> {
         Shader::from_file(gl, path, gl::VERTEX_SHADER)
     }
 
     pub fn from_frag_file(gl: Gl, path: &str) -> Result<Shader, String> {
         Shader::from_file(gl, path, gl::FRAGMENT_SHADER)
-    }
-
-    pub fn default_vert(gl: Gl) -> Result<Shader, String> {
-        let code = include_str!("../rsc/shader/default.vs");
-        let code = CString::new(code.as_bytes()).unwrap();
-        Shader::from_code(gl, code, gl::VERTEX_SHADER)
-    }
-
-    pub fn default_frag(gl: Gl) -> Result<Shader, String> {
-        let code = include_str!("../rsc/shader/default.fs");
-        let code = CString::new(code.as_bytes()).unwrap();
-        Shader::from_code(gl, code, gl::FRAGMENT_SHADER)
     }
 
     pub fn id(&self) -> GLuint {
@@ -236,13 +220,6 @@ impl<'a> UniformVariables<'a> {
 
     pub fn add(&mut self, name: &'a CStr, value: Uniform<'a>) -> &mut Self {
         self.map.insert(name, value);
-        self
-    }
-
-    pub fn add_if_not_exists(&mut self, name: &'a CStr, value: Uniform<'a>) -> &mut Self {
-        if !self.map.contains_key(name) {
-            self.map.insert(name, value);
-        }
         self
     }
 }
