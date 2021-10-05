@@ -8,13 +8,13 @@ use crate::texture::texture_atlas::TextureUV;
 
 type Point3 = nalgebra::Point3<f32>;
 
-pub struct VaoBuilder {
+pub struct VaoBuilder<'a> {
     buffer: Vec<f32>,
     vertex_num: i32,
-    program: Option<Program>,
+    program: Option<&'a Program>,
 }
 
-impl VaoBuilder {
+impl<'a> VaoBuilder<'a> {
     pub fn new() -> Self {
         Self {
             buffer: Vec::<f32>::new(),
@@ -32,7 +32,7 @@ impl VaoBuilder {
     }
 
     // beginはendよりも(-∞, -∞, -∞)に近い
-    pub fn add_cuboid<'a>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'a>) {
+    pub fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b>) {
         // 上面
         self.add_face(
             &Point3::new(begin.x, end.y, begin.z),
@@ -147,14 +147,14 @@ impl VaoBuilder {
         self.buffer.append(&mut v);
     }
 
-    pub fn attatch_program(&mut self, program: Program) {
+    pub fn attatch_program(&mut self, program: &'a Program) {
         if self.program.is_some() {
             panic!("Cannot attatch multiple shader program");
         }
         self.program = Some(program)
     }
 
-    pub fn build(self, gl: &Gl) -> Vao {
+    pub fn build(self, gl: &Gl) -> Vao<'a> {
         Vao::new(
             gl.clone(),
             (self.buffer.len() * mem::size_of::<GLfloat>()) as _,

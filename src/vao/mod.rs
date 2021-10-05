@@ -8,15 +8,15 @@ use crate::shader::{Program, UniformVariables};
 
 pub mod vao_builder;
 
-pub struct Vao {
+pub struct Vao<'a> {
     gl: Gl,
     vao: u32,
     _vbo: u32,
     vertex_num: i32,
-    program: Program,
+    program: &'a Program,
 }
 
-impl Vao {
+impl<'a> Vao<'a> {
     pub fn new(
         gl: Gl,
         size: GLsizeiptr,
@@ -27,7 +27,7 @@ impl Vao {
         attribute_size_vec: std::vec::Vec<GLint>,
         stride: GLsizei,
         vertex_num: i32,
-        program: Program,
+        program: &'a Program,
     ) -> Vao {
         assert!(num_attributes == attribute_type_vec.len());
         assert!(num_attributes == attribute_size_vec.len());
