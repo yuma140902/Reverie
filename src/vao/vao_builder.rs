@@ -32,7 +32,7 @@ impl VaoBuilder {
     }
 
     // beginはendよりも(-∞, -∞, -∞)に近い
-    pub fn add_cuboid<'a>(&mut self, begin: &Point3, end: &Point3, textures: CuboidTextures<'a>) {
+    pub fn add_cuboid<'a>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'a>) {
         // 上面
         self.add_face(
             &Point3::new(begin.x, end.y, begin.z),
