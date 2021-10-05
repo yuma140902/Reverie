@@ -107,6 +107,46 @@ impl VaoBuilder {
         self.buffer.append(&mut v);
     }
 
+    pub fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV) {
+        #[rustfmt::skip]
+        let mut v: Vec<f32> = vec![
+            center.x+r, center.y  , center.z  ,  1.0,  1.0,  1.0, uv.begin_u, uv.begin_v,
+            center.x  , center.y+r, center.z  ,  1.0,  1.0,  1.0, uv.begin_u, uv.end_v,
+            center.x  , center.y  , center.z+r,  1.0,  1.0,  1.0, uv.end_u, uv.end_v,
+            
+            center.x+r, center.y  , center.z  ,  1.0,  1.0, -1.0, uv.begin_u, uv.begin_v,
+            center.x  , center.y  , center.z-r,  1.0,  1.0, -1.0, uv.end_u, uv.end_v,
+            center.x  , center.y+r, center.z  ,  1.0,  1.0, -1.0, uv.begin_u, uv.end_v,
+
+            center.x+r, center.y  , center.z  ,  1.0, -1.0,  1.0, uv.begin_u, uv.begin_v,
+            center.x  , center.y  , center.z+r,  1.0, -1.0,  1.0, uv.end_u, uv.end_v,
+            center.x  , center.y-r, center.z  ,  1.0, -1.0,  1.0, uv.begin_u, uv.end_v,
+
+            center.x+r, center.y  , center.z  ,  1.0, -1.0, -1.0, uv.begin_u, uv.begin_v,
+            center.x  , center.y-r, center.z  ,  1.0, -1.0, -1.0, uv.begin_u, uv.end_v,
+            center.x  , center.y  , center.z-r,  1.0, -1.0, -1.0, uv.end_u, uv.end_v,
+
+            center.x-r, center.y  , center.z  , -1.0,  1.0,  1.0, uv.begin_u, uv.begin_v,
+            center.x  , center.y  , center.z+r, -1.0,  1.0,  1.0, uv.end_u, uv.end_v,
+            center.x  , center.y+r, center.z  , -1.0,  1.0,  1.0, uv.begin_u, uv.end_v,
+
+            center.x-r, center.y  , center.z  , -1.0,  1.0, -1.0, uv.begin_u, uv.begin_v,
+            center.x  , center.y+r, center.z  , -1.0,  1.0, -1.0, uv.begin_u, uv.end_v,
+            center.x  , center.y  , center.z-r, -1.0,  1.0, -1.0, uv.end_u, uv.end_v,
+
+            center.x-r, center.y  , center.z  , -1.0, -1.0,  1.0, uv.begin_u, uv.begin_v,
+            center.x  , center.y-r, center.z  , -1.0, -1.0,  1.0, uv.begin_u, uv.end_v,
+            center.x  , center.y  , center.z+r, -1.0, -1.0,  1.0, uv.end_u, uv.end_v,
+
+            center.x-r, center.y  , center.z  , -1.0, -1.0, -1.0, uv.begin_u, uv.begin_v,
+            center.x  , center.y  , center.z-r, -1.0, -1.0, -1.0, uv.end_u, uv.end_v,
+            center.x  , center.y-r, center.z  , -1.0, -1.0, -1.0, uv.begin_u, uv.end_v,
+        ];
+
+        self.vertex_num += 24;
+        self.buffer.append(&mut v);
+    }
+
     pub fn attatch_program(&mut self, program: Program) {
         if self.program.is_some() {
             panic!("Cannot attatch multiple shader program");
