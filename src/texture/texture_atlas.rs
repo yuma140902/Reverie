@@ -1,3 +1,6 @@
+//! テクスチャアトラスの仕組みを実現するためのモジュール
+
+/// テクスチャアトラス内での、始点と終点のUV座標を表す
 pub struct TextureUV {
     pub begin_u: f32,
     pub begin_v: f32,
@@ -6,6 +9,7 @@ pub struct TextureUV {
 }
 
 impl TextureUV {
+    /// `atlas_width`×`atlas_height`のテクスチャアトラスを`width`×`height`のサイズに分割した時、`row`行目`column`列目のパーツの始点と終点のUV座標
     pub fn of_atlas(
         row: u32,
         column: u32,

@@ -1,3 +1,9 @@
+//! OpenGLのバインディング
+//! 
+//! OpenGL 3.3 Core Profile
+//! 
+//! 機能拡張は無し
+
 mod bindings {
   include!(concat!(env!("OUT_DIR"), "/gl_bindings.rs"));
 }
@@ -6,6 +12,7 @@ pub use bindings::*;
 
 use std::rc::Rc;
 #[derive(Clone)]
+/// 実体はRcなのでいくらでもクローンして良い
 pub struct Gl {
   inner: Rc<bindings::Gl>,
 }
