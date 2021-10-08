@@ -1,3 +1,5 @@
+//! 画像ファイルを読み込み、管理する
+
 use std::collections::HashMap;
 use std::os::raw::c_void;
 use std::path::Path;
@@ -7,6 +9,7 @@ use image::{GenericImageView, ImageError};
 use crate::gl::Gl;
 use crate::gl;
 
+/// 画像ファイルを読み込み、管理する
 pub struct ImageManager {
     gl: Gl,
     image_map: HashMap<String, u32>,
@@ -21,6 +24,9 @@ impl ImageManager {
         image_manager
     }
 
+    /// ファイルから画像を読み込み、OpenGLにテクスチャとして読み込ませる
+    /// 
+    /// 管理用のIDとして文字列を渡す必要がある
     pub fn load_image<'a>(
         &mut self,
         path: &Path,
@@ -84,14 +90,20 @@ impl ImageManager {
         })
     }
 
+    /// OpenGLの関数に渡すためのテクスチャIDを得る
     pub fn get_texture_id(&mut self, id: &str) -> u32 {
         *self.image_map.get(id).expect("failed to get texture")
     }
 }
 
+/// 画像読み込みの結果
 pub struct ImageLoadInfo<'a> {
+    /// OpenGLの関数に渡すためのテクスチャID
     pub gl_id: u32,
+    /// `ImageManager`で管理される(ヒューマンリーダブルな)管理用ID
     pub id: &'a str,
+    /// 画像の幅
     pub width: u32,
+    /// 画像の高さ
     pub height: u32,
 }

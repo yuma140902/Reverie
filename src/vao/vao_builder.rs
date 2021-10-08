@@ -1,3 +1,5 @@
+//! `Vao`のビルダー
+
 use std::mem;
 
 use super::Vao;
@@ -8,6 +10,7 @@ use crate::texture::texture_atlas::TextureUV;
 
 type Point3 = nalgebra::Point3<f32>;
 
+/// `Vao`のビルダー
 pub struct VaoBuilder<'a> {
     buffer: Vec<f32>,
     vertex_num: i32,
@@ -15,6 +18,7 @@ pub struct VaoBuilder<'a> {
 }
 
 impl<'a> VaoBuilder<'a> {
+    /// 空の`VaoBuilder`を作る
     pub fn new() -> Self {
         Self {
             buffer: Vec::<f32>::new(),
@@ -23,6 +27,7 @@ impl<'a> VaoBuilder<'a> {
         }
     }
 
+    /// 初期のバッファーサイズを指定して`VaoBuilder`を作る
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
             buffer: Vec::<f32>::with_capacity(capacity),
@@ -31,7 +36,9 @@ impl<'a> VaoBuilder<'a> {
         }
     }
 
-    // beginはendよりも(-∞, -∞, -∞)に近い
+    /// 各辺が軸に並行な直方体を追加する
+    /// 
+    /// `begin`は`end`よりも(-∞, -∞, -∞)に近い
     pub fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b>) {
         // 上面
         self.add_face(
@@ -88,7 +95,9 @@ impl<'a> VaoBuilder<'a> {
         );
     }
 
-    // p1: 左上, p2: 左下, p3: 右下, p4: 右上
+    /// 各辺が軸に並行な長方形を追加する
+    /// 
+    /// `p1`: 左上, `p2`: 左下, `p3`: 右下, `p4`: 右上
     pub fn add_face(&mut self, p1: &Point3, p2: &Point3, p3: &Point3, p4: &Point3, uv: &TextureUV) {
         let normal = (p3 - p1).cross(&(p2 - p4)).normalize();
         #[rustfmt::skip]
@@ -107,6 +116,9 @@ impl<'a> VaoBuilder<'a> {
         self.buffer.append(&mut v);
     }
 
+    /// 正八面体を追加する
+    /// 
+    /// `r`は中心から頂点までの距離
     pub fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV) {
         #[rustfmt::skip]
         let mut v: Vec<f32> = vec![
@@ -147,6 +159,11 @@ impl<'a> VaoBuilder<'a> {
         self.buffer.append(&mut v);
     }
 
+    /// 描画に用いるプログラムを指定する
+    /// 
+    /// # Panics
+    /// 
+    /// すでに他のプログラムが指定されているとき
     pub fn attatch_program(&mut self, program: &'a Program) {
         if self.program.is_some() {
             panic!("Cannot attatch multiple shader program");
@@ -154,6 +171,11 @@ impl<'a> VaoBuilder<'a> {
         self.program = Some(program)
     }
 
+    /// `Vao`を作る
+    /// 
+    /// # Panics
+    /// 
+    /// 描画に用いるプログラムが指定されていないとき(see: `attatch_program`)
     pub fn build(self, gl: &Gl) -> Vao<'a> {
         Vao::new(
             gl.clone(),
@@ -170,6 +192,10 @@ impl<'a> VaoBuilder<'a> {
     }
 }
 
+/// 直方体の各面のテクスチャを指定するための構造体
+/// 
+/// OpenGLは同時に1つのテクスチャしかバインドできないので、
+/// 各面のテクスチャは同じテクスチャアトラス上にある必要がある
 pub struct CuboidTextures<'a> {
     pub top: &'a TextureUV,
     pub bottom: &'a TextureUV,

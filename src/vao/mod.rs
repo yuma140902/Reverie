@@ -1,3 +1,5 @@
+//! Vertex Array Object
+
 use std::mem;
 use std::os::raw::c_void;
 
@@ -8,6 +10,7 @@ use crate::shader::{Program, UniformVariables};
 
 pub mod vao_builder;
 
+/// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体
 pub struct Vao<'a> {
     gl: Gl,
     vao: u32,
@@ -17,6 +20,7 @@ pub struct Vao<'a> {
 }
 
 impl<'a> Vao<'a> {
+    /// 代わりに`VaoBuilder`を使うことを推奨
     pub fn new(
         gl: Gl,
         size: GLsizeiptr,
@@ -83,6 +87,7 @@ impl<'a> Vao<'a> {
         }
     }
 
+    /// ポリゴンを描画する
     pub fn draw_triangles(&self, uniforms: &UniformVariables) {
         self.draw(uniforms, gl::TRIANGLES);
     }
