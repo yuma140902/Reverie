@@ -4,6 +4,7 @@ version = "0.0.2"
 license = "MPL-2.0"
 authors  = ["yuma140902 <yuma140902@gmail.com>"]
 description = "A toy game engine"
+readme = "README.md"
 repository = "https://github.com/yuma140902/starry-night"
 categories = ["game-engines"]
 edition = "2018"
