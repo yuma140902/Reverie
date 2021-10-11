@@ -18,9 +18,9 @@ pub struct Program {
 
 impl Program {
     /// 頂点シェーダーとフラグメントシェーダーをリンクしてプログラムを作る
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// `Ok`のときは`Program`、`Err`のときはエラーメッセージ
     pub fn from_shaders(gl: Gl, shaders: &[Shader]) -> Result<Program, String> {
         let program_id = unsafe { gl.CreateProgram() };
@@ -154,21 +154,9 @@ pub struct Shader {
 }
 
 impl Shader {
-    /// ファイルからシェーダーのコードを読み込み、コンパイルする
-    /// 
-    /// # Panics
-    /// 
-    /// ファイルが開けなかった時にパニックする
-    pub fn from_file(gl: Gl, path: &str, kind: GLenum) -> Result<Shader, String> {
+    /// シェーダのソースコードをコンパイルする
+    pub fn from_code(gl: Gl, code: &CStr, kind: GLenum) -> Result<Shader, String> {
         let id = unsafe { gl.CreateShader(kind) };
-
-        let mut file = File::open(path)
-            .unwrap_or_else(|err| panic!("ERROR: {} : Failed to open file '{}'", err, path));
-        let mut code = String::new();
-        file.read_to_string(&mut code)
-            .unwrap_or_else(|err| panic!("ERROR: {} : Failed to read file '{}'", err, path));
-
-        let code = CString::new(code.as_bytes()).unwrap();
 
         unsafe {
             gl.ShaderSource(id, 1, &code.as_ptr(), std::ptr::null());
@@ -194,6 +182,23 @@ impl Shader {
             return Err(error.to_string_lossy().into_owned());
         }
         Ok(Shader { gl, id })
+    }
+
+    /// ファイルからシェーダーのコードを読み込み、コンパイルする
+    ///
+    /// # Panics
+    ///
+    /// ファイルが開けなかった時にパニックする
+    pub fn from_file(gl: Gl, path: &str, kind: GLenum) -> Result<Shader, String> {
+        let mut file = File::open(path)
+            .unwrap_or_else(|err| panic!("ERROR: {} : Failed to open file '{}'", err, path));
+        let mut code = String::new();
+        file.read_to_string(&mut code)
+            .unwrap_or_else(|err| panic!("ERROR: {} : Failed to read file '{}'", err, path));
+
+        let code = CString::new(code.as_bytes()).unwrap();
+
+        Shader::from_code(gl, &code, kind)
     }
 
     /// 頂点シェーダーをファイルから作る
@@ -236,7 +241,6 @@ pub enum Uniform<'a> {
     TripleFloat(f32, f32, f32),
     Matrix4(&'a nalgebra::Matrix4<f32>),
 }
-
 
 /// ユニフォーム変数のセット
 pub struct UniformVariables<'a> {
