@@ -1,11 +1,11 @@
 [package]
-name = "starry-night"
-version = "0.0.2"
+name = "reverie-engine"
+version = "0.0.3"
 license = "MPL-2.0"
 authors  = ["yuma140902 <yuma140902@gmail.com>"]
 description = "A toy game engine"
 readme = "README.md"
-repository = "https://github.com/yuma140902/StarryNight"
+repository = "https://github.com/yuma140902/Reverie"
 categories = ["game-engines"]
 edition = "2018"
 build = "src/build.rs"
