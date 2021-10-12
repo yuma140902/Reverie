@@ -1,11 +1,11 @@
-# Starry Night
+# Reverie
 
-[![release badge](https://badgen.net/github/tag/yuma140902/starry-night?label=Release)](https://crates.io/crates/starry-night)
+[![release badge](https://flat.badgen.net/github/tag/yuma140902/Reverie?label=Release)](https://crates.io/crates/reverie-engine)
 
 A toy game engine
 
 # Links
 
-- [GitHub](https://github.com/yuma140902/starry-night)
-- [crates.io](https://crates.io/crates/starry-night)
-- [Docs.rs](https://docs.rs/starry-night/)
+- [GitHub](https://github.com/yuma140902/Reverie)
+- [crates.io](https://crates.io/crates/reverie-engine)
+- [Docs.rs](https://docs.rs/reverie-engine/)
