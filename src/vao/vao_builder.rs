@@ -11,13 +11,13 @@ use crate::texture::texture_atlas::TextureUV;
 type Point3 = nalgebra::Point3<f32>;
 
 /// `Vao`のビルダー
-pub struct VaoBuilder<'a> {
+pub struct VaoBuilder<'a, const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> {
     buffer: Vec<f32>,
     vertex_num: i32,
     program: Option<&'a Program>,
 }
 
-impl<'a> VaoBuilder<'a> {
+impl<'a, const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuilder<'a, W, H, ATLAS_W, ATLAS_H> {
     /// 空の`VaoBuilder`を作る
     pub fn new() -> Self {
         Self {
@@ -39,7 +39,7 @@ impl<'a> VaoBuilder<'a> {
     /// 各辺が軸に並行な直方体を追加する
     /// 
     /// `begin`は`end`よりも(-∞, -∞, -∞)に近い
-    pub fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b>) {
+    pub fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b, W, H, ATLAS_W, ATLAS_H>) {
         // 上面
         self.add_face(
             &Point3::new(begin.x, end.y, begin.z),
@@ -98,7 +98,7 @@ impl<'a> VaoBuilder<'a> {
     /// 各辺が軸に並行な長方形を追加する
     /// 
     /// `p1`: 左上, `p2`: 左下, `p3`: 右下, `p4`: 右上
-    pub fn add_face(&mut self, p1: &Point3, p2: &Point3, p3: &Point3, p4: &Point3, uv: &TextureUV) {
+    pub fn add_face(&mut self, p1: &Point3, p2: &Point3, p3: &Point3, p4: &Point3, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>) {
         let normal = (p3 - p1).cross(&(p2 - p4)).normalize();
         #[rustfmt::skip]
         let mut v: Vec<f32> = vec![
@@ -119,7 +119,7 @@ impl<'a> VaoBuilder<'a> {
     /// 正八面体を追加する
     /// 
     /// `r`は中心から頂点までの距離
-    pub fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV) {
+    pub fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>) {
         #[rustfmt::skip]
         let mut v: Vec<f32> = vec![
             center.x+r, center.y  , center.z  ,  1.0,  1.0,  1.0, uv.begin_u, uv.begin_v,
@@ -196,11 +196,11 @@ impl<'a> VaoBuilder<'a> {
 /// 
 /// OpenGLは同時に1つのテクスチャしかバインドできないので、
 /// 各面のテクスチャは同じテクスチャアトラス上にある必要がある
-pub struct CuboidTextures<'a> {
-    pub top: &'a TextureUV,
-    pub bottom: &'a TextureUV,
-    pub south: &'a TextureUV,
-    pub north: &'a TextureUV,
-    pub west: &'a TextureUV,
-    pub east: &'a TextureUV,
+pub struct CuboidTextures<'a, const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> {
+    pub top: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
+    pub bottom: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
+    pub south: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
+    pub north: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
+    pub west: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
+    pub east: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
 }
