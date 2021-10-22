@@ -26,3 +26,15 @@ impl TextureUV {
         }
     }
 }
+
+/// テクスチャアトラス内で何行目何列目かを表す
+pub struct TextureAtlasPos {
+    pub row: u32,
+    pub column: u32,
+}
+
+impl TextureAtlasPos {
+    pub const fn new(row: u32, column: u32) -> Self {
+        Self { row, column }
+    }
+}
