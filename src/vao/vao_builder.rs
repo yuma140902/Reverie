@@ -3,27 +3,25 @@
 use std::mem;
 
 use super::Vao;
+use super::vao_config::VaoConfig;
 use crate::gl;
 use crate::gl::{types::GLfloat, Gl};
-use crate::shader::Program;
 use crate::texture::texture_atlas::TextureUV;
 
 type Point3 = nalgebra::Point3<f32>;
 
 /// `Vao`のビルダー
-pub struct VaoBuilder<'a, const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> {
+pub struct VaoBuilder<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> {
     buffer: Vec<f32>,
     vertex_num: i32,
-    program: Option<&'a Program>,
 }
 
-impl<'a, const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuilder<'a, W, H, ATLAS_W, ATLAS_H> {
+impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuilder<W, H, ATLAS_W, ATLAS_H> {
     /// 空の`VaoBuilder`を作る
     pub fn new() -> Self {
         Self {
             buffer: Vec::<f32>::new(),
             vertex_num: 0,
-            program: None,
         }
     }
 
@@ -32,7 +30,6 @@ impl<'a, const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> Vao
         Self {
             buffer: Vec::<f32>::with_capacity(capacity),
             vertex_num: 0,
-            program: None,
         }
     }
 
@@ -159,24 +156,12 @@ impl<'a, const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> Vao
         self.buffer.append(&mut v);
     }
 
-    /// 描画に用いるプログラムを指定する
-    /// 
-    /// # Panics
-    /// 
-    /// すでに他のプログラムが指定されているとき
-    pub fn attatch_program(&mut self, program: &'a Program) {
-        if self.program.is_some() {
-            panic!("Cannot attatch multiple shader program");
-        }
-        self.program = Some(program)
-    }
-
     /// `Vao`を作る
     /// 
     /// # Panics
     /// 
     /// 描画に用いるプログラムが指定されていないとき(see: `attatch_program`)
-    pub fn build(self, gl: &Gl) -> Vao<'a> {
+    pub fn build<'a>(self, gl: &Gl, config: VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
             gl.clone(),
             (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
@@ -187,7 +172,7 @@ impl<'a, const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> Vao
             vec![3, 3, 2],
             ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
             self.vertex_num,
-            self.program.unwrap(),
+            config,
         )
     }
 }
