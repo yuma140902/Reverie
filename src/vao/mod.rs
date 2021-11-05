@@ -6,7 +6,7 @@ use std::os::raw::c_void;
 use crate::gl;
 use crate::gl::types::{GLenum, GLfloat, GLint, GLsizei, GLsizeiptr};
 use crate::gl::Gl;
-use crate::shader::{Program, UniformVariables};
+use crate::shader::UniformVariables;
 
 use self::vao_config::VaoConfig;
 
