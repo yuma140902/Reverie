@@ -157,10 +157,6 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuil
     }
 
     /// `Vao`を作る
-    /// 
-    /// # Panics
-    /// 
-    /// 描画に用いるプログラムが指定されていないとき(see: `attatch_program`)
     pub fn build<'a>(self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
             gl.clone(),
