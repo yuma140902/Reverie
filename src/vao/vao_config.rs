@@ -1,5 +1,6 @@
 //! `Vao`の設定
 use crate::shader::Program;
+use crate::texture::image_manager::ImageLoadInfo;
 use crate::types::*;
 
 /// `Vao`の設定
@@ -18,6 +19,7 @@ pub struct VaoConfig<'a> {
     pub(crate) ambient: Vector3,
     pub(crate) diffuse: Vector3,
     pub(crate) specular: Vector3,
+    pub(crate) texture: Option<&'a ImageLoadInfo<'a>>,
 }
 
 /// `VaoConfig`のビルダー
@@ -34,6 +36,7 @@ pub struct VaoConfigBuilder<'a> {
     ambient: Vector3,
     diffuse: Vector3,
     specular: Vector3,
+    texture: Option<&'a ImageLoadInfo<'a>>,
 }
 
 impl<'a> VaoConfigBuilder<'a> {
@@ -51,6 +54,7 @@ impl<'a> VaoConfigBuilder<'a> {
             ambient: Vector3::new(0.3, 0.3, 0.3),
             diffuse: Vector3::new(0.5, 0.5, 0.5),
             specular: Vector3::new(0.2, 0.2, 0.2),
+            texture: None,
         }
     }
 
@@ -68,6 +72,7 @@ impl<'a> VaoConfigBuilder<'a> {
             ambient: self.ambient,
             diffuse: self.diffuse,
             specular: self.specular,
+            texture: self.texture,
         }
     }
 
@@ -123,6 +128,16 @@ impl<'a> VaoConfigBuilder<'a> {
 
     pub fn specular(mut self, value: Vector3) -> Self {
         self.specular = value;
+        self
+    }
+
+    pub fn texture(mut self, value: &'a ImageLoadInfo<'a>) -> Self {
+        self.texture = Some(value);
+        self
+    }
+
+    pub fn no_texture(mut self) -> Self {
+        self.texture = None;
         self
     }
 }

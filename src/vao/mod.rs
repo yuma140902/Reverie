@@ -82,6 +82,10 @@ impl<'a> Vao<'a> {
 
     pub fn draw(&self, uniforms: &UniformVariables, draw_mode: GLenum) {
         unsafe {
+            if let Some(texture) = self.config.texture {
+                self.gl.BindTexture(gl::TEXTURE_2D, texture.gl_id);
+            }
+
             if self.config.depth_test {
                 self.gl.Enable(gl::DEPTH_TEST);
             } else {
@@ -132,6 +136,7 @@ impl<'a> Vao<'a> {
             self.gl.BindVertexArray(self.vao);
             self.gl.DrawArrays(draw_mode, 0, self.vertex_num);
             self.gl.BindVertexArray(0);
+            self.gl.BindTexture(gl::TEXTURE_2D, 0);
         }
     }
 
