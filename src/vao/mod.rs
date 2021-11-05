@@ -8,6 +8,8 @@ use crate::gl::types::{GLenum, GLfloat, GLint, GLsizei, GLsizeiptr};
 use crate::gl::Gl;
 use crate::shader::{Program, UniformVariables};
 
+use self::vao_config::VaoConfig;
+
 pub mod vao_builder;
 pub mod vao_config;
 
@@ -17,7 +19,7 @@ pub struct Vao<'a> {
     vao: u32,
     _vbo: u32,
     vertex_num: i32,
-    program: &'a Program,
+    config: VaoConfig<'a>,
 }
 
 impl<'a> Vao<'a> {
@@ -32,7 +34,7 @@ impl<'a> Vao<'a> {
         attribute_size_vec: std::vec::Vec<GLint>,
         stride: GLsizei,
         vertex_num: i32,
-        program: &'a Program,
+        config: VaoConfig<'a>,
     ) -> Vao {
         assert!(num_attributes == attribute_type_vec.len());
         assert!(num_attributes == attribute_size_vec.len());
@@ -74,14 +76,59 @@ impl<'a> Vao<'a> {
             vao,
             _vbo: vbo,
             vertex_num,
-            program,
+            config,
         }
     }
 
     pub fn draw(&self, uniforms: &UniformVariables, draw_mode: GLenum) {
         unsafe {
-            self.program.set_used();
-            self.program.set_uniforms(uniforms);
+            if self.config.depth_test {
+                self.gl.Enable(gl::DEPTH_TEST);
+            } else {
+                self.gl.Disable(gl::DEPTH_TEST);
+            }
+
+            if self.config.blend {
+                self.gl.Enable(gl::BLEND);
+                self.gl.BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+            } else {
+                self.gl.Disable(gl::BLEND);
+            }
+
+            if self.config.wireframe {
+                self.gl.PolygonMode(gl::FRONT_AND_BACK, gl::LINE);
+            } else {
+                self.gl.PolygonMode(gl::FRONT_AND_BACK, gl::FILL);
+            }
+
+            if self.config.culling {
+                self.gl.Enable(gl::CULL_FACE);
+            } else {
+                self.gl.Disable(gl::CULL_FACE);
+            }
+
+            use crate::shader::Uniform::*;
+            use c_str_macro::c_str;
+            let program = self.config.program;
+            program.set_uniform(c_str!("uAlpha"), &Float(self.config.alpha));
+            program.set_uniform(
+                c_str!("uMaterial.specular"),
+                &Vector3(&self.config.material_specular),
+            );
+            program.set_uniform(
+                c_str!("uMaterial.shininess"),
+                &Float(self.config.material_shininess),
+            );
+            program.set_uniform(
+                c_str!("uLight.direction"),
+                &Vector3(&self.config.light_direction),
+            );
+            program.set_uniform(c_str!("uLight.ambient"), &Vector3(&self.config.ambient));
+            program.set_uniform(c_str!("uLight.diffuse"), &Vector3(&self.config.diffuse));
+            program.set_uniform(c_str!("uLight.specular"), &Vector3(&self.config.specular));
+
+            self.config.program.set_used();
+            self.config.program.set_uniforms(uniforms);
             self.gl.BindVertexArray(self.vao);
             self.gl.DrawArrays(draw_mode, 0, self.vertex_num);
             self.gl.BindVertexArray(0);
