@@ -161,7 +161,7 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuil
     /// # Panics
     /// 
     /// 描画に用いるプログラムが指定されていないとき(see: `attatch_program`)
-    pub fn build<'a>(self, gl: &Gl, config: VaoConfig<'a>) -> Vao<'a> {
+    pub fn build<'a>(self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
             gl.clone(),
             (self.buffer.len() * mem::size_of::<GLfloat>()) as _,

@@ -19,7 +19,7 @@ pub struct Vao<'a> {
     vao: u32,
     _vbo: u32,
     vertex_num: i32,
-    config: VaoConfig<'a>,
+    config: &'a VaoConfig<'a>,
 }
 
 impl<'a> Vao<'a> {
@@ -34,7 +34,7 @@ impl<'a> Vao<'a> {
         attribute_size_vec: std::vec::Vec<GLint>,
         stride: GLsizei,
         vertex_num: i32,
-        config: VaoConfig<'a>,
+        config: &'a VaoConfig<'a>,
     ) -> Vao {
         assert!(num_attributes == attribute_type_vec.len());
         assert!(num_attributes == attribute_size_vec.len());
