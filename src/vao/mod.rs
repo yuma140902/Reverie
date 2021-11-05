@@ -9,6 +9,7 @@ use crate::gl::Gl;
 use crate::shader::{Program, UniformVariables};
 
 pub mod vao_builder;
+pub mod vao_config;
 
 /// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体
 pub struct Vao<'a> {
