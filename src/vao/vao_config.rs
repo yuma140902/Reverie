@@ -6,18 +6,18 @@ use crate::types::*;
 #[derive(Clone, Copy)]
 pub struct VaoConfig<'a> {
     /// シェーダープログラム
-    program: &'a Program,
-    depth_test: bool,
-    blend: bool,
-    wireframe: bool,
-    culling: bool,
-    alpha: f32,
-    material_specular: Vector3,
-    material_shininess: f32,
-    light_direction: Vector3,
-    ambient: Vector3,
-    diffuse: Vector3,
-    specular: Vector3,
+    pub(crate) program: &'a Program,
+    pub(crate) depth_test: bool,
+    pub(crate) blend: bool,
+    pub(crate) wireframe: bool,
+    pub(crate) culling: bool,
+    pub(crate) alpha: f32,
+    pub(crate) material_specular: Vector3,
+    pub(crate) material_shininess: f32,
+    pub(crate) light_direction: Vector3,
+    pub(crate) ambient: Vector3,
+    pub(crate) diffuse: Vector3,
+    pub(crate) specular: Vector3,
 }
 
 /// `VaoConfig`のビルダー
