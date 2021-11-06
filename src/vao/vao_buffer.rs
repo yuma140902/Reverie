@@ -61,6 +61,13 @@ impl VaoBuffer {
         self.buffer.shrink_to_fit();
     }
 
+    /// バッファの容量を予め確保する
+    ///
+    /// 少なくとも`additional_num_vertex`個の頂点が格納できるように確保する。
+    pub fn reserve(&mut self, additional_num_vertex: usize) {
+        self.buffer.reserve(additional_num_vertex * VERTEX_SIZE);
+    }
+
     /// 現在のバッファの内容をもとに`Vao`を作る
     pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
