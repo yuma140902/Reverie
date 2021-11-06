@@ -62,6 +62,16 @@ impl VaoBuffer {
         }
     }
 
+    /// 頂点群を追加する
+    ///
+    /// * `v` - `頂点のx, y, z座標、頂点が属する面の法線ベクトルのx, y, z成分、テクスチャのu, v座標`
+    /// の8要素がフラットにいくつか繰り返される`Vec`。したがって`v.len()`は8の倍数になる。
+    pub fn append(&mut self, v: &mut Vec<f32>) {
+        debug_assert_eq!(v.len() % 8, 0);
+        self.vertex_num += v.len() as i32 / 8;
+        self.buffer.append(v);
+    }
+
     /// `Vao`を作る
     pub fn build<'a>(self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
@@ -163,9 +173,7 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
             p4.x, p4.y, p4.z, normal.x, normal.y, normal.z, uv.end_u, uv.end_v,
         ];
 
-        self.vertex_num += 6;
-
-        self.buffer.append(&mut v);
+        self.append(&mut v);
     }
 
     fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>) {
@@ -204,8 +212,7 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
             center.x  , center.y-r, center.z  , -1.0, -1.0, -1.0, uv.begin_u, uv.end_v,
         ];
 
-        self.vertex_num += 24;
-        self.buffer.append(&mut v);
+        self.append(&mut v);
     }
 }
 
