@@ -8,6 +8,13 @@ use super::Vao;
 use crate::gl;
 use crate::gl::{types::GLfloat, Gl};
 
+/// 1つの頂点は`VERTEX_SIZE`個のf32から成る。
+///
+/// * 頂点のx, y, z座標
+/// * 頂点が属する面の法線ベクトルのx, y, z成分
+/// * テクスチャのu, v座標
+pub const VERTEX_SIZE: usize = 8;
+
 /// 頂点の情報を動的に追加・削除するためのバッファ
 pub struct VaoBuffer {
     buffer: Vec<f32>,
@@ -33,11 +40,11 @@ impl VaoBuffer {
 
     /// 頂点群を追加する
     ///
-    /// * `v` - `頂点のx, y, z座標、頂点が属する面の法線ベクトルのx, y, z成分、テクスチャのu, v座標`
-    /// の8要素がフラットにいくつか繰り返される`Vec`。したがって`v.len()`は8の倍数になる。
+    /// * `v` - 頂点の情報がフラットに繰り返される`Vec`。したがって`v.len()`は`VERTEX_SIZE`の倍数になる。
+    /// ※頂点情報の仕様については`VERTEX_SIZE`を参照
     pub fn append(&mut self, v: &mut Vec<f32>) {
-        debug_assert_eq!(v.len() % 8, 0);
-        self.vertex_num += v.len() as i32 / 8;
+        debug_assert_eq!(v.len() % VERTEX_SIZE, 0);
+        self.vertex_num += (v.len() / VERTEX_SIZE) as i32;
         self.buffer.append(v);
     }
 
