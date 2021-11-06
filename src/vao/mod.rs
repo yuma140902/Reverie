@@ -123,10 +123,7 @@ impl<'a> Vao<'a> {
                 c_str!("uMaterial.shininess"),
                 &Float(self.config.material_shininess),
             );
-            program.set_uniform(
-                c_str!("uLight.direction"),
-                &Vector3(&self.config.light_direction),
-            );
+            program.set_uniform(c_str!("uLight.direction"), &Vector3(&self.config.light_direction));
             program.set_uniform(c_str!("uLight.ambient"), &Vector3(&self.config.ambient));
             program.set_uniform(c_str!("uLight.diffuse"), &Vector3(&self.config.diffuse));
             program.set_uniform(c_str!("uLight.specular"), &Vector3(&self.config.specular));
