@@ -31,9 +31,11 @@ impl VaoBuffer {
     }
 
     /// 初期のバッファーサイズを指定して`VaoBuilder`を作る
-    pub fn with_capacity(capacity: usize) -> Self {
+    ///
+    /// `num_vertex_to_reserve`個の頂点が確保できるだけの初期容量になる。
+    pub fn with_num_vertex(num_vertex_to_reserve: usize) -> Self {
         Self {
-            buffer: Vec::<f32>::with_capacity(capacity),
+            buffer: Vec::<f32>::with_capacity(num_vertex_to_reserve * VERTEX_SIZE),
             vertex_num: 0,
         }
     }
