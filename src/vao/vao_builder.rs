@@ -78,6 +78,11 @@ impl VaoBuffer {
         self.vertex_num = self.buffer.len() as i32;
     }
 
+    /// バッファの余分な容量をできるだけ縮める
+    pub fn shrink(&mut self) {
+        self.buffer.shrink_to_fit();
+    }
+
     /// `Vao`を作る
     pub fn build<'a>(self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
