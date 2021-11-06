@@ -27,7 +27,7 @@ impl Interpolation<f32> {
         t_total: TimeSpan,
         rate: fn(NormalizedTime) -> f32,
     ) -> Self {
-        assert!(t_total != 0);
+        debug_assert_ne!(t_total, 0);
         Self {
             begin,
             end,

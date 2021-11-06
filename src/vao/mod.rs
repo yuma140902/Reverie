@@ -36,8 +36,8 @@ impl<'a> Vao<'a> {
         vertex_num: i32,
         config: &'a VaoConfig<'a>,
     ) -> Vao {
-        assert!(num_attributes == attribute_type_vec.len());
-        assert!(num_attributes == attribute_size_vec.len());
+        debug_assert_eq!(num_attributes, attribute_type_vec.len());
+        debug_assert_eq!(num_attributes, attribute_size_vec.len());
 
         let mut vao = 0;
         let mut vbo = 0;
