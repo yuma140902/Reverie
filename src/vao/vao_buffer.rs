@@ -52,8 +52,8 @@ impl VaoBuffer {
         self.buffer.shrink_to_fit();
     }
 
-    /// `Vao`を作る
-    pub fn build<'a>(self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
+    /// 現在のバッファの内容をもとに`Vao`を作る
+    pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
             gl.clone(),
             (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
