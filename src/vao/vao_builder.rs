@@ -72,6 +72,12 @@ impl VaoBuffer {
         self.buffer.append(v);
     }
 
+    /// すべての頂点を削除する
+    pub fn clear(&mut self) {
+        self.buffer.clear();
+        self.vertex_num = self.buffer.len() as i32;
+    }
+
     /// `Vao`を作る
     pub fn build<'a>(self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
