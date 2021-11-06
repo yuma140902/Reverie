@@ -10,6 +10,7 @@ use crate::shader::UniformVariables;
 
 use self::vao_config::VaoConfig;
 
+pub mod vao_buffer;
 pub mod vao_builder;
 pub mod vao_config;
 

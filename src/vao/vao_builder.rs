@@ -1,21 +1,11 @@
-//! `Vao`のビルダー
+//! `VaoBuffer`を操作するユーティリティ
 
-use std::mem;
-
-use super::vao_config::VaoConfig;
-use super::Vao;
-use crate::gl;
-use crate::gl::{types::GLfloat, Gl};
 use crate::texture::texture_atlas::TextureUV;
+use crate::types::*;
 
-type Point3 = nalgebra::Point3<f32>;
+use super::vao_buffer::VaoBuffer;
 
-/// `Vao`のビルダー
-pub struct VaoBuffer {
-    buffer: Vec<f32>,
-    vertex_num: i32,
-}
-
+/// `VaoBuffer`上に立方体などの立体を追加する
 pub trait VaoBuilder3DGeometry<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> {
     /// 各辺が軸に並行な直方体を追加する
     ///
@@ -43,61 +33,6 @@ pub trait VaoBuilder3DGeometry<const W: u32, const H: u32, const ATLAS_W: u32, c
     ///
     /// `r`は中心から頂点までの距離
     fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>);
-}
-
-impl VaoBuffer {
-    /// 空の`VaoBuffer`を作る
-    pub fn new() -> Self {
-        Self {
-            buffer: Vec::<f32>::new(),
-            vertex_num: 0,
-        }
-    }
-
-    /// 初期のバッファーサイズを指定して`VaoBuilder`を作る
-    pub fn with_capacity(capacity: usize) -> Self {
-        Self {
-            buffer: Vec::<f32>::with_capacity(capacity),
-            vertex_num: 0,
-        }
-    }
-
-    /// 頂点群を追加する
-    ///
-    /// * `v` - `頂点のx, y, z座標、頂点が属する面の法線ベクトルのx, y, z成分、テクスチャのu, v座標`
-    /// の8要素がフラットにいくつか繰り返される`Vec`。したがって`v.len()`は8の倍数になる。
-    pub fn append(&mut self, v: &mut Vec<f32>) {
-        debug_assert_eq!(v.len() % 8, 0);
-        self.vertex_num += v.len() as i32 / 8;
-        self.buffer.append(v);
-    }
-
-    /// すべての頂点を削除する
-    pub fn clear(&mut self) {
-        self.buffer.clear();
-        self.vertex_num = self.buffer.len() as i32;
-    }
-
-    /// バッファの余分な容量をできるだけ縮める
-    pub fn shrink(&mut self) {
-        self.buffer.shrink_to_fit();
-    }
-
-    /// `Vao`を作る
-    pub fn build<'a>(self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
-        Vao::new(
-            gl.clone(),
-            (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
-            self.buffer.as_ptr() as _,
-            gl::STATIC_DRAW,
-            3usize,
-            vec![gl::FLOAT, gl::FLOAT, gl::FLOAT],
-            vec![3, 3, 2],
-            ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
-            self.vertex_num,
-            config,
-        )
-    }
 }
 
 impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
