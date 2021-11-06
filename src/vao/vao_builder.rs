@@ -11,12 +11,29 @@ use crate::texture::texture_atlas::TextureUV;
 type Point3 = nalgebra::Point3<f32>;
 
 /// `Vao`のビルダー
-pub struct VaoBuilder<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> {
+pub struct VaoBuilder {
     buffer: Vec<f32>,
     vertex_num: i32,
 }
 
-impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuilder<W, H, ATLAS_W, ATLAS_H> {
+pub trait VaoBuilder3DGeometry<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> {
+    /// 各辺が軸に並行な直方体を追加する
+    /// 
+    /// `begin`は`end`よりも(-∞, -∞, -∞)に近い
+    fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b, W, H, ATLAS_W, ATLAS_H>);
+
+    /// 各辺が軸に並行な長方形を追加する
+    /// 
+    /// `p1`: 左上, `p2`: 左下, `p3`: 右下, `p4`: 右上
+    fn add_face(&mut self, p1: &Point3, p2: &Point3, p3: &Point3, p4: &Point3, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>);
+
+    /// 正八面体を追加する
+    /// 
+    /// `r`は中心から頂点までの距離
+    fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>);
+}
+
+impl VaoBuilder {
     /// 空の`VaoBuilder`を作る
     pub fn new() -> Self {
         Self {
@@ -33,10 +50,25 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuil
         }
     }
 
-    /// 各辺が軸に並行な直方体を追加する
-    /// 
-    /// `begin`は`end`よりも(-∞, -∞, -∞)に近い
-    pub fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b, W, H, ATLAS_W, ATLAS_H>) {
+    /// `Vao`を作る
+    pub fn build<'a>(self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
+        Vao::new(
+            gl.clone(),
+            (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
+            self.buffer.as_ptr() as _,
+            gl::STATIC_DRAW,
+            3usize,
+            vec![gl::FLOAT, gl::FLOAT, gl::FLOAT],
+            vec![3, 3, 2],
+            ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
+            self.vertex_num,
+            config,
+        )
+    }
+}
+
+impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuilder3DGeometry<W, H, ATLAS_W, ATLAS_H> for VaoBuilder {
+    fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b, W, H, ATLAS_W, ATLAS_H>) {
         // 上面
         self.add_face(
             &Point3::new(begin.x, end.y, begin.z),
@@ -92,10 +124,7 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuil
         );
     }
 
-    /// 各辺が軸に並行な長方形を追加する
-    /// 
-    /// `p1`: 左上, `p2`: 左下, `p3`: 右下, `p4`: 右上
-    pub fn add_face(&mut self, p1: &Point3, p2: &Point3, p3: &Point3, p4: &Point3, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>) {
+    fn add_face(&mut self, p1: &Point3, p2: &Point3, p3: &Point3, p4: &Point3, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>) {
         let normal = (p3 - p1).cross(&(p2 - p4)).normalize();
         #[rustfmt::skip]
         let mut v: Vec<f32> = vec![
@@ -113,10 +142,7 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuil
         self.buffer.append(&mut v);
     }
 
-    /// 正八面体を追加する
-    /// 
-    /// `r`は中心から頂点までの距離
-    pub fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>) {
+    fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>) {
         #[rustfmt::skip]
         let mut v: Vec<f32> = vec![
             center.x+r, center.y  , center.z  ,  1.0,  1.0,  1.0, uv.begin_u, uv.begin_v,
@@ -154,22 +180,6 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuil
 
         self.vertex_num += 24;
         self.buffer.append(&mut v);
-    }
-
-    /// `Vao`を作る
-    pub fn build<'a>(self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
-        Vao::new(
-            gl.clone(),
-            (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
-            self.buffer.as_ptr() as _,
-            gl::STATIC_DRAW,
-            3usize,
-            vec![gl::FLOAT, gl::FLOAT, gl::FLOAT],
-            vec![3, 3, 2],
-            ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
-            self.vertex_num,
-            config,
-        )
     }
 }
 
