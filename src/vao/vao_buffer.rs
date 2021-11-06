@@ -68,6 +68,11 @@ impl VaoBuffer {
         self.buffer.reserve(additional_num_vertex * VERTEX_SIZE);
     }
 
+    /// 先頭の`num_vertex_to_preserve`個の頂点以外の頂点を削除する
+    pub fn clear_preserving_first(&mut self, num_vertex_to_preserve: usize) {
+        self.buffer.truncate(num_vertex_to_preserve * VERTEX_SIZE);
+    }
+
     /// 現在のバッファの内容をもとに`Vao`を作る
     pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
