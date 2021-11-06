@@ -11,7 +11,7 @@ use crate::texture::texture_atlas::TextureUV;
 type Point3 = nalgebra::Point3<f32>;
 
 /// `Vao`のビルダー
-pub struct VaoBuilder {
+pub struct VaoBuffer {
     buffer: Vec<f32>,
     vertex_num: i32,
 }
@@ -33,8 +33,8 @@ pub trait VaoBuilder3DGeometry<const W: u32, const H: u32, const ATLAS_W: u32, c
     fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>);
 }
 
-impl VaoBuilder {
-    /// 空の`VaoBuilder`を作る
+impl VaoBuffer {
+    /// 空の`VaoBuffer`を作る
     pub fn new() -> Self {
         Self {
             buffer: Vec::<f32>::new(),
@@ -67,7 +67,7 @@ impl VaoBuilder {
     }
 }
 
-impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuilder3DGeometry<W, H, ATLAS_W, ATLAS_H> for VaoBuilder {
+impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> VaoBuilder3DGeometry<W, H, ATLAS_W, ATLAS_H> for VaoBuffer {
     fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b, W, H, ATLAS_W, ATLAS_H>) {
         // 上面
         self.add_face(
