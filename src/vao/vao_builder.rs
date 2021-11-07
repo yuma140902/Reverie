@@ -20,6 +20,12 @@ pub trait VaoBuilder3DGeometry<const W: u32, const H: u32, const ATLAS_W: u32, c
     /// 各辺が軸に並行な長方形を追加する
     ///
     /// `p1`: 左上, `p2`: 左下, `p3`: 右下, `p4`: 右上
+    ///
+    /// # y軸と平行のとき
+    /// +yが「上」
+    ///
+    /// # y軸と垂直で表面が+yを向いているとき
+    /// +xが「上」
     fn add_face(
         &mut self,
         p1: &Point3,
