@@ -1,5 +1,12 @@
+use std::fmt::Debug;
+
 /// 長方形の領域
-pub struct Rect<T, U> {
+#[derive(Debug, PartialEq)]
+pub struct Rect<T, U>
+where
+    T: PartialEq,
+    U: PartialEq,
+{
     origin_x: T,
     origin_y: T,
     width: U,
@@ -20,7 +27,6 @@ pub enum Origin {
     BottomRight,
 }
 
-impl<T, U> Rect<T, U> {
 impl Origin {
     pub fn x_diff(&self, width: u32) -> i32 {
         use Origin::*;
@@ -57,6 +63,11 @@ impl Position<i32> {
     }
 }
 
+impl<T, U> Rect<T, U>
+where
+    T: PartialEq,
+    U: PartialEq,
+{
     pub fn new(origin_x: T, origin_y: T, width: U, height: U) -> Self {
         Self {
             origin_x,
@@ -133,3 +144,70 @@ impl Rect<i32, u32> {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn origin_x_diff() {
+        assert_eq!(Origin::TopLeft.x_diff(10), 0);
+        assert_eq!(Origin::Center.x_diff(10), 5);
+        assert_eq!(Origin::BottomRight.x_diff(10), 10);
+    }
+
+    #[test]
+    fn origin_y_diff() {
+        assert_eq!(Origin::TopLeft.y_diff(10), 0);
+        assert_eq!(Origin::Center.y_diff(10), 5);
+        assert_eq!(Origin::BottomRight.y_diff(10), 10);
+    }
+
+    #[test]
+    fn position_positive() {
+        assert_eq!(Position::Positive(10).actual_value(100), 10);
+        assert_eq!(Position::Positive(0).actual_value(100), 0);
+    }
+
+    #[test]
+    fn position_center() {
+        assert_eq!(Position::Center(10).actual_value(100), 60);
+        assert_eq!(Position::Center(-10).actual_value(100), 40);
+        assert_eq!(Position::Center(0).actual_value(100), 50);
+    }
+
+    #[test]
+    fn position_negative() {
+        assert_eq!(Position::Negative(10).actual_value(100), 90);
+        assert_eq!(Position::Negative(0).actual_value(100), 100);
+    }
+
+    #[test]
+    fn new_rect_in_rect_topleft() {
+        let outer = Rect::<i32, u32>::new(0, 0, 400, 300);
+        let rect = Rect::new_in_rect(
+            &outer,
+            &Origin::TopLeft,
+            &Position::Positive(10),
+            &Position::Positive(20),
+            100,
+            100,
+        );
+
+        assert_eq!(rect, Rect::new(10, 20, 100, 100));
+    }
+
+    #[test]
+    fn new_rect_in_rect_center() {
+        let outer = Rect::<i32, u32>::new(0, 0, 400, 300);
+        let rect = Rect::new_in_rect(
+            &outer,
+            &Origin::Center,
+            &Position::Center(0),
+            &Position::Center(0),
+            100,
+            100,
+        );
+
+        assert_eq!(rect, Rect::new(150, 100, 100, 100));
+    }
+}
