@@ -95,6 +95,15 @@ where
 }
 
 impl Rect<i32, u32> {
+    pub const fn new_const(origin_x: i32, origin_y: i32, width: u32, height: u32) -> Self {
+        Self {
+            origin_x,
+            origin_y,
+            width,
+            height,
+        }
+    }
+
     pub fn new_in_rect(
         outer: &Rect<i32, u32>,
         origin: &Origin,
