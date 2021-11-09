@@ -19,7 +19,7 @@ pub use vao_config::{VaoConfig, VaoConfigBuilder};
 pub struct Vao<'a> {
     gl: Gl,
     vao: u32,
-    _vbo: u32,
+    vbo: u32,
     vertex_num: i32,
     config: &'a VaoConfig<'a>,
 }
@@ -76,7 +76,7 @@ impl<'a> Vao<'a> {
         Vao {
             gl,
             vao,
-            _vbo: vbo,
+            vbo,
             vertex_num,
             config,
         }
@@ -142,5 +142,18 @@ impl<'a> Vao<'a> {
     /// ポリゴンを描画する
     pub fn draw_triangles(&self, uniforms: &UniformVariables) {
         self.draw(uniforms, gl::TRIANGLES);
+    }
+}
+
+impl<'a> Drop for Vao<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            if self.vbo > 0 {
+                self.gl.DeleteBuffers(1, &self.vbo as _);
+            }
+            if self.vao > 0 {
+                self.gl.DeleteVertexArrays(1, &self.vao as _);
+            }
+        }
     }
 }
