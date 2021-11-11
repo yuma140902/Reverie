@@ -38,6 +38,10 @@ impl Interpolation<f32> {
         }
     }
 
+    pub fn new_constant(value: f32) -> Self {
+        Self::new(value, value, 0, 1, |_| 0.0)
+    }
+
     /// 線形補間
     pub fn new_lerp(begin: f32, end: f32, t_0: Time, t_total: TimeSpan) -> Self {
         Self::new(begin, end, t_0, t_total, |t| t)
