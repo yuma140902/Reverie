@@ -4,10 +4,10 @@ use std::collections::HashMap;
 use std::os::raw::c_void;
 use std::path::Path;
 
-use image::{GenericImageView, ImageError};
+use image::{DynamicImage, GenericImageView, ImageError};
 
-use crate::gl::Gl;
 use crate::gl;
+use crate::gl::Gl;
 
 /// 画像ファイルを読み込み、管理する
 pub struct ImageManager {
@@ -24,16 +24,13 @@ impl ImageManager {
         image_manager
     }
 
-    /// ファイルから画像を読み込み、OpenGLにテクスチャとして読み込ませる
-    /// 
-    /// 管理用のIDとして文字列を渡す必要がある
     pub fn load_image<'a>(
         &mut self,
-        path: &Path,
+        image: DynamicImage,
         id: &'a str,
         vflip: bool,
     ) -> Result<ImageLoadInfo<'a>, ImageError> {
-        let mut image = image::open(path)?;
+        let mut image = image;
         let format = match image {
             image::DynamicImage::ImageLuma8(_) => gl::RED,
             image::DynamicImage::ImageLumaA8(_) => gl::RG,
@@ -88,6 +85,32 @@ impl ImageManager {
             width: image.width(),
             height: image.height(),
         })
+    }
+
+    /// バイト列から画像を読み込み、OpenGLにテクスチャとして読み込ませる
+    ///
+    /// 管理用のIDとして文字列を渡す必要がある
+    pub fn load_from_memory<'a>(
+        &mut self,
+        bytes: &[u8],
+        id: &'a str,
+        vflip: bool,
+    ) -> Result<ImageLoadInfo<'a>, ImageError> {
+        let image = image::load_from_memory(bytes)?;
+        self.load_image(image, id, vflip)
+    }
+
+    /// ファイルから画像を読み込み、OpenGLにテクスチャとして読み込ませる
+    ///
+    /// 管理用のIDとして文字列を渡す必要がある
+    pub fn load_from_file<'a>(
+        &mut self,
+        path: &Path,
+        id: &'a str,
+        vflip: bool,
+    ) -> Result<ImageLoadInfo<'a>, ImageError> {
+        let image = image::open(path)?;
+        self.load_image(image, id, vflip)
     }
 
     /// OpenGLの関数に渡すためのテクスチャIDを得る
