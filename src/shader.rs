@@ -94,10 +94,8 @@ impl Program {
 
     /// bool型のユニフォーム変数を送る
     pub unsafe fn set_bool(&self, name: &CStr, value: bool) {
-        self.gl.Uniform1i(
-            self.gl.GetUniformLocation(self.id, name.as_ptr()),
-            value as i32,
-        );
+        self.gl
+            .Uniform1i(self.gl.GetUniformLocation(self.id, name.as_ptr()), value as i32);
     }
 
     /// int型のユニフォーム変数を送る
@@ -211,6 +209,16 @@ impl Shader {
         Shader::from_file(gl, path, gl::FRAGMENT_SHADER)
     }
 
+    /// 頂点シェーダーをソースコードから作る
+    pub fn from_vert_code(gl: Gl, code: &CStr) -> Result<Shader, String> {
+        Shader::from_code(gl, code, gl::VERTEX_SHADER)
+    }
+
+    /// フラグメントシェーダーをソースコードから作る
+    pub fn from_frag_code(gl: Gl, code: &CStr) -> Result<Shader, String> {
+        Shader::from_code(gl, code, gl::FRAGMENT_SHADER)
+    }
+
     /// OpenGLの関数に渡すためのシェーダーID
     pub fn id(&self) -> GLuint {
         self.id
@@ -250,9 +258,7 @@ pub struct UniformVariables<'a> {
 impl<'a> UniformVariables<'a> {
     /// 空のセットを作る
     pub fn new() -> UniformVariables<'a> {
-        Self {
-            map: HashMap::new(),
-        }
+        Self { map: HashMap::new() }
     }
 
     /// 名前を指定してユニフォーム変数を追加する
