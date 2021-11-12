@@ -14,6 +14,18 @@ pub struct TextureUV<Width, Height, AtlasWidth, AtlasHeight> {
     _pd: PhantomData<fn() -> (Width, Height, AtlasWidth, AtlasHeight)>,
 }
 
+impl<Width, Height, AtlasWidth, AtlasHeight> TextureUV<Width, Height, AtlasWidth, AtlasHeight> {
+    fn new_internal(rect: &Rect<i32, u32>, texture_width: u32, texture_height: u32) -> Self {
+        Self {
+            begin_u: *rect.origin_x() as f32 / texture_width as f32,
+            begin_v: *rect.origin_y() as f32 / texture_height as f32,
+            end_u: (*rect.origin_x() + *rect.width() as i32) as f32 / texture_width as f32,
+            end_v: (*rect.origin_y() + *rect.height() as i32) as f32 / texture_height as f32,
+            _pd: PhantomData,
+        }
+    }
+}
+
 impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
     TextureUV<Const<W>, Const<H>, Const<ATLAS_W>, Const<ATLAS_H>>
 {
@@ -33,25 +45,13 @@ impl<const ATLAS_W: u32, const ATLAS_H: u32>
     TextureUV<Dynamic, Dynamic, Const<ATLAS_W>, Const<ATLAS_H>>
 {
     pub fn new(rect: &Rect<i32, u32>) -> Self {
-        Self {
-            begin_u: *rect.origin_x() as f32 / ATLAS_W as f32,
-            begin_v: *rect.origin_y() as f32 / ATLAS_H as f32,
-            end_u: (*rect.origin_x() + *rect.width() as i32) as f32 / ATLAS_W as f32,
-            end_v: (*rect.origin_y() + *rect.height() as i32) as f32 / ATLAS_H as f32,
-            _pd: PhantomData,
-        }
+        Self::new_internal(rect, ATLAS_W, ATLAS_H)
     }
 }
 
 impl TextureUV<Dynamic, Dynamic, Dynamic, Dynamic> {
     pub fn new(rect: &Rect<i32, u32>, texture_width: u32, texture_height: u32) -> Self {
-        Self {
-            begin_u: *rect.origin_x() as f32 / texture_width as f32,
-            begin_v: *rect.origin_y() as f32 / texture_height as f32,
-            end_u: (*rect.origin_x() + *rect.width() as i32) as f32 / texture_width as f32,
-            end_v: (*rect.origin_y() + *rect.height() as i32) as f32 / texture_height as f32,
-            _pd: PhantomData,
-        }
+        Self::new_internal(rect, texture_width, texture_height)
     }
 }
 
