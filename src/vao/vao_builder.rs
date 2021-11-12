@@ -6,16 +6,13 @@ use crate::types::*;
 use super::vao_buffer::VaoBuffer;
 
 /// `VaoBuffer`上に立方体などの立体を追加する
-pub trait VaoBuilder3DGeometry<Width, Height, AtlasWidth, AtlasHeight> {
+///
+/// * `T` - テクスチャの型
+pub trait VaoBuilder3DGeometry<T> {
     /// 各辺が軸に並行な直方体を追加する
     ///
     /// `begin`は`end`よりも(-∞, -∞, -∞)に近い
-    fn add_cuboid<'b>(
-        &mut self,
-        begin: &Point3,
-        end: &Point3,
-        textures: &CuboidTextures<'b, Width, Height, AtlasWidth, AtlasHeight>,
-    );
+    fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b, T>);
 
     /// 各辺が軸に並行な長方形を追加する
     ///
@@ -26,34 +23,22 @@ pub trait VaoBuilder3DGeometry<Width, Height, AtlasWidth, AtlasHeight> {
     ///
     /// # y軸と垂直で表面が+yを向いているとき
     /// +xが「上」
-    fn add_face(
-        &mut self,
-        p1: &Point3,
-        p2: &Point3,
-        p3: &Point3,
-        p4: &Point3,
-        uv: &TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
-    );
+    fn add_face(&mut self, p1: &Point3, p2: &Point3, p3: &Point3, p4: &Point3, uv: &T);
 
     /// 正八面体を追加する
     ///
     /// `r`は中心から頂点までの距離
-    fn add_octahedron(
-        &mut self,
-        center: &Point3,
-        r: f32,
-        uv: &TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
-    );
+    fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &T);
 }
 
-impl<Width, Height, AtlasWidth, AtlasHeight> VaoBuilder3DGeometry<Width, Height, AtlasWidth, AtlasHeight>
-    for VaoBuffer
+impl<Width, Height, AtlasWidth, AtlasHeight>
+    VaoBuilder3DGeometry<TextureUV<Width, Height, AtlasWidth, AtlasHeight>> for VaoBuffer
 {
     fn add_cuboid<'b>(
         &mut self,
         begin: &Point3,
         end: &Point3,
-        textures: &CuboidTextures<'b, Width, Height, AtlasWidth, AtlasHeight>,
+        textures: &CuboidTextures<'b, TextureUV<Width, Height, AtlasWidth, AtlasHeight>>,
     ) {
         // 上面
         self.add_face(
@@ -182,11 +167,13 @@ impl<Width, Height, AtlasWidth, AtlasHeight> VaoBuilder3DGeometry<Width, Height,
 ///
 /// OpenGLは同時に1つのテクスチャしかバインドできないので、
 /// 各面のテクスチャは同じテクスチャアトラス上にある必要がある
-pub struct CuboidTextures<'a, Width, Height, AtlasWidth, AtlasHeight> {
-    pub top: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
-    pub bottom: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
-    pub south: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
-    pub north: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
-    pub west: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
-    pub east: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
+///
+/// * `T` - テクスチャの型
+pub struct CuboidTextures<'a, T> {
+    pub top: &'a T,
+    pub bottom: &'a T,
+    pub south: &'a T,
+    pub north: &'a T,
+    pub west: &'a T,
+    pub east: &'a T,
 }
