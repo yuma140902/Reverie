@@ -6,7 +6,7 @@ use crate::types::*;
 use super::vao_buffer::VaoBuffer;
 
 /// `VaoBuffer`上に立方体などの立体を追加する
-pub trait VaoBuilder3DGeometry<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> {
+pub trait VaoBuilder3DGeometry<Width, Height, AtlasWidth, AtlasHeight> {
     /// 各辺が軸に並行な直方体を追加する
     ///
     /// `begin`は`end`よりも(-∞, -∞, -∞)に近い
@@ -14,7 +14,7 @@ pub trait VaoBuilder3DGeometry<const W: u32, const H: u32, const ATLAS_W: u32, c
         &mut self,
         begin: &Point3,
         end: &Point3,
-        textures: &CuboidTextures<'b, W, H, ATLAS_W, ATLAS_H>,
+        textures: &CuboidTextures<'b, Width, Height, AtlasWidth, AtlasHeight>,
     );
 
     /// 各辺が軸に並行な長方形を追加する
@@ -32,23 +32,28 @@ pub trait VaoBuilder3DGeometry<const W: u32, const H: u32, const ATLAS_W: u32, c
         p2: &Point3,
         p3: &Point3,
         p4: &Point3,
-        uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>,
+        uv: &TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
     );
 
     /// 正八面体を追加する
     ///
     /// `r`は中心から頂点までの距離
-    fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>);
+    fn add_octahedron(
+        &mut self,
+        center: &Point3,
+        r: f32,
+        uv: &TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
+    );
 }
 
-impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
-    VaoBuilder3DGeometry<W, H, ATLAS_W, ATLAS_H> for VaoBuffer
+impl<Width, Height, AtlasWidth, AtlasHeight> VaoBuilder3DGeometry<Width, Height, AtlasWidth, AtlasHeight>
+    for VaoBuffer
 {
     fn add_cuboid<'b>(
         &mut self,
         begin: &Point3,
         end: &Point3,
-        textures: &CuboidTextures<'b, W, H, ATLAS_W, ATLAS_H>,
+        textures: &CuboidTextures<'b, Width, Height, AtlasWidth, AtlasHeight>,
     ) {
         // 上面
         self.add_face(
@@ -111,7 +116,7 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
         p2: &Point3,
         p3: &Point3,
         p4: &Point3,
-        uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>,
+        uv: &TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
     ) {
         let normal = (p3 - p1).cross(&(p2 - p4)).normalize();
         #[rustfmt::skip]
@@ -128,7 +133,12 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
         self.append(&mut v);
     }
 
-    fn add_octahedron(&mut self, center: &Point3, r: f32, uv: &TextureUV<W, H, ATLAS_W, ATLAS_H>) {
+    fn add_octahedron(
+        &mut self,
+        center: &Point3,
+        r: f32,
+        uv: &TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
+    ) {
         #[rustfmt::skip]
         let mut v: Vec<f32> = vec![
             center.x+r, center.y  , center.z  ,  1.0,  1.0,  1.0, uv.begin_u, uv.begin_v,
@@ -172,11 +182,11 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
 ///
 /// OpenGLは同時に1つのテクスチャしかバインドできないので、
 /// 各面のテクスチャは同じテクスチャアトラス上にある必要がある
-pub struct CuboidTextures<'a, const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32> {
-    pub top: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
-    pub bottom: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
-    pub south: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
-    pub north: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
-    pub west: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
-    pub east: &'a TextureUV<W, H, ATLAS_W, ATLAS_H>,
+pub struct CuboidTextures<'a, Width, Height, AtlasWidth, AtlasHeight> {
+    pub top: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
+    pub bottom: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
+    pub south: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
+    pub north: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
+    pub west: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
+    pub east: &'a TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
 }
