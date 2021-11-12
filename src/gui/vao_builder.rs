@@ -1,11 +1,15 @@
 use crate::gui::layout::{Origin, Position, Rect};
-use crate::{texture::dynamic_texture_atlas::DynamicTextureUV, vao::VaoBuffer};
+use crate::texture::texture_atlas::TextureUV;
+use crate::vao::VaoBuffer;
 
-pub trait VaoBuilder2DGui {
-    fn add_rectangle(&mut self, texture: &DynamicTextureUV, dst: &Rect<i32, u32>);
+/// `VaoBuffer`上にGUIを追加する
+///
+/// * `T` - テクスチャの型
+pub trait VaoBuilder2DGui<T> {
+    fn add_rectangle(&mut self, texture: &T, dst: &Rect<i32, u32>);
     fn add_layout_rectangle(
         &mut self,
-        texture: &DynamicTextureUV,
+        texture: &T,
         parent_width: u32,
         parent_height: u32,
         origin: &Origin,
@@ -16,7 +20,7 @@ pub trait VaoBuilder2DGui {
     );
     fn add_biggest_rectangle(
         &mut self,
-        texture: &DynamicTextureUV,
+        texture: &T,
         parent_width: u32,
         parent_height: u32,
         inner_width: u32,
@@ -24,8 +28,14 @@ pub trait VaoBuilder2DGui {
     );
 }
 
-impl VaoBuilder2DGui for VaoBuffer {
-    fn add_rectangle(&mut self, texture: &DynamicTextureUV, dst: &Rect<i32, u32>) {
+impl<Width, Height, AtlasWidth, AtlasHeight>
+    VaoBuilder2DGui<TextureUV<Width, Height, AtlasWidth, AtlasHeight>> for VaoBuffer
+{
+    fn add_rectangle(
+        &mut self,
+        texture: &TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
+        dst: &Rect<i32, u32>,
+    ) {
         let x = *dst.origin_x() as f32;
         let y = *dst.origin_y() as f32;
         let w = *dst.width() as f32;
@@ -46,7 +56,7 @@ impl VaoBuilder2DGui for VaoBuffer {
 
     fn add_layout_rectangle(
         &mut self,
-        texture: &DynamicTextureUV,
+        texture: &TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
         parent_width: u32,
         parent_height: u32,
         origin: &Origin,
@@ -68,7 +78,7 @@ impl VaoBuilder2DGui for VaoBuffer {
 
     fn add_biggest_rectangle(
         &mut self,
-        texture: &DynamicTextureUV,
+        texture: &TextureUV<Width, Height, AtlasWidth, AtlasHeight>,
         parent_width: u32,
         parent_height: u32,
         inner_width: u32,
