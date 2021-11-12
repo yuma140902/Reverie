@@ -24,6 +24,28 @@ impl<Width, Height, AtlasWidth, AtlasHeight> TextureUV<Width, Height, AtlasWidth
             _pd: PhantomData,
         }
     }
+
+    /// 上下を反転させる
+    pub fn flipv(&self) -> Self {
+        Self {
+            begin_u: self.begin_u,
+            begin_v: 1.0 - self.end_v,
+            end_u: self.end_u,
+            end_v: 1.0 - self.begin_v,
+            _pd: PhantomData,
+        }
+    }
+
+    /// 左右を反転させる
+    pub fn fliph(&self) -> Self {
+        Self {
+            begin_u: 1.0 - self.end_u,
+            begin_v: self.begin_v,
+            end_u: 1.0 - self.begin_u,
+            end_v: self.end_v,
+            _pd: PhantomData,
+        }
+    }
 }
 
 impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
