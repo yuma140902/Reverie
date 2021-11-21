@@ -6,4 +6,5 @@ pub use shader::{Program, Shader};
 pub mod gui;
 pub mod texture;
 pub mod types;
+pub mod util;
 pub mod vao;
