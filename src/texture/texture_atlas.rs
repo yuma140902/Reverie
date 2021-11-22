@@ -52,8 +52,14 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
     TextureUV<Const<W>, Const<H>, Const<ATLAS_W>, Const<ATLAS_H>>
 {
     /// `ATLAS_W`×`ATLAS_H`のテクスチャアトラスを`W`×`H`のサイズに分割した時、`pos.row`行目`pos.column`列目のパーツの始点と終点のUV座標
-    pub fn new(pos: &TextureAtlasPos) -> Self {
-        Self::new_internal(&pos.to_rect(W, H), ATLAS_W, ATLAS_H)
+    pub fn of_atlas(pos: &TextureAtlasPos) -> Self {
+        TextureUV {
+            begin_u: (pos.column * W) as f32 / ATLAS_W as f32,
+            begin_v: 1.0f32 - ((pos.row + 1) * H) as f32 / ATLAS_H as f32,
+            end_u: ((pos.column + 1) * W) as f32 / ATLAS_W as f32,
+            end_v: 1.0f32 - (pos.row * H) as f32 / ATLAS_H as f32,
+            _pd: PhantomData,
+        }
     }
 }
 
@@ -80,14 +86,5 @@ pub struct TextureAtlasPos {
 impl TextureAtlasPos {
     pub const fn new(row: u32, column: u32) -> Self {
         Self { row, column }
-    }
-
-    pub fn to_rect(&self, width: u32, height: u32) -> Rect<i32, u32> {
-        Rect::new(
-            (self.column * width) as i32,
-            (self.row * height) as i32,
-            width,
-            height,
-        )
     }
 }
