@@ -4,8 +4,14 @@ pub trait Window {
     fn main_loop(&mut self);
 }
 
-pub fn create_window_depending_on_platform(config: &WindowConfig) -> Box<impl Window> {
-    Box::new(crate::window::ms_windows::MsWindowsWindow::new(config))
+#[cfg(target_os = "windows")]
+pub fn create_window_depending_on_platform(config: &WindowConfig) -> Result<Box<impl Window>, String> {
+    Ok(Box::new(crate::window::ms_windows::MsWindowsWindow::new(config)))
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn create_window_depending_on_platform(config: &WindowConfig) -> Result<Box<impl Window>, String> {
+    Err("Not Implmented")
 }
 
 pub struct WindowConfig {

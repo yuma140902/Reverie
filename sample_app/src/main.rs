@@ -3,7 +3,7 @@ use reverie_engine as re;
 
 fn main() {
     let config = re::window::WindowConfigBuilder::new().build();
-    let mut window = re::window::create_window_depending_on_platform(&config);
+    let mut window = re::window::create_window_depending_on_platform(&config).unwrap();
     window.show();
     window.main_loop();
 }
