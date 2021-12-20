@@ -22,30 +22,91 @@ fn encode(source: &str) -> Vec<u16> {
     source.encode_utf16().chain(Some(0)).collect()
 }
 
-unsafe extern "system" fn wnd_proc(hwnd: HWND, msg: UINT, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
-    let text = encode("あいうえお");
-    let text_len = text.len() as i32 - 1;
-    let mut hdc = 0 as HDC;
-    let mut pt = PAINTSTRUCT {
-        hdc: 0 as HDC,
-        fErase: FALSE as BOOL,
-        rcPaint: RECT {
-            left: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
-        },
-        fRestore: FALSE as BOOL,
-        fIncUpdate: FALSE as BOOL,
-        rgbReserved: [0; 32],
-    };
+static mut OPENGL_RENDERING_CONTEXT_HANDLE_MUT: HGLRC = std::ptr::null_mut();
 
-    if msg == WM_DESTROY {
-        PostQuitMessage(0);
-    } else if msg == WM_PAINT {
-        hdc = BeginPaint(hwnd, &mut pt);
-        TextOutW(hdc, 10, 10, text.as_ptr(), text_len);
-        EndPaint(hwnd, &mut pt);
+fn get_opengl_hdc(window_handle: HWND) -> HDC {
+    /// OpenGL用のHDCを取得する。使った後に[`release_opengl_hdc()`]を同じスレッドから呼び出す必要がある。
+    let pfd = PIXELFORMATDESCRIPTOR {
+        nSize: std::mem::size_of::<PIXELFORMATDESCRIPTOR>() as WORD,
+        nVersion: 1,
+        dwFlags: PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
+        iPixelType: PFD_TYPE_RGBA,
+        cColorBits: 24,
+        cRedBits: 0,
+        cRedShift: 0,
+        cGreenBits: 0,
+        cGreenShift: 0,
+        cBlueBits: 0,
+        cBlueShift: 0,
+        cAlphaBits: 0,
+        cAlphaShift: 0,
+        cAccumBits: 0,
+        cAccumRedBits: 0,
+        cAccumGreenBits: 0,
+        cAccumBlueBits: 0,
+        cAccumAlphaBits: 0,
+        cDepthBits: 32,
+        cStencilBits: 0,
+        cAuxBuffers: 0,
+        iLayerType: PFD_MAIN_PLANE,
+        bReserved: 0,
+        dwLayerMask: 0,
+        dwVisibleMask: 0,
+        dwDamageMask: 0,
+    };
+    unsafe {
+        let hdc: HDC = GetDC(window_handle);
+        let pf: i32 = ChoosePixelFormat(hdc, &pfd);
+        SetPixelFormat(hdc, pf, &pfd);
+        if OPENGL_RENDERING_CONTEXT_HANDLE_MUT.is_null() {
+            OPENGL_RENDERING_CONTEXT_HANDLE_MUT = wglCreateContext(hdc);
+        }
+        wglMakeCurrent(hdc, OPENGL_RENDERING_CONTEXT_HANDLE_MUT);
+
+        return hdc;
+    }
+}
+
+/// [`get_opengl_hdc()`]で取得したOpenGL用のHDCを解放する
+fn release_opengl_hdc(window_handle: HWND, hdc: HDC) {
+    unsafe {
+        wglMakeCurrent(hdc, std::ptr::null_mut());
+        ReleaseDC(window_handle, hdc);
+    }
+}
+
+/// OpenGLの描画コンテキスト[`OPENGL_RENDERING_CONTEXT_HANDLE_MUT`]を削除する
+fn exit_opengl() {
+    unsafe {
+        if !OPENGL_RENDERING_CONTEXT_HANDLE_MUT.is_null() {
+            wglDeleteContext(OPENGL_RENDERING_CONTEXT_HANDLE_MUT);
+        }
+    }
+}
+
+unsafe extern "system" fn wnd_proc(hwnd: HWND, msg: UINT, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
+    let hdc: HDC;
+
+    match msg {
+        WM_PAINT => {
+            // 無効リージョンをクリア
+            ValidateRect(hwnd, std::ptr::null_mut());
+            // OpenGL描画用のHDCを取得
+            hdc = get_opengl_hdc(hwnd);
+            // 描画
+            // glClear(GL_COLOR_BUFFER_BIT);
+            // ダブルバッファ切替
+            SwapBuffers(hdc);
+            // OpenGL描画用のHDCを解放
+            release_opengl_hdc(hwnd, hdc);
+        }
+        WM_DESTROY => {
+            PostQuitMessage(0);
+        }
+        WM_QUIT => {
+            exit_opengl();
+        }
+        _ => {}
     }
     return DefWindowProcW(hwnd, msg, wparam, lparam);
 }
@@ -112,10 +173,6 @@ impl crate::window::Window for MsWindowsWindow {
         'main_loop: loop {
             let ret = unsafe { GetMessageW(&mut msg, 0 as HWND, 0, 0) };
             if ret == 0 {
-                break 'main_loop;
-            }
-
-            if msg.message == WM_QUIT {
                 break 'main_loop;
             }
 
