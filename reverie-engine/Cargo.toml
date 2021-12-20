@@ -16,7 +16,7 @@ build = "src/build.rs"
 image = "0.23.14"
 nalgebra = "0.29.0"
 c_str_macro = "1.0.3"
-winapi = { version = "0.3.9", features = ["winuser"] }
+winapi = { version = "0.3.9", features = ["winuser", "errhandlingapi"] }
 
 [build-dependencies]
 gl_generator = "0.14.0"

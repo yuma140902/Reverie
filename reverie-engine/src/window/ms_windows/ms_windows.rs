@@ -1,5 +1,6 @@
 use winapi::shared::minwindef::*;
 use winapi::shared::windef::*;
+use winapi::um::errhandlingapi::*;
 use winapi::um::wingdi::*;
 use winapi::um::winnt::*;
 use winapi::um::winuser::*;
@@ -24,8 +25,8 @@ fn encode(source: &str) -> Vec<u16> {
 
 static mut OPENGL_RENDERING_CONTEXT_HANDLE_MUT: HGLRC = std::ptr::null_mut();
 
-fn get_opengl_hdc(window_handle: HWND) -> HDC {
-    /// OpenGL用のHDCを取得する。使った後に[`release_opengl_hdc()`]を同じスレッドから呼び出す必要がある。
+/// OpenGL用のHDCを取得する。使った後に[`release_opengl_hdc()`]を同じスレッドから呼び出す必要がある。
+fn get_opengl_hdc(window_handle: HWND) -> Result<HDC, String> {
     let pfd = PIXELFORMATDESCRIPTOR {
         nSize: std::mem::size_of::<PIXELFORMATDESCRIPTOR>() as WORD,
         nVersion: 1,
@@ -56,32 +57,71 @@ fn get_opengl_hdc(window_handle: HWND) -> HDC {
     };
     unsafe {
         let hdc: HDC = GetDC(window_handle);
+        if hdc.is_null() {
+            return Err("Fail GetDC()".to_string());
+        }
         let pf: i32 = ChoosePixelFormat(hdc, &pfd);
-        SetPixelFormat(hdc, pf, &pfd);
+        if pf == 0 {
+            return Err(format!(
+                "Fail ChoosePixelFormat(). GetLastError() = {}",
+                GetLastError()
+            ));
+        }
+        if SetPixelFormat(hdc, pf, &pfd) == FALSE {
+            return Err(format!(
+                "Fail SetPixelFormat(). GetLastError() = {}",
+                GetLastError()
+            ));
+        }
         if OPENGL_RENDERING_CONTEXT_HANDLE_MUT.is_null() {
             OPENGL_RENDERING_CONTEXT_HANDLE_MUT = wglCreateContext(hdc);
+            if OPENGL_RENDERING_CONTEXT_HANDLE_MUT.is_null() {
+                return Err(format!(
+                    "Fail wglCreateContext(). GetLastError() = {}",
+                    GetLastError()
+                ));
+            }
         }
-        wglMakeCurrent(hdc, OPENGL_RENDERING_CONTEXT_HANDLE_MUT);
+        if wglMakeCurrent(hdc, OPENGL_RENDERING_CONTEXT_HANDLE_MUT) == FALSE {
+            return Err(format!(
+                "Fail wglMakeCurrent(). GetLastError() = {}",
+                GetLastError()
+            ));
+        }
 
-        return hdc;
+        Ok(hdc)
     }
 }
 
 /// [`get_opengl_hdc()`]で取得したOpenGL用のHDCを解放する
-fn release_opengl_hdc(window_handle: HWND, hdc: HDC) {
+fn release_opengl_hdc(window_handle: HWND, hdc: HDC) -> Result<(), String> {
     unsafe {
-        wglMakeCurrent(hdc, std::ptr::null_mut());
-        ReleaseDC(window_handle, hdc);
+        if wglMakeCurrent(hdc, std::ptr::null_mut()) == FALSE {
+            return Err(format!(
+                "Fail wglMakeCurrent(). GetLastError() = {}",
+                GetLastError()
+            ));
+        }
+        if ReleaseDC(window_handle, hdc) == 0 {
+            return Err("Fail ReleaseDC()".to_string());
+        }
     }
+    Ok(())
 }
 
 /// OpenGLの描画コンテキスト[`OPENGL_RENDERING_CONTEXT_HANDLE_MUT`]を削除する
-fn exit_opengl() {
+fn exit_opengl() -> Result<(), String> {
     unsafe {
         if !OPENGL_RENDERING_CONTEXT_HANDLE_MUT.is_null() {
-            wglDeleteContext(OPENGL_RENDERING_CONTEXT_HANDLE_MUT);
+            if wglDeleteContext(OPENGL_RENDERING_CONTEXT_HANDLE_MUT) == FALSE {
+                return Err(format!(
+                    "Fail wglDeleteContext(). GetLastError() = {}",
+                    GetLastError()
+                ));
+            }
         }
     }
+    Ok(())
 }
 
 unsafe extern "system" fn wnd_proc(hwnd: HWND, msg: UINT, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
@@ -89,22 +129,25 @@ unsafe extern "system" fn wnd_proc(hwnd: HWND, msg: UINT, wparam: WPARAM, lparam
 
     match msg {
         WM_PAINT => {
-            // 無効リージョンをクリア
-            ValidateRect(hwnd, std::ptr::null_mut());
+            // 無効リージョンをクリア(BeginPaint()を使用しないため)
+            if ValidateRect(hwnd, std::ptr::null_mut()) == 0 {
+                panic!("Fail ValidateRect()");
+            }
             // OpenGL描画用のHDCを取得
-            hdc = get_opengl_hdc(hwnd);
-            // 描画
+            hdc = get_opengl_hdc(hwnd).unwrap();
+            // ポリゴン描画
+            // glRotatef(ang1, 1.0, 1.0, 1.0);
             // glClear(GL_COLOR_BUFFER_BIT);
             // ダブルバッファ切替
             SwapBuffers(hdc);
             // OpenGL描画用のHDCを解放
-            release_opengl_hdc(hwnd, hdc);
+            release_opengl_hdc(hwnd, hdc).unwrap();
         }
         WM_DESTROY => {
             PostQuitMessage(0);
         }
         WM_QUIT => {
-            exit_opengl();
+            exit_opengl().unwrap();
         }
         _ => {}
     }
