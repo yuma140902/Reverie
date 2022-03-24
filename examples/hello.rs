@@ -46,7 +46,7 @@ fn main() {
             engine.update();
             match engine.render() {
                 Ok(_) => {}
-                Err(wgpu::SurfaceError::Lost) => engine.resize(engine.size),
+                Err(wgpu::SurfaceError::Lost) => engine.reconfigure(),
                 Err(wgpu::SurfaceError::OutOfMemory) => *control_flow = ControlFlow::Exit,
                 Err(err) if err == wgpu::SurfaceError::Outdated => {
                     tracing::trace!("{:?}", err);
