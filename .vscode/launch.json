@@ -7,6 +7,14 @@
     {
       "type": "lldb",
       "request": "launch",
+      "name": "Launch",
+      "program": "${workspaceFolder}/target/debug/sample_app.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
       "name": "Debug unit tests in library 'reverie-engine'",
       "cargo": {
         "args": [

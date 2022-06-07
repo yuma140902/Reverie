@@ -5,6 +5,9 @@ use winapi::um::wingdi::*;
 use winapi::um::winnt::*;
 use winapi::um::winuser::*;
 
+use crate::gl;
+use crate::gl::Gl;
+
 pub fn print_message(msg: &str) -> Result<i32, std::io::Error> {
     use std::ffi::OsStr;
     use std::iter::once;
@@ -21,6 +24,26 @@ pub fn print_message(msg: &str) -> Result<i32, std::io::Error> {
 
 fn encode(source: &str) -> Vec<u16> {
     source.encode_utf16().chain(Some(0)).collect()
+}
+
+fn to_veci8(source: &str) -> Vec<i8> {
+    use std::ffi::OsStr;
+    use std::os::windows::ffi::OsStrExt;
+    OsStr::new(source)
+        .encode_wide()
+        .map(|c| c as i8)
+        .chain(Some(0))
+        .collect::<Vec<_>>()
+}
+
+fn to_lpcstr(source: &str) -> LPCSTR {
+    // source
+    //     .encode_utf16()
+    //     .map(|c| c as i8)
+    //     .chain(Some(0))
+    //     .collect::<Vec<i8>>()
+    //     .as_ptr();
+    to_veci8(source).as_ptr()
 }
 
 static mut OPENGL_RENDERING_CONTEXT_HANDLE_MUT: HGLRC = std::ptr::null_mut();
@@ -135,6 +158,21 @@ unsafe extern "system" fn wnd_proc(hwnd: HWND, msg: UINT, wparam: WPARAM, lparam
             }
             // OpenGL描画用のHDCを取得
             hdc = get_opengl_hdc(hwnd).unwrap();
+            println!("Create context");
+            dbg!(wglGetCurrentContext());
+            let gl = Gl::load_with(|proc_name| {
+                let addr = wglGetProcAddress(to_veci8(proc_name).as_ptr());
+                if addr.is_null() {
+                    println!(
+                        "no gl function found: {}. GetLastError() = {}",
+                        proc_name,
+                        GetLastError()
+                    );
+                }
+                addr as _
+            });
+            // gl.ClearColor(1.5, 1.5, 1.5, 1.0);
+            // gl.Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
             // ポリゴン描画
             // glRotatef(ang1, 1.0, 1.0, 1.0);
             // glClear(GL_COLOR_BUFFER_BIT);
