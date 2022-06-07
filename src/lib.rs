@@ -1,6 +1,27 @@
 use tracing::{debug, info, trace};
+use crate::vertex::Vertex;
 use tracing_unwrap::{OptionExt, ResultExt};
+use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
+
+pub mod vertex;
+
+// tmp
+const VERTICES: &[Vertex] = &[
+    Vertex {
+        position: [0.0, 0.5, 0.0],
+        color: [1.0, 0.0, 0.0],
+    },
+    Vertex {
+        position: [-0.5, -0.5, 0.0],
+        color: [0.0, 1.0, 0.0],
+    },
+    Vertex {
+        position: [0.5, -0.5, 0.0],
+        color: [0.0, 0.0, 1.0],
+    },
+];
+
 
 pub struct ReverieEngine {
     surface: wgpu::Surface,
@@ -9,6 +30,8 @@ pub struct ReverieEngine {
     config: wgpu::SurfaceConfiguration,
     size: winit::dpi::PhysicalSize<u32>,
     render_pipeline: wgpu::RenderPipeline,
+    vertex_buffer: wgpu::Buffer,
+    num_vertices: u32
 }
 
 impl ReverieEngine {
@@ -74,7 +97,9 @@ impl ReverieEngine {
             vertex: wgpu::VertexState {
                 module: &shader,
                 entry_point: "vs_main",
-                buffers: &[],
+                buffers: &[
+                    Vertex::desc()
+                ],
             },
             fragment: Some(wgpu::FragmentState {
                 module: &shader,
@@ -103,6 +128,14 @@ impl ReverieEngine {
             multiview: None,
         });
 
+        let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor{
+            label: Some("Vertex Buffer"),
+            contents: bytemuck::cast_slice(VERTICES),
+            usage: wgpu::BufferUsages::VERTEX,
+        });
+
+        let num_vertices = VERTICES.len() as u32;
+
         Self {
             surface,
             device,
@@ -110,6 +143,8 @@ impl ReverieEngine {
             config,
             size,
             render_pipeline,
+            vertex_buffer,
+            num_vertices,
         }
     }
 
@@ -170,7 +205,8 @@ impl ReverieEngine {
             });
 
             render_pass.set_pipeline(&self.render_pipeline);
-            render_pass.draw(0..3, 0..1);
+            render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+            render_pass.draw(0..self.num_vertices, 0..1);
         }
 
         self.queue.submit(std::iter::once(encoder.finish()));
