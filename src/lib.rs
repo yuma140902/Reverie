@@ -1,6 +1,27 @@
 use tracing::{debug, info, trace};
+use crate::vertex::Vertex;
 use tracing_unwrap::{OptionExt, ResultExt};
+use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
+
+pub mod vertex;
+
+// tmp
+const VERTICES: &[Vertex] = &[
+    Vertex {
+        position: [0.0, 0.5, 0.0],
+        color: [1.0, 0.0, 0.0],
+    },
+    Vertex {
+        position: [-0.5, -0.5, 0.0],
+        color: [0.0, 1.0, 0.0],
+    },
+    Vertex {
+        position: [0.5, -0.5, 0.0],
+        color: [0.0, 0.0, 1.0],
+    },
+];
+
 
 pub struct ReverieEngine {
     surface: wgpu::Surface,
@@ -9,6 +30,7 @@ pub struct ReverieEngine {
     config: wgpu::SurfaceConfiguration,
     size: winit::dpi::PhysicalSize<u32>,
     render_pipeline: wgpu::RenderPipeline,
+    vertex_buffer: wgpu::Buffer,
 }
 
 impl ReverieEngine {
@@ -103,6 +125,14 @@ impl ReverieEngine {
             multiview: None,
         });
 
+        let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor{
+            label: Some("Vertex Buffer"),
+            contents: bytemuck::cast_slice(VERTICES),
+            usage: wgpu::BufferUsages::VERTEX,
+        });
+
+        //TODO
+
         Self {
             surface,
             device,
@@ -110,6 +140,7 @@ impl ReverieEngine {
             config,
             size,
             render_pipeline,
+            vertex_buffer
         }
     }
 

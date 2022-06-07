@@ -7,6 +7,7 @@ use winit::{
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
+
 fn main() {
     let subscriber = FmtSubscriber::builder().with_max_level(Level::TRACE).finish();
     tracing::subscriber::set_global_default(subscriber).expect("setting default subscriber failed");
