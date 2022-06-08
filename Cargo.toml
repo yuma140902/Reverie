@@ -14,7 +14,7 @@ resolver = "2"
 
 [dependencies]
 bytemuck = { version = "1", features = [ "derive" ] }
-image = "0.24.1"
+image = { version = "0.24", features = ["png", "jpeg"] }
 nalgebra = "0.29.0"
 raw-window-handle = "0.4.2"
 tracing = "0.1.32"
