@@ -4,6 +4,7 @@ use tracing_unwrap::{OptionExt, ResultExt};
 use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
 
+pub mod texture;
 pub mod vertex;
 
 // tmp
