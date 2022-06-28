@@ -84,6 +84,7 @@ impl ReverieEngine {
         let diffuse_bytes = include_bytes!("./test.png");
         let diffuse_image = image::load_from_memory(diffuse_bytes).unwrap();
         let diffuse_rgba = diffuse_image.to_rgba8();
+        info!("Load texture");
 
         use image::GenericImageView;
         let dimsnesions = diffuse_rgba.dimensions();
@@ -110,12 +111,13 @@ impl ReverieEngine {
             mip_level: 0,
             origin: wgpu::Origin3d::ZERO,
             aspect: wgpu::TextureAspect::All,
-        }, &diffuse_rgba, 
+        }, &diffuse_rgba,
         wgpu::ImageDataLayout {
             offset: 0,
             bytes_per_row: std::num::NonZeroU32::new(4 * dimsnesions.0),
             rows_per_image: std::num::NonZeroU32::new(dimsnesions.1),
         }, texture_size);
+        info!("Queue write texture");
 
         let diffuse_texture_view = diffuse_texture.create_view(&wgpu::TextureViewDescriptor::default());
         let diffuse_sampler = device.create_sampler(&wgpu::SamplerDescriptor {
@@ -133,7 +135,7 @@ impl ReverieEngine {
                 wgpu::BindGroupLayoutEntry {
                     binding: 0,
                     visibility: wgpu::ShaderStages::FRAGMENT,
-                    ty: wgpu::BindingType::Texture { 
+                    ty: wgpu::BindingType::Texture {
                         multisampled: false,
                         view_dimension: wgpu::TextureViewDimension::D2,
                         sample_type: wgpu::TextureSampleType::Float { filterable: true },
@@ -164,11 +166,13 @@ impl ReverieEngine {
             ],
             label: Some("diffuse_bind_group")
         });
+        info!("Create diffuse texture bind group");
 
         let shader = device.create_shader_module(&wgpu::ShaderModuleDescriptor {
             label: Some("Shader"),
             source: wgpu::ShaderSource::Wgsl(include_str!("shader.wgsl").into()),
         });
+        info!("Load shader");
 
         let render_pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("Render Pipeline Layout"),
@@ -212,12 +216,14 @@ impl ReverieEngine {
             },
             multiview: None,
         });
+        info!("Create render pipeline");
 
         let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor{
             label: Some("Vertex Buffer"),
             contents: bytemuck::cast_slice(VERTICES),
             usage: wgpu::BufferUsages::VERTEX,
         });
+        info!("Load vertex buffer");
 
         let num_vertices = VERTICES.len() as u32;
 
@@ -226,6 +232,7 @@ impl ReverieEngine {
             contents: bytemuck::cast_slice(INDICES),
             usage: wgpu::BufferUsages::INDEX,
         });
+        info!("Load index buffer");
 
         let num_indices = INDICES.len() as u32;
 
