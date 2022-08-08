@@ -4,9 +4,9 @@ use tracing_unwrap::{OptionExt, ResultExt};
 use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
 
+pub mod camera;
 pub mod texture;
 pub mod vertex;
-pub mod camera;
 
 // tmp
 const VERTICES: &[Vertex] = &[
@@ -46,7 +46,7 @@ pub struct ReverieEngine {
     index_buffer: wgpu::Buffer,
     num_indices: u32,
     diffuse_bind_group: wgpu::BindGroup,
-    diffuse_texture: texture::Texture
+    diffuse_texture: texture::Texture,
 }
 
 impl ReverieEngine {
@@ -98,7 +98,9 @@ impl ReverieEngine {
         let diffuse_bytes = include_bytes!("./test.png");
         info!("Load texture");
 
-        let diffuse_texture = texture::Texture::from_bytes(&device, &queue, diffuse_bytes, Some("test.png")).unwrap_or_log();
+        let diffuse_texture =
+            texture::Texture::from_bytes(&device, &queue, diffuse_bytes, Some("test.png"))
+                .unwrap_or_log();
 
         let texture_bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -217,7 +219,7 @@ impl ReverieEngine {
             index_buffer,
             num_indices,
             diffuse_bind_group,
-            diffuse_texture
+            diffuse_texture,
         }
     }
 
@@ -260,8 +262,7 @@ impl ReverieEngine {
                 label: Some("Render Pass"),
                 color_attachments: &[
                     // [[location(0)]]
-                    Some(
-                    wgpu::RenderPassColorAttachment {
+                    Some(wgpu::RenderPassColorAttachment {
                         view: &view,
                         resolve_target: None,
                         ops: wgpu::Operations {
@@ -273,7 +274,7 @@ impl ReverieEngine {
                             }),
                             store: true,
                         },
-                    }   ),
+                    }),
                 ],
                 depth_stencil_attachment: None,
             });
