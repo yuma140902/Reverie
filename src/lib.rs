@@ -6,6 +6,7 @@ use winit::{event::WindowEvent, window::Window};
 
 pub mod texture;
 pub mod vertex;
+pub mod camera;
 
 // tmp
 const VERTICES: &[Vertex] = &[
@@ -55,7 +56,7 @@ impl ReverieEngine {
 
         let instance = wgpu::Instance::new(wgpu::Backends::all());
         info!("Instance: {:?}", instance);
-        let surface = unsafe { instance.create_surface(window) };
+        let surface = unsafe { instance.create_surface(&window) };
         info!("Surface: {:?}", surface);
 
         let adapter = instance
@@ -86,7 +87,7 @@ impl ReverieEngine {
         assert!(size.height > 0);
         let config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
-            format: surface.get_preferred_format(&adapter).unwrap_or_log(),
+            format: *surface.get_supported_formats(&adapter).get(0).unwrap_or_log(),
             width: size.width,
             height: size.height,
             present_mode: wgpu::PresentMode::Fifo,
@@ -138,7 +139,7 @@ impl ReverieEngine {
         });
         info!("Create diffuse texture bind group");
 
-        let shader = device.create_shader_module(&wgpu::ShaderModuleDescriptor {
+        let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("Shader"),
             source: wgpu::ShaderSource::Wgsl(include_str!("shader.wgsl").into()),
         });
@@ -161,11 +162,11 @@ impl ReverieEngine {
             fragment: Some(wgpu::FragmentState {
                 module: &shader,
                 entry_point: "fs_main",
-                targets: &[wgpu::ColorTargetState {
+                targets: &[Some(wgpu::ColorTargetState {
                     format: config.format,
                     blend: Some(wgpu::BlendState::REPLACE),
                     write_mask: wgpu::ColorWrites::ALL,
-                }],
+                })],
             }),
             primitive: wgpu::PrimitiveState {
                 topology: wgpu::PrimitiveTopology::TriangleList,
@@ -259,6 +260,7 @@ impl ReverieEngine {
                 label: Some("Render Pass"),
                 color_attachments: &[
                     // [[location(0)]]
+                    Some(
                     wgpu::RenderPassColorAttachment {
                         view: &view,
                         resolve_target: None,
@@ -271,7 +273,7 @@ impl ReverieEngine {
                             }),
                             store: true,
                         },
-                    },
+                    }   ),
                 ],
                 depth_stencil_attachment: None,
             });
