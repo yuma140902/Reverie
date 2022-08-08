@@ -54,11 +54,21 @@ impl ReverieEngine {
     pub async fn new(window: &Window) -> Self {
         let size = window.inner_size();
 
+        // Instance
+        // WGPUのインスタンス。InstanceからSurfaceとAdapterを作る
+        // 任意のバックエンドを使用する
         let instance = wgpu::Instance::new(wgpu::Backends::all());
         info!("Instance: {:?}", instance);
+
+        // Surface
+        // ウィンドウの一部で、描画する領域
+        // OpenGLのContextに相当する？
         let surface = unsafe { instance.create_surface(&window) };
         info!("Surface: {:?}", surface);
 
+        // Adapter
+        // GPUのハンドル
+        // AdapterからDeviceとQueueを作る
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
                 power_preference: wgpu::PowerPreference::default(),
@@ -69,9 +79,11 @@ impl ReverieEngine {
             .unwrap_or_log();
         info!("Adapter: {:?}", adapter);
 
+        // Device, Queue
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
+                    // OpenGLのExtensionに相当?
                     features: wgpu::Features::empty(),
                     limits: wgpu::Limits::default(),
                     label: None,
@@ -85,6 +97,7 @@ impl ReverieEngine {
 
         assert!(size.width > 0);
         assert!(size.height > 0);
+        // TODO: comment
         let config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: *surface.get_supported_formats(&adapter).get(0).unwrap_or_log(),
