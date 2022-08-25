@@ -1,4 +1,4 @@
-use crate::window::{Context, Window};
+use crate::window::Window;
 
 pub struct ReverieEngine {}
 
@@ -9,9 +9,5 @@ impl ReverieEngine {
 
     pub fn create_window(&self) -> Window {
         Window::new()
-    }
-
-    pub fn create_context(&self, window: &Window) -> Context {
-        Context::new(window)
     }
 }

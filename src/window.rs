@@ -64,6 +64,10 @@ impl Window {
         Self { event_loop, window }
     }
 
+    pub fn create_context(&self) -> Context {
+        Context::new(&self)
+    }
+
     pub fn process_event(&mut self) -> bool {
         self.event_loop.process_event()
     }
@@ -75,7 +79,7 @@ pub struct Context {
 }
 
 impl Context {
-    pub(crate) fn new(window: &Window) -> Self {
+    pub fn new(window: &Window) -> Self {
         let context =
             raw_gl_context::GlContext::create(&window.window, raw_gl_context::GlConfig::default())
                 .unwrap();
