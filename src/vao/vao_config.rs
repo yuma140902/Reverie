@@ -1,9 +1,9 @@
-//! `Vao`の設定
+//! [`crate::vao::Vao`]の設定
 use crate::shader::Program;
 use crate::texture::image_manager::ImageLoadInfo;
 use crate::types::*;
 
-/// `Vao`の設定
+/// [`crate::vao::Vao`]の設定
 #[derive(Clone, Copy)]
 pub struct VaoConfig<'a> {
     /// シェーダープログラム
@@ -22,7 +22,7 @@ pub struct VaoConfig<'a> {
     pub(crate) texture: Option<&'a ImageLoadInfo<'a>>,
 }
 
-/// `VaoConfig`のビルダー
+/// [`VaoConfig`]のビルダー
 pub struct VaoConfigBuilder<'a> {
     program: &'a Program,
     depth_test: bool,
