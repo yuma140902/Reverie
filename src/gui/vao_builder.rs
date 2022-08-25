@@ -2,7 +2,7 @@ use crate::gui::layout::{Origin, Position, Rect};
 use crate::texture::texture_atlas::TextureUV;
 use crate::vao::VaoBuffer;
 
-/// `VaoBuffer`上にGUIを追加する
+/// [`VaoBuffer`]上にGUIを追加する
 ///
 /// * `T` - テクスチャの型
 pub trait VaoBuilder2DGui<T> {

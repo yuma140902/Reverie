@@ -10,7 +10,7 @@ use crate::shader::UniformVariables;
 
 pub mod vao_buffer;
 pub use vao_buffer::VaoBuffer;
-mod vao_builder;
+pub mod vao_builder;
 pub use vao_builder::{CuboidTextures, VaoBuilder3DGeometry};
 mod vao_config;
 pub use vao_config::{VaoConfig, VaoConfigBuilder};
@@ -25,7 +25,7 @@ pub struct Vao<'a> {
 }
 
 impl<'a> Vao<'a> {
-    /// 代わりに`VaoBuilder`を使うことを推奨
+    /// 代わりに[`VaoBuffer`]を使うことを推奨
     pub fn new(
         gl: Gl,
         size: GLsizeiptr,

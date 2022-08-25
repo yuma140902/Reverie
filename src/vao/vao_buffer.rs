@@ -8,7 +8,7 @@ use super::Vao;
 use crate::gl;
 use crate::gl::{types::GLfloat, Gl};
 
-/// 1つの頂点は`VERTEX_SIZE`個のf32から成る。
+/// 1つの頂点は[`VERTEX_SIZE`]個のf32から成る。
 ///
 /// * 頂点のx, y, z座標
 /// * 頂点が属する面の法線ベクトルのx, y, z成分
@@ -22,7 +22,7 @@ pub struct VaoBuffer {
 }
 
 impl VaoBuffer {
-    /// 空の`VaoBuffer`を作る
+    /// 空の[`VaoBuffer`]を作る
     pub fn new() -> Self {
         Self {
             buffer: Vec::<f32>::new(),
@@ -30,7 +30,7 @@ impl VaoBuffer {
         }
     }
 
-    /// 初期のバッファーサイズを指定して`VaoBuilder`を作る
+    /// 初期のバッファーサイズを指定して[`VaoBuffer`]を作る
     ///
     /// `num_vertex_to_reserve`個の頂点が確保できるだけの初期容量になる。
     pub fn with_num_vertex(num_vertex_to_reserve: usize) -> Self {
@@ -42,8 +42,8 @@ impl VaoBuffer {
 
     /// 頂点群を追加する
     ///
-    /// * `v` - 頂点の情報がフラットに繰り返される`Vec`。したがって`v.len()`は`VERTEX_SIZE`の倍数になる。
-    /// ※頂点情報の仕様については`VERTEX_SIZE`を参照
+    /// * `v` - 頂点の情報がフラットに繰り返される`Vec`。したがって`v.len()`は[`VERTEX_SIZE`]の倍数になる。
+    /// ※頂点情報の仕様については`[VERTEX_SIZE`]を参照
     pub fn append(&mut self, v: &mut Vec<f32>) {
         debug_assert_eq!(v.len() % VERTEX_SIZE, 0);
         self.vertex_num += (v.len() / VERTEX_SIZE) as i32;
@@ -73,7 +73,7 @@ impl VaoBuffer {
         self.buffer.truncate(num_vertex_to_preserve * VERTEX_SIZE);
     }
 
-    /// 現在のバッファの内容をもとに`Vao`を作る
+    /// 現在のバッファの内容をもとに[`Vao`]を作る
     pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
         Vao::new(
             gl.clone(),

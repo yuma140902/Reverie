@@ -1,11 +1,11 @@
-//! `VaoBuffer`を操作するユーティリティ
+//! [`VaoBuffer`]を操作するユーティリティ
 
 use crate::texture::texture_atlas::TextureUV;
 use crate::types::*;
 
 use super::vao_buffer::VaoBuffer;
 
-/// `VaoBuffer`上に立方体などの立体を追加する
+/// [`VaoBuffer`]上に立方体などの立体を追加する
 ///
 /// * `T` - テクスチャの型
 pub trait VaoBuilder3DGeometry<T> {
