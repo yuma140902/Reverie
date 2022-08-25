@@ -91,18 +91,17 @@ impl Context {
     pub fn gl(&self) -> Gl {
         Gl::clone(&self.gl)
     }
-}
 
-impl Deref for Context {
-    type Target = raw_gl_context::GlContext;
-
-    fn deref(&self) -> &Self::Target {
-        &self.context
+    /// この[`Context`]を描画先として設定する
+    pub fn make_current(&self) {
+        self.context.make_current();
     }
-}
 
-impl DerefMut for Context {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.context
+    pub fn make_not_current(&self) {
+        self.context.make_not_current();
+    }
+
+    pub fn swap_buffers(&self) {
+        self.context.swap_buffers();
     }
 }
