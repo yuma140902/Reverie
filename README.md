@@ -4,7 +4,12 @@
 
 A toy game engine
 
-# Links
+## Examples
+
+- <https://github.com/yuma140902/RustyCraft>
+- `cargo run --example craft`
+
+## Links
 
 - [GitHub](https://github.com/yuma140902/Reverie)
 - [crates.io](https://crates.io/crates/reverie-engine)
