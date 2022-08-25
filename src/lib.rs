@@ -7,3 +7,4 @@ pub mod gui;
 pub mod texture;
 pub mod types;
 pub mod vao;
+pub mod window;

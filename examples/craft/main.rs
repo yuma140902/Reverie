@@ -1,20 +1,15 @@
-use raw_gl_context::{GlConfig, GlContext};
-use reverie_engine::gl::{self, Gl};
-use winit::{
-    event_loop::{ControlFlow, EventLoop},
-    window::WindowBuilder,
+use reverie_engine::{
+    gl::{self, Gl},
+    window::{Context, Window},
 };
+use winit::event_loop::ControlFlow;
 
 pub fn main() {
-    let event_loop = EventLoop::new();
-    let window = WindowBuilder::new().build(&event_loop).unwrap();
+    let window = Window::new();
+    let context = Context::new(&window);
+    let gl = Gl::clone(&context.gl);
 
-    let context = GlContext::create(&window, GlConfig::default()).unwrap();
-    context.make_current();
-
-    let gl = Gl::load_with(|symbol| context.get_proc_address(symbol) as *const _);
-
-    event_loop.run(move |event, _, control_flow| {
+    window.run(move |event, control_flow| {
         *control_flow = ControlFlow::Wait;
 
         match event {
