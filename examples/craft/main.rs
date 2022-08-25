@@ -1,14 +1,14 @@
 use std::time::{Duration, Instant};
 
-use reverie_engine::{
-    gl::{self, Gl},
-    window::{Context, Window},
-};
+use re::gl;
+use re::ReverieEngine;
+use reverie_engine as re;
 
 pub fn main() {
-    let mut window = Window::new();
-    let context = Context::new(&window);
-    let gl = Gl::clone(&context.gl);
+    let engine = ReverieEngine::new();
+    let mut window = engine.create_window();
+    let context = engine.create_context(&window);
+    let gl = context.gl();
 
     let mut start = Instant::now();
 

@@ -55,7 +55,7 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         let event_loop = EventLoop::new();
         let window = winit::window::WindowBuilder::new()
             .build(&event_loop.event_loop)
@@ -70,18 +70,22 @@ impl Window {
 }
 
 pub struct Context {
-    pub context: raw_gl_context::GlContext,
-    pub gl: Gl,
+    context: raw_gl_context::GlContext,
+    gl: Gl,
 }
 
 impl Context {
-    pub fn new(window: &Window) -> Self {
+    pub(crate) fn new(window: &Window) -> Self {
         let context =
             raw_gl_context::GlContext::create(&window.window, raw_gl_context::GlConfig::default())
                 .unwrap();
         let gl = Gl::load_with(|symbol| context.get_proc_address(symbol) as *const _);
 
         Self { context, gl }
+    }
+
+    pub fn gl(&self) -> Gl {
+        Gl::clone(&self.gl)
     }
 }
 

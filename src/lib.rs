@@ -3,6 +3,8 @@ pub mod interpolation;
 pub use interpolation::Interpolation;
 pub mod shader;
 pub use shader::{Program, Shader};
+mod engine;
+pub use engine::ReverieEngine;
 pub mod gui;
 pub mod texture;
 pub mod types;
