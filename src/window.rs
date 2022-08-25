@@ -1,12 +1,11 @@
 use std::{
     collections::VecDeque,
-    ops::{Deref, DerefMut},
     sync::{Arc, Mutex},
 };
 
 use winit::platform::run_return::EventLoopExtRunReturn;
 
-use crate::gl::Gl;
+use crate::{Context, ContextBackend};
 
 pub struct EventLoop {
     event_loop: winit::event_loop::EventLoop<()>,
@@ -51,7 +50,7 @@ impl EventLoop {
 
 pub struct Window {
     event_loop: EventLoop,
-    window: winit::window::Window,
+    pub(crate) window: winit::window::Window,
 }
 
 impl Window {
@@ -64,44 +63,16 @@ impl Window {
         Self { event_loop, window }
     }
 
-    pub fn create_context(&self) -> Context {
+    #[cfg(feature = "raw_gl_context")]
+    pub fn create_context(&self) -> Context<raw_gl_context::GlContext> {
+        self.create_context_with_backend::<raw_gl_context::GlContext>()
+    }
+
+    pub fn create_context_with_backend<C: ContextBackend>(&self) -> Context<C> {
         Context::new(&self)
     }
 
     pub fn process_event(&mut self) -> bool {
         self.event_loop.process_event()
-    }
-}
-
-pub struct Context {
-    context: raw_gl_context::GlContext,
-    gl: Gl,
-}
-
-impl Context {
-    pub fn new(window: &Window) -> Self {
-        let context =
-            raw_gl_context::GlContext::create(&window.window, raw_gl_context::GlConfig::default())
-                .unwrap();
-        let gl = Gl::load_with(|symbol| context.get_proc_address(symbol) as *const _);
-
-        Self { context, gl }
-    }
-
-    pub fn gl(&self) -> Gl {
-        Gl::clone(&self.gl)
-    }
-
-    /// この[`Context`]を描画先として設定する
-    pub fn make_current(&self) {
-        self.context.make_current();
-    }
-
-    pub fn make_not_current(&self) {
-        self.context.make_not_current();
-    }
-
-    pub fn swap_buffers(&self) {
-        self.context.swap_buffers();
     }
 }

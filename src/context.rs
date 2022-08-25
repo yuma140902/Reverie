@@ -1,0 +1,67 @@
+use std::ffi::c_void;
+
+use crate::{gl::Gl, Window};
+
+pub trait ContextBackend {
+    fn new(window: &Window) -> Self;
+    fn get_proc_address(&self, symbol: &str) -> *const c_void;
+    /// この[`Context`]を描画先として設定する
+    fn make_current(&self);
+    fn make_not_current(&self);
+    fn swap_buffers(&self);
+}
+
+#[cfg(feature = "raw_gl_context")]
+impl ContextBackend for raw_gl_context::GlContext {
+    fn new(window: &Window) -> Self {
+        let context =
+            raw_gl_context::GlContext::create(&window.window, raw_gl_context::GlConfig::default())
+                .unwrap();
+        context
+    }
+    fn get_proc_address(&self, symbol: &str) -> *const c_void {
+        self.get_proc_address(symbol)
+    }
+
+    fn make_current(&self) {
+        self.make_current()
+    }
+
+    fn make_not_current(&self) {
+        self.make_not_current()
+    }
+
+    fn swap_buffers(&self) {
+        self.swap_buffers()
+    }
+}
+
+pub struct Context<C: ContextBackend> {
+    backend: C,
+    gl: Gl,
+}
+
+impl<C: ContextBackend> Context<C> {
+    pub fn new(window: &Window) -> Self {
+        let backend = C::new(window);
+        let gl = Gl::load_with(|symbol| backend.get_proc_address(symbol) as *const _);
+
+        Self { backend, gl }
+    }
+    pub fn gl(&self) -> Gl {
+        Gl::clone(&self.gl)
+    }
+
+    /// この[`Context`]を描画先として設定する
+    pub fn make_current(&self) {
+        self.backend.make_current();
+    }
+
+    pub fn make_not_current(&self) {
+        self.backend.make_not_current();
+    }
+
+    pub fn swap_buffers(&self) {
+        self.backend.swap_buffers();
+    }
+}

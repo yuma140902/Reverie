@@ -10,14 +10,19 @@ categories = ["game-engines"]
 edition = "2018"
 build = "src/build.rs"
 
+[features]
+default = ["raw_gl_context", "winit"]
+raw_gl_context = ["dep:raw-gl-context"]
+winit = ["dep:winit"]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 image = "0.23.14"
 nalgebra = "0.29.0"
 c_str_macro = "1.0.3"
-raw-gl-context = "0.1.2"
-winit = "0.27.2"
+raw-gl-context = { version = "0.1.2", optional = true }
+winit = { version = "0.27.2", optional = true }
 
 [build-dependencies]
 gl_generator = "0.14.0"
