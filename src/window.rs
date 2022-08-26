@@ -1,17 +1,19 @@
+#[cfg(feature = "winit")]
 use std::{
     collections::VecDeque,
     sync::{Arc, Mutex},
 };
 
-use winit::platform::run_return::EventLoopExtRunReturn;
-
 use crate::{Context, ContextBackend};
 
 pub struct EventLoop {
+    #[cfg(feature = "winit")]
     event_loop: winit::event_loop::EventLoop<()>,
+    #[cfg(feature = "winit")]
     queue: Arc<Mutex<VecDeque<winit::event::Event<'static, ()>>>>,
 }
 
+#[cfg(feature = "winit")]
 impl EventLoop {
     fn new() -> Self {
         let event_loop = winit::event_loop::EventLoop::new();
@@ -20,6 +22,7 @@ impl EventLoop {
     }
 
     fn process_event(&mut self) -> bool {
+        use winit::platform::run_return::EventLoopExtRunReturn;
         let queue = Arc::clone(&self.queue);
         let mut exit = false;
         self.event_loop.run_return(|event, _, control_flow| {
@@ -49,11 +52,14 @@ impl EventLoop {
 }
 
 pub struct Window {
+    #[cfg(feature = "winit")]
     event_loop: EventLoop,
+    #[cfg(feature = "winit")]
     pub(crate) window: winit::window::Window,
 }
 
 impl Window {
+    #[cfg(feature = "winit")]
     pub(crate) fn new() -> Self {
         let event_loop = EventLoop::new();
         let window = winit::window::WindowBuilder::new()
@@ -63,15 +69,26 @@ impl Window {
         Self { event_loop, window }
     }
 
+    #[cfg(not(feature = "winit"))]
+    pub(crate) fn new() -> Self {
+        Self {}
+    }
+
     #[cfg(feature = "raw_gl_context")]
-    pub fn create_context(&self) -> Context<raw_gl_context::GlContext> {
+    pub fn create_context_raw_gl_context(&self) -> Context<raw_gl_context::GlContext> {
         self.create_context_with_backend::<raw_gl_context::GlContext>()
+    }
+
+    #[cfg(feature = "glutin")]
+    pub fn create_context_glutin(&self) -> Context<glutin::RawContext<glutin::PossiblyCurrent>> {
+        self.create_context_with_backend::<glutin::RawContext<glutin::PossiblyCurrent>>()
     }
 
     pub fn create_context_with_backend<C: ContextBackend>(&self) -> Context<C> {
         Context::new(&self)
     }
 
+    #[cfg(feature = "winit")]
     pub fn process_event(&mut self) -> bool {
         self.event_loop.process_event()
     }

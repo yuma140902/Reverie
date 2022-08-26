@@ -11,7 +11,7 @@ use reverie_engine as re;
 pub fn main() {
     let engine = ReverieEngine::new();
     let mut window = engine.create_window();
-    let context = window.create_context_with_backend::<glutin::RawContext<glutin::PossiblyCurrent>>();
+    let context = window.create_context_glutin();
     context.make_current();
     let gl = context.gl();
 
