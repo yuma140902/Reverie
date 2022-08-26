@@ -17,6 +17,18 @@ pub struct Program {
 }
 
 impl Program {
+    pub fn default_uv(gl: Gl) -> Result<Program, String> {
+        let vert = Shader::from_vert_code(
+            Gl::clone(&gl),
+            &CString::new(include_str!("../resources/uv.vert")).unwrap(),
+        )?;
+        let frag = Shader::from_frag_code(
+            Gl::clone(&gl),
+            &CString::new(include_str!("../resources/uv.frag")).unwrap(),
+        )?;
+        Program::from_shaders(gl, &[vert, frag])
+    }
+
     /// 頂点シェーダーとフラグメントシェーダーをリンクしてプログラムを作る
     ///
     /// # Returns
