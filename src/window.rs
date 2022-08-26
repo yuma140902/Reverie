@@ -36,7 +36,7 @@ impl EventLoop {
                 }
                 winit::event::Event::MainEventsCleared => (false, false),
                 winit::event::Event::RedrawRequested(_) => (false, false),
-                _ => (true, true),
+                _ => (false, true),
             };
 
             if push_event {
