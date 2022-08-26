@@ -1,11 +1,11 @@
 use std::time::{Duration, Instant};
 
 use re::gl;
+use re::shader::Program;
 use re::shader::UniformVariables;
-use re::vao::VaoBuffer;
-use re::vao::VaoConfigBuilder;
-use re::Program;
 use re::ReverieEngine;
+use re::VaoBuffer;
+use re::VaoConfigBuilder;
 use reverie_engine as re;
 
 pub fn main() {

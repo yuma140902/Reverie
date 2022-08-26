@@ -2,14 +2,22 @@ mod context;
 mod engine;
 pub mod gl;
 pub mod gui;
-pub mod interpolation;
+mod interpolation;
 pub mod shader;
-pub mod texture;
+mod texture;
 pub mod types;
-pub mod vao;
+mod vao;
 mod window;
 pub use context::{Context, ContextBackend};
 pub use engine::ReverieEngine;
+pub use gui::VaoBuilder2DGui;
 pub use interpolation::Interpolation;
-pub use shader::{Program, Shader};
+pub use texture::{
+    image_manager::{ImageLoadInfo, ImageManager},
+    texture_atlas::{TextureAtlasPos, TextureUV},
+};
+pub use vao::{
+    vao_buffer::VaoBuffer, vao_buffer::VERTEX_SIZE, vao_builder::CuboidTextures,
+    vao_builder::VaoBuilder3DGeometry, vao_config::VaoConfig, vao_config::VaoConfigBuilder, Vao,
+};
 pub use window::{EventLoop, Window};

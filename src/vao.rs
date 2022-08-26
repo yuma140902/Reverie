@@ -8,12 +8,11 @@ use crate::gl::types::{GLenum, GLfloat, GLint, GLsizei, GLsizeiptr};
 use crate::gl::Gl;
 use crate::shader::UniformVariables;
 
+use self::vao_config::VaoConfig;
+
 pub mod vao_buffer;
-pub use vao_buffer::VaoBuffer;
 pub mod vao_builder;
-pub use vao_builder::{CuboidTextures, VaoBuilder3DGeometry};
-mod vao_config;
-pub use vao_config::{VaoConfig, VaoConfigBuilder};
+pub mod vao_config;
 
 /// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体
 pub struct Vao<'a> {
@@ -25,7 +24,7 @@ pub struct Vao<'a> {
 }
 
 impl<'a> Vao<'a> {
-    /// 代わりに[`VaoBuffer`]を使うことを推奨
+    /// 代わりに[`self::vao_buffer::VaoBuffer`]を使うことを推奨
     pub fn new(
         gl: Gl,
         size: GLsizeiptr,

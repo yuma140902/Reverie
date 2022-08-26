@@ -1,9 +1,6 @@
 //! 補間に関するモジュール
 
-use self::types::*;
-
-mod types;
-pub use types::{Time, TimeSpan};
+use crate::types::interpolation::*;
 
 /// 補間をする構造体
 ///

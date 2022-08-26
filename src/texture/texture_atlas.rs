@@ -2,7 +2,7 @@
 
 use std::marker::PhantomData;
 
-use crate::gui::layout::Rect;
+use crate::gui::Rect;
 use crate::types::*;
 
 /// テクスチャアトラス内での、始点と終点のUV座標を表す

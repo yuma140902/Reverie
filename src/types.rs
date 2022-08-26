@@ -9,3 +9,9 @@ pub struct Const<const C: u32>;
 
 /// 定数ジェネリクスの値が定まっていないことを表す型
 pub struct Dynamic;
+
+pub mod interpolation {
+    pub type Time = i64;
+    pub type TimeSpan = u32;
+    pub(crate) type NormalizedTime = f32;
+}
