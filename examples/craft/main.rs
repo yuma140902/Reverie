@@ -23,18 +23,17 @@ pub fn main() {
 
     while !window.process_event() {
         let elapsed = start.elapsed();
-        if elapsed > Duration::from_millis(16) {
-            println!(
-                "{} FPS",
-                Duration::from_secs(1).as_nanos() as f64 / elapsed.as_nanos() as f64
-            );
-            vao_empty.draw_triangles(&UniformVariables::new());
-            unsafe {
-                gl.ClearColor(1.0, 0.0, 1.0, 1.0);
-                gl.Clear(gl::COLOR_BUFFER_BIT);
-            }
-            context.swap_buffers();
-            start = Instant::now();
+        println!(
+            "{} FPS",
+            Duration::from_secs(1).as_nanos() as f64 / elapsed.as_nanos() as f64
+        );
+        vao_empty.draw_triangles(&UniformVariables::new());
+        unsafe {
+            gl.ClearColor(1.0, 0.0, 1.0, 1.0);
+            gl.Clear(gl::COLOR_BUFFER_BIT);
         }
+        context.swap_buffers();
+        start = Instant::now();
+        std::thread::sleep(std::time::Duration::from_millis(1));
     }
 }
