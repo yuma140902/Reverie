@@ -1,5 +1,7 @@
 use std::ffi::c_void;
 
+use glutin::ContextBuilder;
+
 use crate::{gl::Gl, Window};
 
 pub trait ContextBackend {
@@ -33,6 +35,33 @@ impl ContextBackend for raw_gl_context::GlContext {
 
     fn swap_buffers(&self) {
         self.swap_buffers()
+    }
+}
+
+impl ContextBackend for glutin::RawContext<glutin::PossiblyCurrent> {
+    fn new(window: &Window) -> Self {
+        use glutin::platform::windows::RawContextExt;
+        use winit::platform::windows::WindowExtWindows;
+        let hwnd = window.window.hwnd();
+        let raw_context = unsafe { glutin::ContextBuilder::new().build_raw_context(hwnd) }.unwrap();
+        let raw_context = unsafe { raw_context.make_current() }.unwrap();
+        raw_context
+    }
+
+    fn get_proc_address(&self, symbol: &str) -> *const c_void {
+        self.get_proc_address(symbol)
+    }
+
+    fn make_current(&self) {
+        // todo
+    }
+
+    fn make_not_current(&self) {
+        // todo
+    }
+
+    fn swap_buffers(&self) {
+        self.swap_buffers().unwrap();
     }
 }
 
