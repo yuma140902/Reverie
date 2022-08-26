@@ -9,12 +9,16 @@ repository = "https://github.com/yuma140902/Reverie"
 categories = ["game-engines"]
 edition = "2018"
 build = "src/build.rs"
+resolver = "2"
+
+[package.metadata.docs.rs]
+all-features = true
+default-target = "x86_64-pc-windows-msvc"
 
 [features]
-default = ["raw_gl_context", "winit", "glutin"]
-raw_gl_context = ["dep:raw-gl-context"]
-glutin = ["dep:glutin"]
-winit = ["dep:winit"]
+default = ["glutin"]
+raw_gl_context = ["dep:raw-gl-context", "winit"]
+glutin = ["dep:glutin", "winit"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -28,3 +32,7 @@ glutin = { version = "0.29.1", optional = true }
 
 [build-dependencies]
 gl_generator = "0.14.0"
+
+[[example]]
+name = "craft"
+required-features = ["glutin"]

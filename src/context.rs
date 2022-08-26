@@ -1,7 +1,5 @@
 use std::ffi::c_void;
 
-use glutin::ContextBuilder;
-
 use crate::{gl::Gl, Window};
 
 pub trait ContextBackend {
@@ -38,7 +36,9 @@ impl ContextBackend for raw_gl_context::GlContext {
     }
 }
 
+#[cfg(feature = "glutin")]
 impl ContextBackend for glutin::RawContext<glutin::PossiblyCurrent> {
+    #[cfg(target_os = "windows")]
     fn new(window: &Window) -> Self {
         use glutin::platform::windows::RawContextExt;
         use winit::platform::windows::WindowExtWindows;
@@ -46,6 +46,11 @@ impl ContextBackend for glutin::RawContext<glutin::PossiblyCurrent> {
         let raw_context = unsafe { glutin::ContextBuilder::new().build_raw_context(hwnd) }.unwrap();
         let raw_context = unsafe { raw_context.make_current() }.unwrap();
         raw_context
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    fn new(window: &Window) -> Self {
+        panic!("glutin rawcontext is not implemented for this platform");
     }
 
     fn get_proc_address(&self, symbol: &str) -> *const c_void {
