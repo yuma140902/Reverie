@@ -7,7 +7,8 @@ A toy game engine
 ## Examples
 
 - <https://github.com/yuma140902/RustyCraft>
-- `cargo run --example craft`
+- `cargo run --example window`
+- `cargo run --example raw`
 
 ## Links
 

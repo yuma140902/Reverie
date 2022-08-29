@@ -1,11 +1,7 @@
 use std::time::{Duration, Instant};
 
 use re::gl;
-use re::shader::Program;
-use re::shader::UniformVariables;
 use re::ReverieEngine;
-use re::VaoBuffer;
-use re::VaoConfigBuilder;
 use reverie_engine as re;
 
 pub fn main() {
@@ -15,10 +11,6 @@ pub fn main() {
     context.make_current();
     let gl = context.gl();
 
-    let program = Program::default_uv(context.gl()).unwrap();
-    let config = VaoConfigBuilder::new(&program).build();
-    let vao_empty = VaoBuffer::new().build(&gl, &config);
-
     let mut start = Instant::now();
 
     while !window.process_event() {
@@ -27,11 +19,14 @@ pub fn main() {
             "{} FPS",
             Duration::from_secs(1).as_nanos() as f64 / elapsed.as_nanos() as f64
         );
-        vao_empty.draw_triangles(&UniformVariables::new());
         unsafe {
+            gl.Viewport(0, 0, 800, 600); // TODO: window size (#26)
             gl.ClearColor(1.0, 0.0, 1.0, 1.0);
             gl.Clear(gl::COLOR_BUFFER_BIT);
         }
+
+        // rendering code here
+
         context.swap_buffers();
         start = Instant::now();
         std::thread::sleep(std::time::Duration::from_millis(1));
