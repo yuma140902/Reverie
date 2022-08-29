@@ -36,3 +36,7 @@ gl_generator = "0.14.0"
 [[example]]
 name = "craft"
 required-features = ["glutin"]
+
+[[example]]
+name = "raw"
+required-features = ["glutin"]
