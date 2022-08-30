@@ -1,4 +1,4 @@
-use crate::window::Window;
+use crate::window::WindowBuilder;
 
 pub struct ReverieEngine {}
 
@@ -7,7 +7,7 @@ impl ReverieEngine {
         Self {}
     }
 
-    pub fn create_window(&self) -> Window {
-        Window::new()
+    pub fn window_builder(&self) -> WindowBuilder {
+        WindowBuilder::new()
     }
 }

@@ -60,9 +60,11 @@ pub struct Window {
 
 impl Window {
     #[cfg(feature = "winit")]
-    pub(crate) fn new() -> Self {
+    pub(crate) fn new(title: Option<String>, width: u32, height: u32) -> Self {
         let event_loop = EventLoop::new();
         let window = winit::window::WindowBuilder::new()
+            .with_title(title.unwrap_or_else(|| "ReverieEngine".to_owned()))
+            .with_inner_size(winit::dpi::LogicalSize::new(width as f32, height as f32))
             .build(&event_loop.event_loop)
             .unwrap();
 
@@ -91,5 +93,47 @@ impl Window {
     #[cfg(feature = "winit")]
     pub fn process_event(&mut self) -> bool {
         self.event_loop.process_event()
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn get_winit_window(&self) -> &winit::window::Window {
+        &self.window
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn get_winit_window_mut(&mut self) -> &mut winit::window::Window {
+        &mut self.window
+    }
+}
+
+pub struct WindowBuilder {
+    title: Option<String>,
+    width: u32,
+    height: u32,
+}
+
+impl WindowBuilder {
+    pub(crate) fn new() -> Self {
+        Self {
+            title: None,
+            width: 800,
+            height: 600,
+        }
+    }
+
+    pub fn title(mut self, title: impl Into<String>) -> Self {
+        self.title = Some(title.into());
+        self
+    }
+
+    pub fn size(mut self, width: u32, height: u32) -> Self {
+        self.width = width;
+        self.height = height;
+        self
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn build(self) -> Window {
+        Window::new(self.title, self.width, self.height)
     }
 }

@@ -24,8 +24,11 @@ type Matrix4 = nalgebra::Matrix4<f32>;
 pub type TextureUV = re::TextureUV<Const<64>, Const<64>, Const<256>, Const<256>>;
 
 fn main() {
+    let width = 900;
+    let height = 480;
+
     let engine = ReverieEngine::new();
-    let mut window = engine.create_window();
+    let mut window = engine.window_builder().title("Craft").size(width, height).build();
     let context = window.create_context_glutin();
     let gl = context.gl();
 
@@ -99,9 +102,6 @@ fn main() {
     let vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
 
     let camera = Camera::new();
-
-    let width = 800;
-    let height = 600;
 
     while !window.process_event() {
         unsafe {
