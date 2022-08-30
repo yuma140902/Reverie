@@ -40,3 +40,8 @@ required-features = ["glutin"]
 [[example]]
 name = "raw"
 required-features = ["glutin"]
+
+[workspace]
+members = [
+  "examples/craft"
+]
