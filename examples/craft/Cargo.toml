@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-reverie-engine = { version = "0.0.5", path = "../.." }
+reverie-engine = { version = "0.0.5", path = "../../reverie" }
 nalgebra = "0.29.0"
 nalgebra-glm = "0.15.0"
 c_str_macro = "1.0.3"
