@@ -1,47 +1,8 @@
-[package]
-name = "reverie-engine"
-version = "0.0.5"
-license = "MPL-2.0"
-authors  = ["yuma140902 <yuma140902@gmail.com>"]
-description = "A toy game engine"
-readme = "README.md"
-repository = "https://github.com/yuma140902/Reverie"
-categories = ["game-engines"]
-edition = "2018"
-build = "src/build.rs"
-resolver = "2"
-
-[package.metadata.docs.rs]
-all-features = true
-default-target = "x86_64-pc-windows-msvc"
-
-[features]
-default = ["glutin"]
-raw_gl_context = ["dep:raw-gl-context", "winit"]
-glutin = ["dep:glutin", "winit"]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-image = "0.23.14"
-nalgebra = "0.29.0"
-c_str_macro = "1.0.3"
-raw-gl-context = { version = "0.1.2", optional = true }
-winit = { version = "0.27.2", optional = true }
-glutin = { version = "0.29.1", optional = true }
-
-[build-dependencies]
-gl_generator = "0.14.0"
-
-[[example]]
-name = "window"
-required-features = ["glutin"]
-
-[[example]]
-name = "raw"
-required-features = ["glutin"]
-
 [workspace]
+
 members = [
-  "examples/craft"
+  "reverie",
+  "examples/*"
 ]
+
+resolver = "2"

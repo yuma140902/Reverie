@@ -7,8 +7,8 @@ A toy game engine
 ## Examples
 
 - `cargo run -p example-craft`
-- `cargo run --example window`
-- `cargo run --example raw`
+- `cargo run -p example-window`
+- `cargo run -p example-raw`
 
 ## Links
 
