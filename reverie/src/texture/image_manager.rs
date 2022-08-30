@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::os::raw::c_void;
 use std::path::Path;
 
-use image::{DynamicImage, GenericImageView, ImageError};
+use image::{DynamicImage, ImageError};
 
 use crate::gl;
 use crate::gl::Gl;
@@ -32,16 +32,17 @@ impl ImageManager {
     ) -> Result<ImageLoadInfo<'a>, ImageError> {
         let mut image = image;
         let format = match image {
-            image::DynamicImage::ImageLuma8(_) => gl::RED,
-            image::DynamicImage::ImageLumaA8(_) => gl::RG,
-            image::DynamicImage::ImageRgb8(_) => gl::RGB,
-            image::DynamicImage::ImageRgba8(_) => gl::RGBA,
-            image::DynamicImage::ImageBgr8(_) => gl::RGB,
-            image::DynamicImage::ImageBgra8(_) => gl::RGBA,
-            image::DynamicImage::ImageLuma16(_) => todo!(),
-            image::DynamicImage::ImageLumaA16(_) => todo!(),
-            image::DynamicImage::ImageRgb16(_) => todo!(),
-            image::DynamicImage::ImageRgba16(_) => todo!(),
+            DynamicImage::ImageLuma8(_) => gl::RED,
+            DynamicImage::ImageLumaA8(_) => gl::RG,
+            DynamicImage::ImageRgb8(_) => gl::RGB,
+            DynamicImage::ImageRgba8(_) => gl::RGBA,
+            DynamicImage::ImageLuma16(_) => todo!(),
+            DynamicImage::ImageLumaA16(_) => todo!(),
+            DynamicImage::ImageRgb16(_) => todo!(),
+            DynamicImage::ImageRgba16(_) => todo!(),
+            DynamicImage::ImageRgb32F(_) => todo!(),
+            DynamicImage::ImageRgba32F(_) => todo!(),
+            _ => todo!(),
         };
         if vflip {
             image = image.flipv();

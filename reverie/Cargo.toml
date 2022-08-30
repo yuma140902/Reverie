@@ -22,8 +22,8 @@ glutin = ["dep:glutin", "winit"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-image = "0.23.14"
-nalgebra = "0.29.0"
+image = "0.24.3"
+nalgebra = "0.31.1"
 c_str_macro = "1.0.3"
 raw-gl-context = { version = "0.1.2", optional = true }
 winit = { version = "0.27.2", optional = true }
