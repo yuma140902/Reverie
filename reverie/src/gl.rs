@@ -4,6 +4,8 @@
 //!
 //! 機能拡張は無し
 
+#![allow(clippy::all)]
+
 mod bindings {
     include!(concat!(env!("OUT_DIR"), "/gl_bindings.rs"));
 }
