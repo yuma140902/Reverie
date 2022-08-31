@@ -47,7 +47,7 @@ impl EventLoop {
                 *control_flow = winit::event_loop::ControlFlow::Exit;
             }
         });
-        return exit;
+        exit
     }
 }
 
@@ -87,7 +87,7 @@ impl Window {
     }
 
     pub fn create_context_with_backend<C: ContextBackend>(&self) -> Context<C> {
-        Context::new(&self)
+        Context::new(self)
     }
 
     #[cfg(feature = "winit")]
