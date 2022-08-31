@@ -6,6 +6,7 @@ use crate::gui::Rect;
 use crate::types::*;
 
 /// テクスチャアトラス内での、始点と終点のUV座標を表す
+#[derive(Debug)]
 pub struct TextureUV<Width, Height, AtlasWidth, AtlasHeight> {
     pub begin_u: f32,
     pub begin_v: f32,
@@ -78,6 +79,7 @@ impl TextureUV<Dynamic, Dynamic, Dynamic, Dynamic> {
 }
 
 /// テクスチャアトラス内で何行目何列目かを表す
+#[derive(Debug)]
 pub struct TextureAtlasPos {
     pub row: u32,
     pub column: u32,

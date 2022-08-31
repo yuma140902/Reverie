@@ -4,7 +4,7 @@ use crate::texture::image_manager::ImageLoadInfo;
 use crate::types::*;
 
 /// [`crate::vao::Vao`]の設定
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct VaoConfig<'a> {
     /// シェーダープログラム
     pub(crate) program: &'a Program,
@@ -23,6 +23,7 @@ pub struct VaoConfig<'a> {
 }
 
 /// [`VaoConfig`]のビルダー
+#[derive(Debug)]
 pub struct VaoConfigBuilder<'a> {
     program: &'a Program,
     depth_test: bool,

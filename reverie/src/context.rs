@@ -44,7 +44,7 @@ impl ContextBackend for glutin::RawContext<glutin::PossiblyCurrent> {
         use winit::platform::windows::WindowExtWindows;
         let hwnd = window.window.hwnd();
         let raw_context = unsafe { glutin::ContextBuilder::new().build_raw_context(hwnd) }.unwrap();
-        
+
         unsafe { raw_context.make_current() }.unwrap()
     }
 
@@ -70,6 +70,7 @@ impl ContextBackend for glutin::RawContext<glutin::PossiblyCurrent> {
     }
 }
 
+#[derive(Debug)]
 pub struct Context<C: ContextBackend> {
     backend: C,
     gl: Gl,
