@@ -65,5 +65,5 @@ fn add_block(
     textures: &CuboidTextures<'_, TextureUV>,
 ) {
     let begin = Point3::new(x, y, z).cast::<f32>();
-    builder.add_cuboid(&begin, &(begin + BLOCK_SIZE), &textures);
+    builder.add_cuboid(&begin, &(begin + BLOCK_SIZE), textures);
 }

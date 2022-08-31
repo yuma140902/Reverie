@@ -17,11 +17,11 @@ pub struct ImageManager {
 
 impl ImageManager {
     pub fn new(gl: Gl) -> ImageManager {
-        let image_manager = ImageManager {
+        
+        ImageManager {
             gl,
             image_map: HashMap::new(),
-        };
-        image_manager
+        }
     }
 
     pub fn load_image<'a>(

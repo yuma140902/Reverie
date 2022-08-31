@@ -44,8 +44,8 @@ impl ContextBackend for glutin::RawContext<glutin::PossiblyCurrent> {
         use winit::platform::windows::WindowExtWindows;
         let hwnd = window.window.hwnd();
         let raw_context = unsafe { glutin::ContextBuilder::new().build_raw_context(hwnd) }.unwrap();
-        let raw_context = unsafe { raw_context.make_current() }.unwrap();
-        raw_context
+        
+        unsafe { raw_context.make_current() }.unwrap()
     }
 
     #[cfg(not(target_os = "windows"))]
