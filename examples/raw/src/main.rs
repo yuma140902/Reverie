@@ -76,7 +76,7 @@ pub fn main() {
             gl::FLOAT,
             gl::FALSE,
             3 * size_of::<f32>() as i32,
-            0 as *const c_void,
+            std::ptr::null::<c_void>(),
         );
         gl.EnableVertexAttribArray(0);
         println!("VertexAttribPointer setup");

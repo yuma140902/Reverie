@@ -21,6 +21,12 @@ pub struct VaoBuffer {
     vertex_num: i32,
 }
 
+impl Default for VaoBuffer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl VaoBuffer {
     /// 空の[`VaoBuffer`]を作る
     pub fn new() -> Self {

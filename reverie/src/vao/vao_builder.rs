@@ -44,9 +44,9 @@ impl<Width, Height, AtlasWidth, AtlasHeight>
         self.add_face(
             &Point3::new(begin.x, end.y, begin.z),
             &Point3::new(begin.x, end.y, end.z),
-            &end,
+            end,
             &Point3::new(end.x, end.y, begin.z),
-            &textures.top,
+            textures.top,
         );
 
         // 下面
@@ -54,8 +54,8 @@ impl<Width, Height, AtlasWidth, AtlasHeight>
             &Point3::new(end.x, begin.y, begin.z),
             &Point3::new(end.x, begin.y, end.z),
             &Point3::new(begin.x, begin.y, end.z),
-            &begin,
-            &textures.bottom,
+            begin,
+            textures.bottom,
         );
 
         // 南
@@ -64,7 +64,7 @@ impl<Width, Height, AtlasWidth, AtlasHeight>
             &Point3::new(begin.x, begin.y, begin.z),
             &Point3::new(begin.x, begin.y, end.z),
             &Point3::new(begin.x, end.y, end.z),
-            &textures.south,
+            textures.south,
         );
 
         // 北
@@ -73,7 +73,7 @@ impl<Width, Height, AtlasWidth, AtlasHeight>
             &Point3::new(end.x, begin.y, end.z),
             &Point3::new(end.x, begin.y, begin.z),
             &Point3::new(end.x, end.y, begin.z),
-            &textures.north,
+            textures.north,
         );
 
         // 西
@@ -82,7 +82,7 @@ impl<Width, Height, AtlasWidth, AtlasHeight>
             &Point3::new(end.x, begin.y, begin.z),
             &Point3::new(begin.x, begin.y, begin.z),
             &Point3::new(begin.x, end.y, begin.z),
-            &textures.west,
+            textures.west,
         );
 
         // 東
@@ -91,7 +91,7 @@ impl<Width, Height, AtlasWidth, AtlasHeight>
             &Point3::new(begin.x, begin.y, end.z),
             &Point3::new(end.x, begin.y, end.z),
             &Point3::new(end.x, end.y, end.z),
-            &textures.east,
+            textures.east,
         );
     }
 
