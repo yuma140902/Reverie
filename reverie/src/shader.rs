@@ -11,6 +11,7 @@ use std::io::Read;
 use std::str;
 
 /// プログラム
+#[derive(Debug)]
 pub struct Program {
     gl: Gl,
     id: GLuint,
@@ -158,6 +159,7 @@ impl Drop for Program {
 }
 
 /// 頂点シェーダーまたはフラグメントシェーダー
+#[derive(Debug)]
 pub struct Shader {
     gl: Gl,
     id: GLuint,
@@ -253,6 +255,7 @@ fn create_whitespace_cstring_with_len(len: usize) -> CString {
 }
 
 /// ユニフォーム変数
+#[derive(Debug)]
 pub enum Uniform<'a> {
     Bool(bool),
     Int(i32),

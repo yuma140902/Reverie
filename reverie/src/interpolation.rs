@@ -5,6 +5,7 @@ use crate::types::interpolation::*;
 /// 補間をする構造体
 ///
 /// `begin`から`end`まで、`t_total`の時間をかけて値を変化させる。
+#[derive(Debug)]
 pub struct Interpolation<T> {
     begin: T,
     end: T,

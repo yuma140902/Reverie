@@ -12,6 +12,7 @@ mod bindings {
 
 pub use bindings::*;
 
+use std::fmt::Debug;
 use std::rc::Rc;
 #[derive(Clone)]
 /// 実体は[`std::rc::Rc`]なのでいくらでもクローンして良い
@@ -27,6 +28,12 @@ impl Gl {
         Gl {
             inner: Rc::new(bindings::Gl::load_with(loadfn)),
         }
+    }
+}
+
+impl Debug for Gl {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("<OpenGL Bindings>")
     }
 }
 

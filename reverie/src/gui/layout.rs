@@ -14,7 +14,7 @@ where
 }
 
 /// 長方形の領域のうち、レイアウトの基準とする部分
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum Origin {
     TopLeft,
     Top,
@@ -47,6 +47,7 @@ impl Origin {
     }
 }
 
+#[derive(Debug)]
 pub enum Position<T> {
     Positive(T),
     Center(T),

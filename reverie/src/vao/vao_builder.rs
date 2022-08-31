@@ -169,6 +169,7 @@ impl<Width, Height, AtlasWidth, AtlasHeight>
 /// 各面のテクスチャは同じテクスチャアトラス上にある必要がある
 ///
 /// * `T` - テクスチャの型
+#[derive(Debug)]
 pub struct CuboidTextures<'a, T> {
     pub top: &'a T,
     pub bottom: &'a T,

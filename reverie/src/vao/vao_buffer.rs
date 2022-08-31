@@ -16,6 +16,7 @@ use crate::gl::{types::GLfloat, Gl};
 pub const VERTEX_SIZE: usize = 8;
 
 /// 頂点の情報を動的に追加・削除するためのバッファ
+#[derive(Debug)]
 pub struct VaoBuffer {
     buffer: Vec<f32>,
     vertex_num: i32,

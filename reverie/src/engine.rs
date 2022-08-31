@@ -1,5 +1,6 @@
 use crate::window::WindowBuilder;
 
+#[derive(Debug)]
 pub struct ReverieEngine {}
 
 impl ReverieEngine {

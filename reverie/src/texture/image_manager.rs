@@ -10,6 +10,7 @@ use crate::gl;
 use crate::gl::Gl;
 
 /// 画像ファイルを読み込み、管理する
+#[derive(Debug)]
 pub struct ImageManager {
     gl: Gl,
     image_map: HashMap<String, u32>,
@@ -17,7 +18,6 @@ pub struct ImageManager {
 
 impl ImageManager {
     pub fn new(gl: Gl) -> ImageManager {
-        
         ImageManager {
             gl,
             image_map: HashMap::new(),
@@ -121,6 +121,7 @@ impl ImageManager {
 }
 
 /// 画像読み込みの結果
+#[derive(Debug)]
 pub struct ImageLoadInfo<'a> {
     /// OpenGLの関数に渡すためのテクスチャID
     pub gl_id: u32,

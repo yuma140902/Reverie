@@ -6,6 +6,7 @@ use std::{
 
 use crate::{Context, ContextBackend};
 
+#[derive(Debug)]
 pub struct EventLoop {
     #[cfg(feature = "winit")]
     event_loop: winit::event_loop::EventLoop<()>,
@@ -51,6 +52,7 @@ impl EventLoop {
     }
 }
 
+#[derive(Debug)]
 pub struct Window {
     #[cfg(feature = "winit")]
     event_loop: EventLoop,

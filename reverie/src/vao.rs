@@ -15,6 +15,7 @@ pub mod vao_builder;
 pub mod vao_config;
 
 /// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体
+#[derive(Debug)]
 pub struct Vao<'a> {
     gl: Gl,
     vao: u32,
