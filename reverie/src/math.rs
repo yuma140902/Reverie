@@ -17,6 +17,34 @@ derive_into_f64!(Rad);
 derive_approx!(Deg);
 derive_approx!(Rad);
 
+impl Deg {
+    pub fn to_rad(&self) -> Rad {
+        Rad(self.0 * std::f64::consts::PI / 180.0)
+    }
+
+    pub fn sin(&self) -> f64 {
+        self.to_rad().0.sin()
+    }
+
+    pub fn cos(&self) -> f64 {
+        self.to_rad().0.cos()
+    }
+}
+
+impl Rad {
+    pub fn to_deg(&self) -> Deg {
+        Deg(self.0 * 180.0 / std::f64::consts::PI)
+    }
+
+    pub fn sin(&self) -> f64 {
+        self.0.sin()
+    }
+
+    pub fn cos(&self) -> f64 {
+        self.0.cos()
+    }
+}
+
 #[cfg(test)]
 mod test {
     use approx::assert_relative_eq;
@@ -67,6 +95,24 @@ mod test {
     }
 
     #[test]
+    fn deg_to_rad() {
+        assert_relative_eq!(Deg(0.0).to_rad(), Rad(0.0));
+        assert_relative_eq!(Deg(90.0).to_rad(), Rad(std::f64::consts::PI / 2.0));
+    }
+
+    #[test]
+    fn deg_sin() {
+        assert_relative_eq!(Deg(0.0).sin(), 0.0);
+        assert_relative_eq!(Deg(90.0).sin(), 1.0);
+    }
+
+    #[test]
+    fn deg_cos() {
+        assert_relative_eq!(Deg(0.0).cos(), 1.0);
+        assert_relative_eq!(Deg(90.0).cos(), 0.0);
+    }
+
+    #[test]
     fn rad_op_add() {
         assert_relative_eq!(Rad(30.0) + Rad(40.0), Rad(70.0));
         assert_relative_eq!(Rad(70.0) + Rad(40.0), Rad(110.0));
@@ -107,5 +153,23 @@ mod test {
     #[test]
     fn rad_op_div() {
         assert_relative_eq!(Rad(10.0) / 2.0, Rad(5.0));
+    }
+
+    #[test]
+    fn rad_to_deg() {
+        assert_relative_eq!(Rad(0.0).to_deg(), Deg(0.0));
+        assert_relative_eq!(Rad(std::f64::consts::PI / 2.0).to_deg(), Deg(90.0));
+    }
+
+    #[test]
+    fn rad_sin() {
+        assert_relative_eq!(Rad(0.0).sin(), 0.0);
+        assert_relative_eq!(Rad(std::f64::consts::PI / 2.0).sin(), 1.0);
+    }
+
+    #[test]
+    fn rad_cos() {
+        assert_relative_eq!(Rad(0.0).cos(), 1.0);
+        assert_relative_eq!(Rad(std::f64::consts::PI / 2.0).cos(), 0.0);
     }
 }
