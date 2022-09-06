@@ -3,6 +3,7 @@ mod engine;
 pub mod gl;
 pub mod gui;
 mod interpolation;
+pub mod math;
 pub mod shader;
 mod texture;
 pub mod types;
