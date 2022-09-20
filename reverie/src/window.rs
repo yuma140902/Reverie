@@ -2,9 +2,11 @@ use crate::{Context, ContextBackend};
 
 mod builder;
 mod event_loop;
+pub mod input;
 
 pub use builder::WindowBuilder;
 pub use event_loop::EventLoop;
+use input::Input;
 
 #[derive(Debug)]
 pub struct Window {
@@ -12,6 +14,8 @@ pub struct Window {
     event_loop: EventLoop,
     #[cfg(feature = "winit")]
     pub(crate) window: winit::window::Window,
+    #[cfg(feature = "winit")]
+    input: Input,
 }
 
 impl Window {
@@ -23,8 +27,13 @@ impl Window {
             .with_inner_size(winit::dpi::LogicalSize::new(width as f32, height as f32))
             .build(&event_loop.event_loop)
             .unwrap();
+        let input = Input::new();
 
-        Self { event_loop, window }
+        Self {
+            event_loop,
+            window,
+            input,
+        }
     }
 
     #[cfg(not(feature = "winit"))]
@@ -48,7 +57,7 @@ impl Window {
 
     #[cfg(feature = "winit")]
     pub fn process_event(&mut self) -> bool {
-        self.event_loop.process_event()
+        self.event_loop.process_event(&mut self.input)
     }
 
     #[cfg(feature = "winit")]
@@ -59,5 +68,20 @@ impl Window {
     #[cfg(feature = "winit")]
     pub fn get_winit_window_mut(&mut self) -> &mut winit::window::Window {
         &mut self.window
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn keydown(&mut self, keycode: &winit::event::VirtualKeyCode) -> bool {
+        self.input.get_keydown(keycode)
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn keyup(&mut self, keycode: &winit::event::VirtualKeyCode) -> bool {
+        self.input.get_keyup(keycode)
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn keypressed(&mut self, keycode: &winit::event::VirtualKeyCode) -> bool {
+        self.input.get_key_pressed(keycode)
     }
 }
