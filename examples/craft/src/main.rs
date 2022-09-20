@@ -111,6 +111,16 @@ fn main() {
             gl.Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
         }
 
+        if window.keydown(&winit::event::VirtualKeyCode::Space) {
+            println!("keydown!!");
+        }
+        if window.keyup(&winit::event::VirtualKeyCode::Space) {
+            println!("keyup!!");
+        }
+        if window.keypressed(&winit::event::VirtualKeyCode::Space) {
+            println!("keypressed!!");
+        }
+
         let model_matrix =
             nalgebra_glm::scale(&Matrix4::identity(), &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32));
         let view_matrix = camera.view_matrix();
