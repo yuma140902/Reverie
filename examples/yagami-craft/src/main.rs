@@ -1,5 +1,6 @@
 use c_str_macro::c_str;
 use re::gl;
+use re::math::Rad;
 use re::shader::Program;
 use re::shader::Shader;
 use re::shader::UniformVariables;
@@ -111,39 +112,24 @@ fn main() {
             gl.Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
         }
 
-        {
-            if window.keydown(&winit::event::VirtualKeyCode::Space) {
-                println!("keydown!!");
-            }
-            if window.keyup(&winit::event::VirtualKeyCode::Space) {
-                println!("keyup!!");
-            }
-            if window.keypressed(&winit::event::VirtualKeyCode::Space) {
-                println!("keypressed!!");
-            }
-            {
-                let (dx, dy) = window.cursor_delta();
-                if dx != 0 || dy != 0 {
-                    println!("delta ({}, {})", dx, dy);
-                }
-            }
-            if window.mouse_down(&winit::event::MouseButton::Left) {
-                println!("mouse down");
-            }
-            if window.mouse_up(&winit::event::MouseButton::Left) {
-                println!("mouse up");
-            }
-            if window.mouse_pressed(&winit::event::MouseButton::Left) {
-                println!("mouse pressed");
-            }
+        if window.keypressed(&winit::event::VirtualKeyCode::Escape) {
+            break;
         }
 
-        let (front, _right, _up) = camera::calc_front_right_up(camera.pitch_rad, camera.yaw_rad);
+        let (front, _right, _up) = camera::calc_front_right_up(camera.yaw, camera.pitch);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
-            camera.pos += front * 0.01;
+            camera.pos += front * 0.1;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::S) {
-            camera.pos -= front * 0.01;
+            camera.pos -= front * 0.1;
+        }
+
+        let (dx, dy) = window.cursor_delta();
+        if dy != 0 {
+            camera.pitch += Rad(-dy as f32 * 0.01);
+        }
+        if dx != 0 {
+            camera.yaw += Rad(-dx as f32 * 0.01);
         }
 
         let model_matrix =
