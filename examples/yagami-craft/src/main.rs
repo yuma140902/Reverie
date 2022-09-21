@@ -116,20 +116,22 @@ fn main() {
             break;
         }
 
+        const MOVE_SPEED: f32 = 0.1;
         let (front, _right, _up) = camera::calc_front_right_up(camera.yaw, camera.pitch);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
-            camera.pos += front * 0.1;
+            camera.pos += front * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::S) {
-            camera.pos -= front * 0.1;
+            camera.pos -= front * MOVE_SPEED;
         }
 
+        const ROTATION_SPEED: f32 = 0.01;
         let (dx, dy) = window.cursor_delta();
         if dy != 0 {
-            camera.pitch += Rad(-dy as f32 * 0.01);
+            camera.pitch += Rad(-dy as f32 * ROTATION_SPEED);
         }
         if dx != 0 {
-            camera.yaw += Rad(-dx as f32 * 0.01);
+            camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
         }
 
         let model_matrix =
