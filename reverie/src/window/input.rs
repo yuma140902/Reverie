@@ -3,20 +3,20 @@ use std::collections::HashSet;
 #[cfg(feature = "winit")]
 pub(crate) fn mouse_button_index(mouse_button: &winit::event::MouseButton) -> usize {
     match mouse_button {
-        glutin::event::MouseButton::Left => 0,
-        glutin::event::MouseButton::Right => 1,
-        glutin::event::MouseButton::Middle => 2,
-        glutin::event::MouseButton::Other(id) => *id as usize * 2,
+        winit::event::MouseButton::Left => 0,
+        winit::event::MouseButton::Right => 1,
+        winit::event::MouseButton::Middle => 2,
+        winit::event::MouseButton::Other(id) => *id as usize * 2,
     }
 }
 
 #[cfg(feature = "winit")]
 pub(crate) fn mouse_button_index_3(mouse_button: &winit::event::MouseButton) -> Option<usize> {
     match mouse_button {
-        glutin::event::MouseButton::Left
-        | glutin::event::MouseButton::Right
-        | glutin::event::MouseButton::Middle => Some(mouse_button_index(mouse_button)),
-        glutin::event::MouseButton::Other(_) => None,
+        winit::event::MouseButton::Left
+        | winit::event::MouseButton::Right
+        | winit::event::MouseButton::Middle => Some(mouse_button_index(mouse_button)),
+        winit::event::MouseButton::Other(_) => None,
     }
 }
 
