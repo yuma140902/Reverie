@@ -77,9 +77,21 @@ impl EventLoop {
             if !continue_polling {
                 #[cfg(windows)]
                 {
+                    let winsize = winit_window.inner_size();
+                    let winpos = winit_window.inner_position().unwrap();
                     if let Ok(cursor) = crate::platform::get_cursor_pos() {
-                        input.update_cursor_position(cursor);
+                        input.update_cursor_position(
+                            cursor,
+                            winpos.x,
+                            winpos.y,
+                            winsize.width as i32,
+                            winsize.height as i32,
+                        );
                     }
+                    crate::platform::set_cursor_pos(
+                        winpos.x + winsize.width as i32 / 2,
+                        winpos.y + winsize.height as i32 / 2,
+                    );
                 }
 
                 *control_flow = winit::event_loop::ControlFlow::Exit;

@@ -33,8 +33,8 @@ pub(crate) struct Input {
     unhandled_keyups: HashSet<winit::event::VirtualKeyCode>,
     cursor_x: i32,
     cursor_y: i32,
-    prev_cursor_x: i32,
-    prev_cursor_y: i32,
+    cursor_dx: i32,
+    cursor_dy: i32,
     mousedown_unhandled: [bool; 3],
     mouseup_unhandled: [bool; 3],
     mouse_pressed: [bool; 3],
@@ -52,8 +52,8 @@ impl Input {
             unhandled_keyups,
             cursor_x: 0,
             cursor_y: 0,
-            prev_cursor_x: 0,
-            prev_cursor_y: 0,
+            cursor_dx: 0,
+            cursor_dy: 0,
             mousedown_unhandled: [false; 3],
             mouseup_unhandled: [false; 3],
             mouse_pressed: [false; 3],
@@ -76,11 +76,19 @@ impl Input {
     }
 
     #[cfg(feature = "winit")]
-    pub(crate) fn update_cursor_position(&mut self, pos: CursorPosition<DesktopOrigin>) {
-        self.prev_cursor_x = self.cursor_x;
-        self.prev_cursor_y = self.cursor_y;
+    pub(crate) fn update_cursor_position(
+        &mut self,
+        pos: CursorPosition<DesktopOrigin>,
+        window_x: i32,
+        window_y: i32,
+        window_width: i32,
+        window_height: i32,
+    ) {
         self.cursor_x = pos.x;
         self.cursor_y = pos.y;
+        let pos_rel = pos.to_window_center(window_x, window_y, window_width, window_height);
+        self.cursor_dx = pos_rel.x;
+        self.cursor_dy = pos_rel.y;
     }
 
     #[cfg(feature = "winit")]
@@ -137,10 +145,7 @@ impl Input {
 
     #[cfg(feature = "winit")]
     pub(crate) fn get_cursor_delta(&self) -> (i32, i32) {
-        (
-            self.cursor_x - self.prev_cursor_x,
-            self.cursor_y - self.prev_cursor_y,
-        )
+        (self.cursor_dx, self.cursor_dy)
     }
 
     #[cfg(feature = "winit")]
