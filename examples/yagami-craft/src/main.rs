@@ -125,9 +125,14 @@ fn main() {
         }
 
         let (dx, dy) = window.cursor_delta();
-        if dy != 0 && -2 < dy && dy < 2 {
+        // TODO: ヨーとピッチが逆
+        if dy != 0 {
             println!("{}", dy);
-            camera.yaw_rad += Rad(dy as f32 * 0.01);
+            camera.yaw_rad += Rad(-dy as f32 * 0.01);
+        }
+        if dx != 0 {
+            println!("{}", dx);
+            camera.pitch_rad += Rad(-dx as f32 * 0.01);
         }
 
         let model_matrix =
