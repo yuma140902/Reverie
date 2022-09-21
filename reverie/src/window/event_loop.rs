@@ -55,18 +55,6 @@ impl EventLoop {
                         };
                         (false, true)
                     }
-                    winit::event::WindowEvent::CursorMoved { position, .. } => {
-                        input.update_cursor_position(position.x as i32, position.y as i32);
-                        let winpos = winit_window.inner_position().unwrap();
-                        let winsize = winit_window.inner_size();
-                        #[cfg(windows)]
-                        crate::platform::set_cursor_pos(
-                            winpos.x + winsize.width as i32 / 2,
-                            winpos.y + winsize.height as i32 / 2,
-                        )
-                        .unwrap();
-                        (false, true)
-                    }
                     winit::event::WindowEvent::MouseInput { state, button, .. } => {
                         match state {
                             winit::event::ElementState::Pressed => input.update_mouse_pressed(button),
@@ -85,7 +73,15 @@ impl EventLoop {
                 let mut q = queue.lock().unwrap();
                 q.push_back(event.to_static().unwrap());
             }
+            // exit
             if !continue_polling {
+                #[cfg(windows)]
+                {
+                    if let Ok(cursor) = crate::platform::get_cursor_pos() {
+                        input.update_cursor_position(cursor);
+                    }
+                }
+
                 *control_flow = winit::event_loop::ControlFlow::Exit;
             }
         });
