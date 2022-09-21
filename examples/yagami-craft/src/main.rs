@@ -1,5 +1,6 @@
 use c_str_macro::c_str;
 use re::gl;
+use re::math::Rad;
 use re::shader::Program;
 use re::shader::Shader;
 use re::shader::UniformVariables;
@@ -121,6 +122,12 @@ fn main() {
         }
         if window.keypressed(&winit::event::VirtualKeyCode::S) {
             camera.pos -= front * 0.01;
+        }
+
+        let (dx, dy) = window.cursor_delta();
+        if dy != 0 && -2 < dy && dy < 2 {
+            println!("{}", dy);
+            camera.yaw_rad += Rad(dy as f32 * 0.01);
         }
 
         let model_matrix =
