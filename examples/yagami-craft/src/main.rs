@@ -111,31 +111,8 @@ fn main() {
             gl.Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
         }
 
-        {
-            if window.keydown(&winit::event::VirtualKeyCode::Space) {
-                println!("keydown!!");
-            }
-            if window.keyup(&winit::event::VirtualKeyCode::Space) {
-                println!("keyup!!");
-            }
-            if window.keypressed(&winit::event::VirtualKeyCode::Space) {
-                println!("keypressed!!");
-            }
-            {
-                let (dx, dy) = window.cursor_delta();
-                if dx != 0 || dy != 0 {
-                    println!("delta ({}, {})", dx, dy);
-                }
-            }
-            if window.mouse_down(&winit::event::MouseButton::Left) {
-                println!("mouse down");
-            }
-            if window.mouse_up(&winit::event::MouseButton::Left) {
-                println!("mouse up");
-            }
-            if window.mouse_pressed(&winit::event::MouseButton::Left) {
-                println!("mouse pressed");
-            }
+        if window.keypressed(&winit::event::VirtualKeyCode::Escape) {
+            break;
         }
 
         let (front, _right, _up) = camera::calc_front_right_up(camera.pitch_rad, camera.yaw_rad);
