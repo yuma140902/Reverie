@@ -3,21 +3,21 @@ use reverie_engine::math::{Deg, Rad};
 
 pub struct Camera {
     pub pos: Point3<f32>,
-    pub pitch_rad: Rad<f32>,
-    pub yaw_rad: Rad<f32>,
+    pub yaw: Rad<f32>,
+    pub pitch: Rad<f32>,
 }
 
 impl Camera {
     pub fn new() -> Self {
         Self {
             pos: Point3::new(4.0, 3.6, 4.0),
-            pitch_rad: Deg(225_f32).to_rad(),
-            yaw_rad: Deg(-30_f32).to_rad(),
+            yaw: Deg(225_f32).to_rad(),
+            pitch: Deg(-30_f32).to_rad(),
         }
     }
 
     pub fn view_matrix(&self) -> Matrix4<f32> {
-        let (front, _right, up) = calc_front_right_up(self.pitch_rad, self.yaw_rad);
+        let (front, _right, up) = calc_front_right_up(self.yaw, self.pitch);
         Matrix4::<f32>::look_at_rh(&self.pos, &(self.pos + front), &up)
     }
 
@@ -32,17 +32,12 @@ impl Camera {
 }
 
 pub(crate) fn calc_front_right_up(
-    pitch_rad: Rad<f32>,
-    yaw_rad: Rad<f32>,
+    yaw: Rad<f32>,
+    pitch: Rad<f32>,
 ) -> (Vector3<f32>, Vector3<f32>, Vector3<f32>) {
-    let front = Vector3::new(
-        yaw_rad.cos() * pitch_rad.sin(),
-        yaw_rad.sin(),
-        yaw_rad.cos() * pitch_rad.cos(),
-    )
-    .normalize();
+    let front = Vector3::new(pitch.cos() * yaw.sin(), pitch.sin(), pitch.cos() * yaw.cos()).normalize();
 
-    let right_rad = pitch_rad - Deg(90.0f32).to_rad();
+    let right_rad = yaw - Deg(90.0f32).to_rad();
     // 右方向のベクトル
     let right = Vector3::new(
         right_rad.sin(),

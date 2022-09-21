@@ -116,7 +116,7 @@ fn main() {
             break;
         }
 
-        let (front, _right, _up) = camera::calc_front_right_up(camera.pitch_rad, camera.yaw_rad);
+        let (front, _right, _up) = camera::calc_front_right_up(camera.yaw, camera.pitch);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
             camera.pos += front * 0.1;
         }
@@ -125,14 +125,11 @@ fn main() {
         }
 
         let (dx, dy) = window.cursor_delta();
-        // TODO: ヨーとピッチが逆
         if dy != 0 {
-            println!("{}", dy);
-            camera.yaw_rad += Rad(-dy as f32 * 0.01);
+            camera.pitch += Rad(-dy as f32 * 0.01);
         }
         if dx != 0 {
-            println!("{}", dx);
-            camera.pitch_rad += Rad(-dx as f32 * 0.01);
+            camera.yaw += Rad(-dx as f32 * 0.01);
         }
 
         let model_matrix =
