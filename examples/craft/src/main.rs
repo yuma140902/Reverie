@@ -121,6 +121,9 @@ fn main() {
             println!("keypressed!!");
         }
 
+        #[cfg(windows)]
+        reverie_engine::platform::set_cursor_pos(100, 200).unwrap();
+
         let model_matrix =
             nalgebra_glm::scale(&Matrix4::identity(), &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32));
         let view_matrix = camera.view_matrix();
