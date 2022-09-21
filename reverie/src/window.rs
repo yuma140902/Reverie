@@ -1,4 +1,6 @@
 use crate::{Context, ContextBackend};
+use input::cursor::{CursorPosition, DesktopOrigin};
+use input::Input;
 
 mod builder;
 mod event_loop;
@@ -6,7 +8,6 @@ pub mod input;
 
 pub use builder::WindowBuilder;
 pub use event_loop::EventLoop;
-use input::{CursorPositionOrigin, Input};
 
 #[derive(Debug)]
 pub struct Window {
@@ -86,8 +87,8 @@ impl Window {
     }
 
     #[cfg(feature = "winit")]
-    pub fn cursor_pos(&mut self, origin: CursorPositionOrigin) -> (i32, i32) {
-        self.input.get_cursor_pos(origin, &self.window)
+    pub fn cursor_pos(&mut self) -> CursorPosition<DesktopOrigin> {
+        self.input.get_cursor_pos()
     }
 
     #[cfg(feature = "winit")]

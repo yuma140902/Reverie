@@ -1,4 +1,7 @@
+use self::cursor::{CursorPosition, DesktopOrigin};
 use std::collections::HashSet;
+
+pub mod cursor;
 
 #[cfg(feature = "winit")]
 pub(crate) fn mouse_button_index(mouse_button: &winit::event::MouseButton) -> usize {
@@ -73,11 +76,11 @@ impl Input {
     }
 
     #[cfg(feature = "winit")]
-    pub(crate) fn update_cursor_position(&mut self, x: i32, y: i32) {
+    pub(crate) fn update_cursor_position(&mut self, pos: CursorPosition<DesktopOrigin>) {
         self.prev_cursor_x = self.cursor_x;
         self.prev_cursor_y = self.cursor_y;
-        self.cursor_x = x;
-        self.cursor_y = y;
+        self.cursor_x = pos.x;
+        self.cursor_y = pos.y;
     }
 
     #[cfg(feature = "winit")]
@@ -128,41 +131,16 @@ impl Input {
     }
 
     #[cfg(feature = "winit")]
-    pub(crate) fn get_cursor_pos_desktop(&self) -> (i32, i32) {
-        (self.cursor_x, self.cursor_y)
+    pub(crate) fn get_cursor_pos(&self) -> CursorPosition<DesktopOrigin> {
+        CursorPosition::new(self.cursor_x, self.cursor_y)
     }
 
     #[cfg(feature = "winit")]
-    pub(crate) fn get_cursor_pos(
-        &self,
-        origin: CursorPositionOrigin,
-        window: &winit::window::Window,
-    ) -> (i32, i32) {
-        match origin {
-            CursorPositionOrigin::Desktop => self.get_cursor_pos_desktop(),
-            CursorPositionOrigin::Window => {
-                let winpos = window.inner_position().unwrap();
-                (self.cursor_x - winpos.x, self.cursor_y - winpos.y)
-            }
-            CursorPositionOrigin::WindowCenter => {
-                let winpos = window.inner_position().unwrap();
-                let winsize = window.inner_size();
-                (
-                    self.cursor_x - winpos.x - winsize.width as i32 / 2,
-                    self.cursor_y - winpos.y - winsize.height as i32 / 2,
-                )
-            }
-        }
-    }
-
-    #[cfg(feature = "winit")]
-    pub(crate) fn get_cursor_delta(&mut self) -> (i32, i32) {
-        let ret = (
+    pub(crate) fn get_cursor_delta(&self) -> (i32, i32) {
+        (
             self.cursor_x - self.prev_cursor_x,
             self.cursor_y - self.prev_cursor_y,
-        );
-        self.update_cursor_position(self.cursor_x, self.cursor_y);
-        ret
+        )
     }
 
     #[cfg(feature = "winit")]
@@ -183,11 +161,4 @@ impl Input {
         self.mouseup_unhandled[index] = false;
         mouse_up && !self.mouse_pressed[index]
     }
-}
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum CursorPositionOrigin {
-    Desktop,
-    Window,
-    WindowCenter,
 }
