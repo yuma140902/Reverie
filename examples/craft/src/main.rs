@@ -120,9 +120,12 @@ fn main() {
         if window.keypressed(&winit::event::VirtualKeyCode::Space) {
             println!("keypressed!!");
         }
-
-        #[cfg(windows)]
-        reverie_engine::platform::set_cursor_pos(100, 200).unwrap();
+        {
+            let (dx, dy) = window.cursor_delta();
+            if dx != 0 || dy != 0 {
+                println!("delta ({}, {})", dx, dy);
+            }
+        }
 
         let model_matrix =
             nalgebra_glm::scale(&Matrix4::identity(), &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32));

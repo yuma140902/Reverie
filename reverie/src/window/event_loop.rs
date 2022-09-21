@@ -21,7 +21,11 @@ impl EventLoop {
         Self { event_loop, queue }
     }
 
-    pub(super) fn process_event(&mut self, input: &mut Input) -> bool {
+    pub(super) fn process_event(
+        &mut self,
+        input: &mut Input,
+        winit_window: &winit::window::Window,
+    ) -> bool {
         use winit::platform::run_return::EventLoopExtRunReturn;
         let queue = Arc::clone(&self.queue);
         let mut exit = false;
@@ -43,12 +47,24 @@ impl EventLoop {
                     } => {
                         match state {
                             winit::event::ElementState::Pressed => {
-                                input.set_key_pressed(virtual_keycode)
+                                input.update_key_pressed(virtual_keycode)
                             }
                             winit::event::ElementState::Released => {
-                                input.set_key_released(virtual_keycode)
+                                input.update_key_released(virtual_keycode)
                             }
                         };
+                        (false, true)
+                    }
+                    winit::event::WindowEvent::CursorMoved { position, .. } => {
+                        input.update_cursor_position(position.x as i32, position.y as i32);
+                        let winpos = winit_window.inner_position().unwrap();
+                        let winsize = winit_window.inner_size();
+                        #[cfg(windows)]
+                        crate::platform::set_cursor_pos(
+                            winpos.x + winsize.width as i32 / 2,
+                            winpos.y + winsize.height as i32 / 2,
+                        )
+                        .unwrap();
                         (false, true)
                     }
                     _ => (false, true),
