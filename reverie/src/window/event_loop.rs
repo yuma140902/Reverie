@@ -67,6 +67,13 @@ impl EventLoop {
                         .unwrap();
                         (false, true)
                     }
+                    winit::event::WindowEvent::MouseInput { state, button, .. } => {
+                        match state {
+                            winit::event::ElementState::Pressed => input.update_mouse_pressed(button),
+                            winit::event::ElementState::Released => input.update_mouse_released(button),
+                        }
+                        (false, true)
+                    }
                     _ => (false, true),
                 },
                 winit::event::Event::MainEventsCleared => (false, false),

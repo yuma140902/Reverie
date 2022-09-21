@@ -1,5 +1,25 @@
 use std::collections::HashSet;
 
+#[cfg(feature = "winit")]
+pub(crate) fn mouse_button_index(mouse_button: &winit::event::MouseButton) -> usize {
+    match mouse_button {
+        glutin::event::MouseButton::Left => 0,
+        glutin::event::MouseButton::Right => 1,
+        glutin::event::MouseButton::Middle => 2,
+        glutin::event::MouseButton::Other(id) => *id as usize * 2,
+    }
+}
+
+#[cfg(feature = "winit")]
+pub(crate) fn mouse_button_index_3(mouse_button: &winit::event::MouseButton) -> Option<usize> {
+    match mouse_button {
+        glutin::event::MouseButton::Left
+        | glutin::event::MouseButton::Right
+        | glutin::event::MouseButton::Middle => Some(mouse_button_index(mouse_button)),
+        glutin::event::MouseButton::Other(_) => None,
+    }
+}
+
 #[derive(Debug)]
 pub(crate) struct Input {
     #[cfg(feature = "winit")]
@@ -12,6 +32,9 @@ pub(crate) struct Input {
     cursor_y: i32,
     prev_cursor_x: i32,
     prev_cursor_y: i32,
+    mousedown_unhandled: [bool; 3],
+    mouseup_unhandled: [bool; 3],
+    mouse_pressed: [bool; 3],
 }
 
 impl Input {
@@ -28,6 +51,9 @@ impl Input {
             cursor_y: 0,
             prev_cursor_x: 0,
             prev_cursor_y: 0,
+            mousedown_unhandled: [false; 3],
+            mouseup_unhandled: [false; 3],
+            mouse_pressed: [false; 3],
         }
     }
 
@@ -52,6 +78,22 @@ impl Input {
         self.prev_cursor_y = self.cursor_y;
         self.cursor_x = x;
         self.cursor_y = y;
+    }
+
+    #[cfg(feature = "winit")]
+    pub(crate) fn update_mouse_pressed(&mut self, button: &winit::event::MouseButton) {
+        if let Some(index) = mouse_button_index_3(button) {
+            self.mousedown_unhandled[index] = true;
+            self.mouse_pressed[index] = true;
+        }
+    }
+
+    #[cfg(feature = "winit")]
+    pub(crate) fn update_mouse_released(&mut self, button: &winit::event::MouseButton) {
+        if let Some(index) = mouse_button_index_3(button) {
+            self.mouseup_unhandled[index] = true;
+            self.mouse_pressed[index] = false;
+        }
     }
 
     #[cfg(feature = "winit")]
@@ -121,6 +163,25 @@ impl Input {
         );
         self.update_cursor_position(self.cursor_x, self.cursor_y);
         ret
+    }
+
+    #[cfg(feature = "winit")]
+    pub(crate) fn get_mouse_pressed(&self, index: usize) -> bool {
+        self.mouse_pressed[index]
+    }
+
+    #[cfg(feature = "winit")]
+    pub(crate) fn get_mouse_down(&mut self, index: usize) -> bool {
+        let mouse_down = self.mousedown_unhandled[index];
+        self.mousedown_unhandled[index] = false;
+        mouse_down && self.mouse_pressed[index]
+    }
+
+    #[cfg(feature = "winit")]
+    pub(crate) fn get_mouse_up(&mut self, index: usize) -> bool {
+        let mouse_up = self.mouseup_unhandled[index];
+        self.mouseup_unhandled[index] = false;
+        mouse_up && !self.mouse_pressed[index]
     }
 }
 

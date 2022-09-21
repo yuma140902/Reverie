@@ -94,4 +94,31 @@ impl Window {
     pub fn cursor_delta(&mut self) -> (i32, i32) {
         self.input.get_cursor_delta()
     }
+
+    #[cfg(feature = "winit")]
+    pub fn mouse_down(&mut self, button: &winit::event::MouseButton) -> bool {
+        if let Some(index) = input::mouse_button_index_3(button) {
+            self.input.get_mouse_down(index)
+        } else {
+            false
+        }
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn mouse_up(&mut self, button: &winit::event::MouseButton) -> bool {
+        if let Some(index) = input::mouse_button_index_3(button) {
+            self.input.get_mouse_up(index)
+        } else {
+            false
+        }
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn mouse_pressed(&mut self, button: &winit::event::MouseButton) -> bool {
+        if let Some(index) = input::mouse_button_index_3(button) {
+            self.input.get_mouse_pressed(index)
+        } else {
+            false
+        }
+    }
 }

@@ -126,6 +126,15 @@ fn main() {
                 println!("delta ({}, {})", dx, dy);
             }
         }
+        if window.mouse_down(&winit::event::MouseButton::Left) {
+            println!("mouse down");
+        }
+        if window.mouse_up(&winit::event::MouseButton::Left) {
+            println!("mouse up");
+        }
+        if window.mouse_pressed(&winit::event::MouseButton::Left) {
+            println!("mouse pressed");
+        }
 
         let model_matrix =
             nalgebra_glm::scale(&Matrix4::identity(), &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32));
