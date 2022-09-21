@@ -6,7 +6,7 @@ pub mod input;
 
 pub use builder::WindowBuilder;
 pub use event_loop::EventLoop;
-use input::Input;
+use input::{CursorPositionOrigin, Input};
 
 #[derive(Debug)]
 pub struct Window {
@@ -57,7 +57,7 @@ impl Window {
 
     #[cfg(feature = "winit")]
     pub fn process_event(&mut self) -> bool {
-        self.event_loop.process_event(&mut self.input)
+        self.event_loop.process_event(&mut self.input, &self.window)
     }
 
     #[cfg(feature = "winit")]
@@ -83,5 +83,42 @@ impl Window {
     #[cfg(feature = "winit")]
     pub fn keypressed(&mut self, keycode: &winit::event::VirtualKeyCode) -> bool {
         self.input.get_key_pressed(keycode)
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn cursor_pos(&mut self, origin: CursorPositionOrigin) -> (i32, i32) {
+        self.input.get_cursor_pos(origin, &self.window)
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn cursor_delta(&mut self) -> (i32, i32) {
+        self.input.get_cursor_delta()
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn mouse_down(&mut self, button: &winit::event::MouseButton) -> bool {
+        if let Some(index) = input::mouse_button_index_3(button) {
+            self.input.get_mouse_down(index)
+        } else {
+            false
+        }
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn mouse_up(&mut self, button: &winit::event::MouseButton) -> bool {
+        if let Some(index) = input::mouse_button_index_3(button) {
+            self.input.get_mouse_up(index)
+        } else {
+            false
+        }
+    }
+
+    #[cfg(feature = "winit")]
+    pub fn mouse_pressed(&mut self, button: &winit::event::MouseButton) -> bool {
+        if let Some(index) = input::mouse_button_index_3(button) {
+            self.input.get_mouse_pressed(index)
+        } else {
+            false
+        }
     }
 }

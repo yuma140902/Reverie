@@ -8,6 +8,7 @@ pub mod shader;
 mod texture;
 pub mod types;
 mod vao;
+pub mod platform;
 mod window;
 pub use context::{Context, ContextBackend};
 pub use engine::ReverieEngine;
