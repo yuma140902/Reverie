@@ -28,6 +28,14 @@ macro_rules! impl_deg {
             pub fn cos(&self) -> $float {
                 self.to_rad().0.cos()
             }
+
+            pub fn normalized(&self) -> Deg<$float> {
+                let mut angle = (self.0 + 180.0) % 360.0 - 180.0;
+                if angle < -180.0 {
+                    angle += 360.0;
+                }
+                Deg(angle)
+            }
         }
     };
 }
@@ -45,6 +53,15 @@ macro_rules! impl_rad {
 
             pub fn cos(&self) -> $float {
                 self.0.cos()
+            }
+
+            pub fn normalized(&self) -> Rad<$float> {
+                use std::$float::consts::PI;
+                let mut angle = (self.0 + PI) % (2.0 * PI) - PI;
+                if angle < -PI {
+                    angle += 2.0 * PI;
+                }
+                Rad(angle)
             }
         }
     };

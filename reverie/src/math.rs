@@ -96,6 +96,16 @@ mod test {
     }
 
     #[test]
+    fn deg_normalized() {
+        assert_relative_eq!(Deg(170_f32).normalized(), Deg(170_f32));
+        assert_relative_eq!(Deg(180_f32).normalized(), Deg(-180_f32));
+        assert_relative_eq!(Deg(190_f32).normalized(), Deg(-170_f32));
+        assert_relative_eq!(Deg(-170_f32).normalized(), Deg(-170_f32));
+        assert_relative_eq!(Deg(-180_f32).normalized(), Deg(-180_f32));
+        assert_relative_eq!(Deg(-190_f32).normalized(), Deg(170_f32));
+    }
+
+    #[test]
     fn rad_op_add() {
         assert_relative_eq!(Rad(30_f32) + Rad(40_f32), Rad(70_f32));
         assert_relative_eq!(Rad(70_f32) + Rad(40_f32), Rad(110_f32));
@@ -154,5 +164,16 @@ mod test {
     fn rad_cos() {
         assert_relative_eq!(Rad(0_f32).cos(), 1_f32);
         assert_relative_eq!(Rad(std::f32::consts::PI / 2_f32).cos(), 0_f32);
+    }
+
+    #[test]
+    fn rad_normalized() {
+        use std::f32::consts::PI;
+        assert_relative_eq!(Rad(PI * 0.9).normalized(), Rad(PI * 0.9));
+        assert_relative_eq!(Rad(PI * 1.0).normalized(), Rad(-PI * 1.0));
+        assert_relative_eq!(Rad(PI * 1.1).normalized(), Rad(-PI * 0.9));
+        assert_relative_eq!(Rad(-PI * 0.9).normalized(), Rad(-PI * 0.9));
+        assert_relative_eq!(Rad(-PI * 1.0).normalized(), Rad(-PI * 1.0));
+        assert_relative_eq!(Rad(-PI * 1.1).normalized(), Rad(PI * 0.9));
     }
 }
