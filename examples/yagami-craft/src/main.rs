@@ -118,10 +118,10 @@ fn main() {
 
         let (front, _right, _up) = camera::calc_front_right_up(camera.pitch_rad, camera.yaw_rad);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
-            camera.pos += front * 0.01;
+            camera.pos += front * 0.1;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::S) {
-            camera.pos -= front * 0.01;
+            camera.pos -= front * 0.1;
         }
 
         let (dx, dy) = window.cursor_delta();
