@@ -13,6 +13,7 @@ use re::VaoConfigBuilder;
 use reverie_engine as re;
 
 mod camera;
+pub mod util;
 mod world;
 use camera::Camera;
 use world::World;
@@ -116,13 +117,27 @@ fn main() {
             break;
         }
 
-        const MOVE_SPEED: f32 = 0.1;
-        let (front, _right, _up) = camera::calc_front_right_up(camera.yaw, camera.pitch);
+        const MOVE_SPEED: f32 = 0.08;
+        const UP: Vector3 = Vector3::new(0.0, 1.0, 0.0);
+        let (front, right, _up) = camera::calc_front_right_up(camera.yaw, camera.pitch);
+        let front = util::take_xz_normalized(&front);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
             camera.pos += front * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::S) {
             camera.pos -= front * MOVE_SPEED;
+        }
+        if window.keypressed(&winit::event::VirtualKeyCode::D) {
+            camera.pos += right * MOVE_SPEED;
+        }
+        if window.keypressed(&winit::event::VirtualKeyCode::A) {
+            camera.pos -= right * MOVE_SPEED;
+        }
+        if window.keypressed(&winit::event::VirtualKeyCode::Space) {
+            camera.pos += UP * MOVE_SPEED;
+        }
+        if window.keypressed(&winit::event::VirtualKeyCode::LShift) {
+            camera.pos -= UP * MOVE_SPEED;
         }
 
         const ROTATION_SPEED: f32 = 0.01;
