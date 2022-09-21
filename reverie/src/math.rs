@@ -4,46 +4,29 @@ use newtype_ops::newtype_ops;
 mod macros;
 
 #[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
-pub struct Deg(pub f64);
+pub struct Deg<T>(pub T);
 
 #[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
-pub struct Rad(pub f64);
+pub struct Rad<T>(pub T);
 
-newtype_ops! { { [Deg] [Rad] } {add sub} {:=} {^&}Self {^&}Self }
-newtype_ops! { { [Deg] [Rad] } {neg} {:=} {^&}Self }
-newtype_ops! { { [Deg] [Rad] } {mul div} {:=} {^&}Self {^&}f64 }
-derive_into_f64!(Deg);
-derive_into_f64!(Rad);
-derive_approx!(Deg);
-derive_approx!(Rad);
+newtype_ops! { { [Deg<f64>] [Deg<f32>] [Rad<f64>] [Rad<f32>] } {add sub} {:=} {^&}Self {^&}Self }
+newtype_ops! { { [Deg<f64>] [Deg<f32>] [Rad<f64>] [Rad<f32>] } {neg} {:=} {^&}Self }
+newtype_ops! { { [Deg<f64>] [Rad<f64>] } {mul div} {:=} {^&}Self {^&}f64 }
+newtype_ops! { { [Deg<f32>] [Rad<f32>] } {mul div} {:=} {^&}Self {^&}f32 }
+derive_into!(Deg<f64>, f64);
+derive_into!(Deg<f32>, f32);
+derive_into!(Rad<f64>, f64);
+derive_into!(Rad<f32>, f32);
+derive_approx!(Deg<f64>, f64);
+derive_approx!(Deg<f32>, f32);
+derive_approx!(Rad<f64>, f64);
+derive_approx!(Rad<f32>, f32);
 
-impl Deg {
-    pub fn to_rad(&self) -> Rad {
-        Rad(self.0 * std::f64::consts::PI / 180.0)
-    }
+impl_deg!(f64);
+impl_deg!(f32);
 
-    pub fn sin(&self) -> f64 {
-        self.to_rad().0.sin()
-    }
-
-    pub fn cos(&self) -> f64 {
-        self.to_rad().0.cos()
-    }
-}
-
-impl Rad {
-    pub fn to_deg(&self) -> Deg {
-        Deg(self.0 * 180.0 / std::f64::consts::PI)
-    }
-
-    pub fn sin(&self) -> f64 {
-        self.0.sin()
-    }
-
-    pub fn cos(&self) -> f64 {
-        self.0.cos()
-    }
-}
+impl_rad!(f64);
+impl_rad!(f32);
 
 #[cfg(test)]
 mod test {
@@ -53,123 +36,123 @@ mod test {
 
     #[test]
     fn deg_op_add() {
-        assert_relative_eq!(Deg(30.0) + Deg(40.0), Deg(70.0));
-        assert_relative_eq!(Deg(70.0) + Deg(40.0), Deg(110.0));
-        assert_relative_eq!(Deg(180.0) + Deg(200.0), Deg(380.0));
+        assert_relative_eq!(Deg(30_f32) + Deg(40_f32), Deg(70_f32));
+        assert_relative_eq!(Deg(70_f32) + Deg(40_f32), Deg(110_f32));
+        assert_relative_eq!(Deg(180_f32) + Deg(200_f32), Deg(380_f32));
     }
 
     #[test]
     fn deg_op_add_asign() {
-        let mut a = Deg(10.0);
-        a += Deg(20.0);
-        assert_relative_eq!(a, Deg(30.0));
+        let mut a = Deg(10_f32);
+        a += Deg(20_f32);
+        assert_relative_eq!(a, Deg(30_f32));
     }
 
     #[test]
     fn deg_op_sub() {
-        assert_relative_eq!(Deg(40.0) - Deg(30.0), Deg(10.0));
-        assert_relative_eq!(Deg(30.0) - Deg(30.0), Deg(0.0));
-        assert_relative_eq!(Deg(30.0) - Deg(40.0), Deg(-10.0));
+        assert_relative_eq!(Deg(40_f32) - Deg(30_f32), Deg(10_f32));
+        assert_relative_eq!(Deg(30_f32) - Deg(30_f32), Deg(0_f32));
+        assert_relative_eq!(Deg(30_f32) - Deg(40_f32), Deg(-10_f32));
     }
 
     #[test]
     fn deg_op_sub_assign() {
-        let mut a = Deg(10.0);
-        a -= Deg(10.0);
-        assert_relative_eq!(a, Deg(0.0));
+        let mut a = Deg(10_f32);
+        a -= Deg(10_f32);
+        assert_relative_eq!(a, Deg(0_f32));
     }
 
     #[test]
     fn deg_op_neg() {
-        assert_relative_eq!(-Deg(10.0), Deg(-10.0));
+        assert_relative_eq!(-Deg(10_f32), Deg(-10_f32));
     }
 
     #[test]
     fn deg_op_mul() {
-        assert_relative_eq!(Deg(10.0) * 2.0, Deg(20.0));
+        assert_relative_eq!(Deg(10_f32) * 2_f32, Deg(20_f32));
     }
 
     #[test]
     fn deg_op_div() {
-        assert_relative_eq!(Deg(10.0) / 2.0, Deg(5.0));
+        assert_relative_eq!(Deg(10_f32) / 2_f32, Deg(5_f32));
     }
 
     #[test]
     fn deg_to_rad() {
-        assert_relative_eq!(Deg(0.0).to_rad(), Rad(0.0));
-        assert_relative_eq!(Deg(90.0).to_rad(), Rad(std::f64::consts::PI / 2.0));
+        assert_relative_eq!(Deg(0_f32).to_rad(), Rad(0_f32));
+        assert_relative_eq!(Deg(90_f32).to_rad(), Rad(std::f32::consts::PI / 2_f32));
     }
 
     #[test]
     fn deg_sin() {
-        assert_relative_eq!(Deg(0.0).sin(), 0.0);
-        assert_relative_eq!(Deg(90.0).sin(), 1.0);
+        assert_relative_eq!(Deg(0_f32).sin(), 0_f32);
+        assert_relative_eq!(Deg(90_f32).sin(), 1_f32);
     }
 
     #[test]
     fn deg_cos() {
-        assert_relative_eq!(Deg(0.0).cos(), 1.0);
-        assert_relative_eq!(Deg(90.0).cos(), 0.0);
+        assert_relative_eq!(Deg(0_f32).cos(), 1_f32);
+        assert_relative_eq!(Deg(90_f32).cos(), 0_f32);
     }
 
     #[test]
     fn rad_op_add() {
-        assert_relative_eq!(Rad(30.0) + Rad(40.0), Rad(70.0));
-        assert_relative_eq!(Rad(70.0) + Rad(40.0), Rad(110.0));
-        assert_relative_eq!(Rad(180.0) + Rad(200.0), Rad(380.0));
+        assert_relative_eq!(Rad(30_f32) + Rad(40_f32), Rad(70_f32));
+        assert_relative_eq!(Rad(70_f32) + Rad(40_f32), Rad(110_f32));
+        assert_relative_eq!(Rad(180_f32) + Rad(200_f32), Rad(380_f32));
     }
 
     #[test]
     fn rad_op_add_asign() {
-        let mut a = Rad(10.0);
-        a += Rad(20.0);
-        assert_relative_eq!(a, Rad(30.0));
+        let mut a = Rad(10_f32);
+        a += Rad(20_f32);
+        assert_relative_eq!(a, Rad(30_f32));
     }
 
     #[test]
     fn rad_op_sub() {
-        assert_relative_eq!(Rad(40.0) - Rad(30.0), Rad(10.0));
-        assert_relative_eq!(Rad(30.0) - Rad(30.0), Rad(0.0));
-        assert_relative_eq!(Rad(30.0) - Rad(40.0), Rad(-10.0));
+        assert_relative_eq!(Rad(40_f32) - Rad(30_f32), Rad(10_f32));
+        assert_relative_eq!(Rad(30_f32) - Rad(30_f32), Rad(0_f32));
+        assert_relative_eq!(Rad(30_f32) - Rad(40_f32), Rad(-10_f32));
     }
 
     #[test]
     fn rad_op_sub_assign() {
-        let mut a = Rad(10.0);
-        a -= Rad(10.0);
-        assert_relative_eq!(a, Rad(0.0));
+        let mut a = Rad(10_f32);
+        a -= Rad(10_f32);
+        assert_relative_eq!(a, Rad(0_f32));
     }
 
     #[test]
     fn rad_op_neg() {
-        assert_relative_eq!(-Rad(10.0), Rad(-10.0));
+        assert_relative_eq!(-Rad(10_f32), Rad(-10_f32));
     }
 
     #[test]
     fn rad_op_mul() {
-        assert_relative_eq!(Rad(10.0) * 2.0, Rad(20.0));
+        assert_relative_eq!(Rad(10_f32) * 2_f32, Rad(20_f32));
     }
 
     #[test]
     fn rad_op_div() {
-        assert_relative_eq!(Rad(10.0) / 2.0, Rad(5.0));
+        assert_relative_eq!(Rad(10_f32) / 2_f32, Rad(5_f32));
     }
 
     #[test]
     fn rad_to_deg() {
-        assert_relative_eq!(Rad(0.0).to_deg(), Deg(0.0));
-        assert_relative_eq!(Rad(std::f64::consts::PI / 2.0).to_deg(), Deg(90.0));
+        assert_relative_eq!(Rad(0_f32).to_deg(), Deg(0_f32));
+        assert_relative_eq!(Rad(std::f32::consts::PI / 2_f32).to_deg(), Deg(90_f32));
     }
 
     #[test]
     fn rad_sin() {
-        assert_relative_eq!(Rad(0.0).sin(), 0.0);
-        assert_relative_eq!(Rad(std::f64::consts::PI / 2.0).sin(), 1.0);
+        assert_relative_eq!(Rad(0_f32).sin(), 0_f32);
+        assert_relative_eq!(Rad(std::f32::consts::PI / 2_f32).sin(), 1_f32);
     }
 
     #[test]
     fn rad_cos() {
-        assert_relative_eq!(Rad(0.0).cos(), 1.0);
-        assert_relative_eq!(Rad(std::f64::consts::PI / 2.0).cos(), 0.0);
+        assert_relative_eq!(Rad(0_f32).cos(), 1_f32);
+        assert_relative_eq!(Rad(std::f32::consts::PI / 2_f32).cos(), 0_f32);
     }
 }

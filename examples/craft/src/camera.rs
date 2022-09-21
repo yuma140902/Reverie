@@ -21,16 +21,14 @@ impl Camera {
     }
 
     pub fn projection_matrix(&self, width: u32, height: u32) -> Matrix4<f32> {
-        Matrix4::new_perspective(
-            width as f32 / height as f32,
-            deg_to_rad(45.0f32),
-            0.1,
-            100.0,
-        )
+        Matrix4::new_perspective(width as f32 / height as f32, deg_to_rad(45.0f32), 0.1, 100.0)
     }
 }
 
-fn calc_front_right_up(pitch_rad: f32, yaw_rad: f32) -> (Vector3<f32>, Vector3<f32>, Vector3<f32>) {
+pub(crate) fn calc_front_right_up(
+    pitch_rad: f32,
+    yaw_rad: f32,
+) -> (Vector3<f32>, Vector3<f32>, Vector3<f32>) {
     let front = Vector3::new(
         yaw_rad.cos() * pitch_rad.sin(),
         yaw_rad.sin(),
