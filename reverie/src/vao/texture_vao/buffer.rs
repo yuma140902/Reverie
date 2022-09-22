@@ -2,8 +2,8 @@
 
 use std::mem;
 
-use super::vao_config::VaoConfig;
-use super::Vao;
+use crate::Vao;
+use crate::VaoConfig;
 
 use crate::gl;
 use crate::gl::{types::GLfloat, Gl};

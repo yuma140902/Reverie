@@ -3,7 +3,7 @@
 use crate::texture::texture_atlas::TextureUV;
 use crate::types::*;
 
-use super::vao_buffer::VaoBuffer;
+use crate::VaoBuffer;
 
 /// [`VaoBuffer`]上に立方体などの立体を追加する
 ///
