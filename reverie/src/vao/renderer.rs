@@ -3,7 +3,7 @@ use nalgebra::{Matrix4, Point3, Vector3};
 
 use crate::{
     gl::{self, Gl},
-    shader::{Program, Uniform::*, UniformVariables},
+    shader::{Program, Shader, Uniform::*, UniformVariables},
     ImageLoadInfo, Vao,
 };
 
@@ -86,6 +86,58 @@ impl Renderer<&Phong3DRenderingInfo<'_>> for Phong3DRenderer {
             gl.BindTexture(gl::TEXTURE_2D, extra.texture.gl_id);
             vao.draw_triangles(&uniforms);
             gl.BindTexture(gl::TEXTURE_2D, 0);
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct Color3DRenderer {
+    program: Program,
+}
+
+impl Color3DRenderer {
+    pub fn new(gl: &Gl) -> Self {
+        let vert_shader =
+            Shader::from_vert_code(gl.clone(), c_str!(include_str!("../../resources/color3d.vert")))
+                .unwrap();
+        let frag_shader =
+            Shader::from_frag_code(gl.clone(), c_str!(include_str!("../../resources/color3d.frag")))
+                .unwrap();
+        let program = Program::from_shaders(gl.clone(), &[vert_shader, frag_shader]).unwrap();
+        Self { program }
+    }
+}
+
+pub struct Color3DRenderingInfo<'a> {
+    pub model_matrix: &'a Matrix4<f32>,
+    pub view_matrix: &'a Matrix4<f32>,
+    pub projection_matrix: &'a Matrix4<f32>,
+    pub camera_pos: &'a Point3<f32>,
+}
+
+impl Renderer<&Color3DRenderingInfo<'_>> for Color3DRenderer {
+    fn render(&self, gl: Gl, vao: &Vao, extra: &Color3DRenderingInfo) {
+        let uniforms = {
+            use crate::shader::Uniform::*;
+            let mut uniforms = UniformVariables::new();
+            uniforms.add(c_str!("uModel"), Matrix4(&extra.model_matrix));
+            uniforms.add(c_str!("uView"), Matrix4(&extra.view_matrix));
+            uniforms.add(c_str!("uProjection"), Matrix4(&extra.projection_matrix));
+            uniforms.add(
+                c_str!("uViewPosition"),
+                TripleFloat(extra.camera_pos.x, extra.camera_pos.y, extra.camera_pos.z),
+            );
+            uniforms
+        };
+
+        unsafe {
+            self.program.set_used();
+            self.program.set_uniforms(&uniforms);
+        }
+
+        unsafe {
+            gl.BindTexture(gl::TEXTURE_2D, 0);
+            vao.draw(&uniforms, gl::LINES);
         }
     }
 }
