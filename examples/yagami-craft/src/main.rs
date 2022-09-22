@@ -3,13 +3,13 @@ use re::gl;
 use re::math::Rad;
 use re::shader::Program;
 use re::shader::Shader;
-use re::shader::UniformVariables;
 use re::types::Const;
 use re::CuboidTextures;
 use re::ImageManager;
-use re::PhongRenderer;
+use re::Phong3DRenderer;
+use re::Phong3DRenderingInfo;
+use re::PhongRenderingInfo;
 use re::Renderer;
-use re::RenderingInfo;
 use re::ReverieEngine;
 use re::TextureAtlasPos;
 use re::VaoConfigBuilder;
@@ -75,36 +75,24 @@ fn main() {
         world
     };
 
-    let vao_config = {
-        let depth_test = true;
-        let blend = true;
-        let wireframe = false;
-        let culling = true;
-        let alpha: f32 = 1.0;
-        /* ベクトルではなく色 */
-        let material_specular = Vector3::new(0.2, 0.2, 0.2);
-        let material_shininess: f32 = 0.1;
-        let light_direction = Vector3::new(1.0, 1.0, 0.0);
-        /* ambient, diffuse, specular はベクトルではなく色 */
-        let ambient = Vector3::new(0.3, 0.3, 0.3);
-        let diffuse = Vector3::new(0.5, 0.5, 0.5);
-        let specular = Vector3::new(0.2, 0.2, 0.2);
-        VaoConfigBuilder::new(&shader)
-            .depth_test(depth_test)
-            .blend(blend)
-            .wireframe(wireframe)
-            .culling(culling)
-            .alpha(alpha)
-            .material_specular(material_specular)
-            .material_shininess(material_shininess)
-            .light_direction(light_direction)
-            .ambient(ambient)
-            .diffuse(diffuse)
-            .specular(specular)
-            .build()
+    let vao_config = VaoConfigBuilder::new()
+        .depth_test(true)
+        .blend(true)
+        .wireframe(false)
+        .culling(true)
+        .build();
+
+    let phong_info = PhongRenderingInfo {
+        material_specular: &Vector3::new(0.2, 0.2, 0.2),
+        material_shininess: 0.1,
+        light_direction: &Vector3::new(1.0, 1.0, 0.0),
+        ambient: &Vector3::new(0.3, 0.3, 0.3),
+        diffuse: &Vector3::new(0.5, 0.5, 0.5),
+        specular: &Vector3::new(0.2, 0.2, 0.2),
+        alpha: 1.0,
     };
 
-    let renderer = PhongRenderer::new();
+    let renderer = Phong3DRenderer::new(shader);
     let vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
 
     let mut camera = Camera::new();
@@ -158,7 +146,8 @@ fn main() {
         let view_matrix = camera.view_matrix();
         let projection_matrix: Matrix4 = camera.projection_matrix(width, height);
 
-        let info = &RenderingInfo {
+        let info = &Phong3DRenderingInfo {
+            phong: &phong_info,
             model_matrix: &model_matrix,
             view_matrix: &view_matrix,
             projection_matrix: &projection_matrix,

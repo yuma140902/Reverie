@@ -89,7 +89,7 @@ impl<V: VertexType> VaoBuffer<V> {
     }
 
     /// 現在のバッファの内容をもとに[`Vao`]を作る
-    pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
+    pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig) -> Vao<'a> {
         Vao::new(
             gl.clone(),
             (self.buffer.len() * mem::size_of::<GLfloat>()) as _,

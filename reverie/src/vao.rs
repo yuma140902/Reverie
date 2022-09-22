@@ -21,7 +21,7 @@ pub struct Vao<'a> {
     vao: u32,
     vbo: u32,
     vertex_num: i32,
-    config: &'a VaoConfig<'a>,
+    config: &'a VaoConfig,
 }
 
 impl<'a> Vao<'a> {
@@ -36,7 +36,7 @@ impl<'a> Vao<'a> {
         attribute_sizes: &'static [GLint],
         stride: GLsizei,
         vertex_num: i32,
-        config: &'a VaoConfig<'a>,
+        config: &'a VaoConfig,
     ) -> Vao<'a> {
         debug_assert_eq!(num_attributes, attribute_types.len());
         debug_assert_eq!(num_attributes, attribute_sizes.len());
@@ -85,10 +85,6 @@ impl<'a> Vao<'a> {
     /// Use [`crate::Renderer`] instead
     pub fn draw(&self, uniforms: &UniformVariables, draw_mode: GLenum) {
         unsafe {
-            if let Some(texture) = self.config.texture {
-                self.gl.BindTexture(gl::TEXTURE_2D, texture.gl_id);
-            }
-
             if self.config.depth_test {
                 self.gl.Enable(gl::DEPTH_TEST);
             } else {
@@ -114,25 +110,6 @@ impl<'a> Vao<'a> {
                 self.gl.Disable(gl::CULL_FACE);
             }
 
-            use crate::shader::Uniform::*;
-            use c_str_macro::c_str;
-            let program = self.config.program;
-            program.set_uniform(c_str!("uAlpha"), &Float(self.config.alpha));
-            program.set_uniform(
-                c_str!("uMaterial.specular"),
-                &Vector3(&self.config.material_specular),
-            );
-            program.set_uniform(
-                c_str!("uMaterial.shininess"),
-                &Float(self.config.material_shininess),
-            );
-            program.set_uniform(c_str!("uLight.direction"), &Vector3(&self.config.light_direction));
-            program.set_uniform(c_str!("uLight.ambient"), &Vector3(&self.config.ambient));
-            program.set_uniform(c_str!("uLight.diffuse"), &Vector3(&self.config.diffuse));
-            program.set_uniform(c_str!("uLight.specular"), &Vector3(&self.config.specular));
-
-            self.config.program.set_used();
-            self.config.program.set_uniforms(uniforms);
             self.gl.BindVertexArray(self.vao);
             self.gl.DrawArrays(draw_mode, 0, self.vertex_num);
             self.gl.BindVertexArray(0);

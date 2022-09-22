@@ -21,7 +21,7 @@ pub use texture::{
 pub use vao::{
     buffer::VaoBuffer,
     config::{VaoConfig, VaoConfigBuilder},
-    renderer::{PhongRenderer, Renderer, RenderingInfo},
+    renderer::{Phong3DRenderer, Phong3DRenderingInfo, PhongRenderingInfo, Renderer},
     texture_vao::builder::{CuboidTextures, VaoBuilder3DGeometry},
     vertex::{VertexType, VertexWithNormUv},
     Vao,
