@@ -8,13 +8,6 @@ use crate::VaoConfig;
 use crate::gl;
 use crate::gl::{types::GLfloat, Gl};
 
-/// 1つの頂点は[`VERTEX_SIZE`]個のf32から成る。
-///
-/// * 頂点のx, y, z座標
-/// * 頂点が属する面の法線ベクトルのx, y, z成分
-/// * テクスチャのu, v座標
-pub const SIZE_VERTEX_WITH_NORM_AND_UV: usize = 8;
-
 /// 頂点の情報を動的に追加・削除するためのバッファ
 #[derive(Debug)]
 pub struct VaoBuffer<const VERTEX_SIZE: usize> {

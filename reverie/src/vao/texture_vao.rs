@@ -10,6 +10,13 @@ use super::vao_config::VaoConfig;
 
 pub mod builder;
 
+/// 1つの頂点は[`SIZE_VERTEX_WITH_NORM_AND_UV`]個のf32から成る。
+///
+/// * 頂点のx, y, z座標
+/// * 頂点が属する面の法線ベクトルのx, y, z成分
+/// * テクスチャのu, v座標
+pub const SIZE_VERTEX_WITH_NORM_AND_UV: usize = 8;
+
 /// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体
 #[derive(Debug)]
 pub struct TextureVao<'a> {

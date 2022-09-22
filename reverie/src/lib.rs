@@ -19,10 +19,10 @@ pub use texture::{
     texture_atlas::{TextureAtlasPos, TextureUV},
 };
 pub use vao::{
-    buffer::{VaoBuffer, SIZE_VERTEX_WITH_NORM_AND_UV},
+    buffer::VaoBuffer,
     texture_vao::{
         builder::{CuboidTextures, VaoBuilder3DGeometry},
-        TextureVao,
+        TextureVao, SIZE_VERTEX_WITH_NORM_AND_UV,
     },
     vao_config::{VaoConfig, VaoConfigBuilder},
 };
