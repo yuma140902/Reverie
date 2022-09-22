@@ -1,17 +1,22 @@
 use c_str_macro::c_str;
 use re::gl;
+use re::math::Rad;
 use re::shader::Program;
 use re::shader::Shader;
-use re::shader::UniformVariables;
 use re::types::Const;
 use re::CuboidTextures;
 use re::ImageManager;
+use re::Phong3DRenderer;
+use re::Phong3DRenderingInfo;
+use re::PhongRenderingInfo;
+use re::Renderer;
 use re::ReverieEngine;
 use re::TextureAtlasPos;
 use re::VaoConfigBuilder;
 use reverie_engine as re;
 
 mod camera;
+pub mod util;
 mod world;
 use camera::Camera;
 use world::World;
@@ -70,35 +75,24 @@ fn main() {
         world
     };
 
-    let vao_config = {
-        let depth_test = true;
-        let blend = true;
-        let wireframe = false;
-        let culling = true;
-        let alpha: f32 = 1.0;
-        /* ベクトルではなく色 */
-        let material_specular = Vector3::new(0.2, 0.2, 0.2);
-        let material_shininess: f32 = 0.1;
-        let light_direction = Vector3::new(1.0, 1.0, 0.0);
-        /* ambient, diffuse, specular はベクトルではなく色 */
-        let ambient = Vector3::new(0.3, 0.3, 0.3);
-        let diffuse = Vector3::new(0.5, 0.5, 0.5);
-        let specular = Vector3::new(0.2, 0.2, 0.2);
-        VaoConfigBuilder::new(&shader)
-            .depth_test(depth_test)
-            .blend(blend)
-            .wireframe(wireframe)
-            .culling(culling)
-            .alpha(alpha)
-            .material_specular(material_specular)
-            .material_shininess(material_shininess)
-            .light_direction(light_direction)
-            .ambient(ambient)
-            .diffuse(diffuse)
-            .specular(specular)
-            .build()
+    let vao_config = VaoConfigBuilder::new()
+        .depth_test(true)
+        .blend(true)
+        .wireframe(false)
+        .culling(true)
+        .build();
+
+    let phong_info = PhongRenderingInfo {
+        material_specular: &Vector3::new(0.1, 0.1, 0.1),
+        material_shininess: 0.4,
+        light_direction: &Vector3::new(1.0, 1.0, 0.0),
+        ambient: &Vector3::new(0.3, 0.3, 0.3),
+        diffuse: &Vector3::new(0.6, 0.6, 0.6),
+        specular: &Vector3::new(0.2, 0.2, 0.2),
+        alpha: 1.0,
     };
 
+    let renderer = Phong3DRenderer::new(shader);
     let vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
 
     let mut camera = Camera::new();
@@ -111,39 +105,40 @@ fn main() {
             gl.Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
         }
 
-        {
-            if window.keydown(&winit::event::VirtualKeyCode::Space) {
-                println!("keydown!!");
-            }
-            if window.keyup(&winit::event::VirtualKeyCode::Space) {
-                println!("keyup!!");
-            }
-            if window.keypressed(&winit::event::VirtualKeyCode::Space) {
-                println!("keypressed!!");
-            }
-            {
-                let (dx, dy) = window.cursor_delta();
-                if dx != 0 || dy != 0 {
-                    println!("delta ({}, {})", dx, dy);
-                }
-            }
-            if window.mouse_down(&winit::event::MouseButton::Left) {
-                println!("mouse down");
-            }
-            if window.mouse_up(&winit::event::MouseButton::Left) {
-                println!("mouse up");
-            }
-            if window.mouse_pressed(&winit::event::MouseButton::Left) {
-                println!("mouse pressed");
-            }
+        if window.keypressed(&winit::event::VirtualKeyCode::Escape) {
+            break;
         }
 
-        let (front, _right, _up) = camera::calc_front_right_up(camera.pitch_rad, camera.yaw_rad);
+        const MOVE_SPEED: f32 = 0.08;
+        const UP: Vector3 = Vector3::new(0.0, 1.0, 0.0);
+        let (front, right, _up) = camera::calc_front_right_up(camera.yaw, camera.pitch);
+        let front = util::take_xz_normalized(&front);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
-            camera.pos += front * 0.01;
+            camera.pos += front * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::S) {
-            camera.pos -= front * 0.01;
+            camera.pos -= front * MOVE_SPEED;
+        }
+        if window.keypressed(&winit::event::VirtualKeyCode::D) {
+            camera.pos += right * MOVE_SPEED;
+        }
+        if window.keypressed(&winit::event::VirtualKeyCode::A) {
+            camera.pos -= right * MOVE_SPEED;
+        }
+        if window.keypressed(&winit::event::VirtualKeyCode::Space) {
+            camera.pos += UP * MOVE_SPEED;
+        }
+        if window.keypressed(&winit::event::VirtualKeyCode::LShift) {
+            camera.pos -= UP * MOVE_SPEED;
+        }
+
+        const ROTATION_SPEED: f32 = 0.01;
+        let (dx, dy) = window.cursor_delta();
+        if dy != 0 {
+            camera.pitch += Rad(-dy as f32 * ROTATION_SPEED);
+        }
+        if dx != 0 {
+            camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
         }
 
         let model_matrix =
@@ -151,24 +146,15 @@ fn main() {
         let view_matrix = camera.view_matrix();
         let projection_matrix: Matrix4 = camera.projection_matrix(width, height);
 
-        let uniforms = {
-            use re::shader::Uniform::*;
-            let mut uniforms = UniformVariables::new();
-            uniforms.add(c_str!("uModel"), Matrix4(&model_matrix));
-            uniforms.add(c_str!("uView"), Matrix4(&view_matrix));
-            uniforms.add(c_str!("uProjection"), Matrix4(&projection_matrix));
-            uniforms.add(
-                c_str!("uViewPosition"),
-                TripleFloat(camera.pos.x, camera.pos.y, camera.pos.z),
-            );
-            uniforms
+        let info = &Phong3DRenderingInfo {
+            phong: &phong_info,
+            model_matrix: &model_matrix,
+            view_matrix: &view_matrix,
+            projection_matrix: &projection_matrix,
+            camera_pos: &camera.pos,
+            texture: &block_atlas_texture,
         };
-
-        unsafe {
-            gl.BindTexture(gl::TEXTURE_2D, block_atlas_texture.gl_id);
-            vertex_obj.draw_triangles(&uniforms);
-            gl.BindTexture(gl::TEXTURE_2D, 0);
-        }
+        renderer.render(gl.clone(), &vertex_obj, info);
 
         context.swap_buffers();
 
