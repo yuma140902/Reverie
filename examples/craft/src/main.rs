@@ -1,6 +1,7 @@
 use c_str_macro::c_str;
 use player::Player;
 use re::gl;
+use re::math::Deg;
 use re::math::Rad;
 use re::shader::Program;
 use re::shader::Shader;
@@ -139,6 +140,12 @@ fn main() {
         if dy != 0 {
             player.camera.pitch += Rad(-dy as f32 * ROTATION_SPEED);
             player.camera.pitch = player.camera.pitch.normalized();
+            if player.camera.pitch < Deg(-90_f32).to_rad() {
+                player.camera.pitch = Deg(-90_f32).to_rad();
+            }
+            if Deg(90_f32).to_rad() < player.camera.pitch {
+                player.camera.pitch = Deg(90_f32).to_rad();
+            }
         }
         if dx != 0 {
             player.camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
