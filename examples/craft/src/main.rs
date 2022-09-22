@@ -138,9 +138,11 @@ fn main() {
         let (dx, dy) = window.cursor_delta();
         if dy != 0 {
             player.camera.pitch += Rad(-dy as f32 * ROTATION_SPEED);
+            player.camera.pitch = player.camera.pitch.normalized();
         }
         if dx != 0 {
             player.camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
+            player.camera.yaw = player.camera.yaw.normalized();
         }
 
         player.update_pos(&world);
