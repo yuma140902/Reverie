@@ -2,7 +2,7 @@
 
 use std::mem;
 
-use crate::Vao;
+use crate::TextureVao;
 use crate::VaoConfig;
 
 use crate::gl;
@@ -81,8 +81,8 @@ impl VaoBuffer {
     }
 
     /// 現在のバッファの内容をもとに[`Vao`]を作る
-    pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
-        Vao::new(
+    pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig<'a>) -> TextureVao<'a> {
+        TextureVao::new(
             gl.clone(),
             (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
             self.buffer.as_ptr() as _,

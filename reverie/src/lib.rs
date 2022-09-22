@@ -22,7 +22,7 @@ pub use vao::{
     texture_vao::{
         buffer::{VaoBuffer, VERTEX_SIZE},
         builder::{CuboidTextures, VaoBuilder3DGeometry},
-        Vao,
+        TextureVao,
     },
     vao_config::{VaoConfig, VaoConfigBuilder},
 };

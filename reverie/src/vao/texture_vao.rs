@@ -13,7 +13,7 @@ pub mod builder;
 
 /// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体
 #[derive(Debug)]
-pub struct Vao<'a> {
+pub struct TextureVao<'a> {
     gl: Gl,
     vao: u32,
     vbo: u32,
@@ -21,7 +21,7 @@ pub struct Vao<'a> {
     config: &'a VaoConfig<'a>,
 }
 
-impl<'a> Vao<'a> {
+impl<'a> TextureVao<'a> {
     /// 代わりに[`self::vao_buffer::VaoBuffer`]を使うことを推奨
     pub fn new(
         gl: Gl,
@@ -34,7 +34,7 @@ impl<'a> Vao<'a> {
         stride: GLsizei,
         vertex_num: i32,
         config: &'a VaoConfig<'a>,
-    ) -> Vao {
+    ) -> TextureVao {
         debug_assert_eq!(num_attributes, attribute_type_vec.len());
         debug_assert_eq!(num_attributes, attribute_size_vec.len());
 
@@ -70,7 +70,7 @@ impl<'a> Vao<'a> {
             gl.BindVertexArray(0);
         }
 
-        Vao {
+        TextureVao {
             gl,
             vao,
             vbo,
@@ -142,7 +142,7 @@ impl<'a> Vao<'a> {
     }
 }
 
-impl<'a> Drop for Vao<'a> {
+impl<'a> Drop for TextureVao<'a> {
     fn drop(&mut self) {
         unsafe {
             if self.vbo > 0 {
