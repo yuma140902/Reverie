@@ -2,8 +2,9 @@
 
 use crate::texture::texture_atlas::TextureUV;
 use crate::types::*;
+use crate::VertexWithNormUv;
 
-use super::vao_buffer::VaoBuffer;
+use crate::VaoBuffer;
 
 /// [`VaoBuffer`]上に立方体などの立体を追加する
 ///
@@ -32,7 +33,8 @@ pub trait VaoBuilder3DGeometry<T> {
 }
 
 impl<Width, Height, AtlasWidth, AtlasHeight>
-    VaoBuilder3DGeometry<TextureUV<Width, Height, AtlasWidth, AtlasHeight>> for VaoBuffer
+    VaoBuilder3DGeometry<TextureUV<Width, Height, AtlasWidth, AtlasHeight>>
+    for VaoBuffer<VertexWithNormUv>
 {
     fn add_cuboid<'b>(
         &mut self,

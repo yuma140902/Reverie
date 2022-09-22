@@ -4,11 +4,11 @@ pub mod gl;
 pub mod gui;
 mod interpolation;
 pub mod math;
+pub mod platform;
 pub mod shader;
 mod texture;
 pub mod types;
 mod vao;
-pub mod platform;
 mod window;
 pub use context::{Context, ContextBackend};
 pub use engine::ReverieEngine;
@@ -19,7 +19,11 @@ pub use texture::{
     texture_atlas::{TextureAtlasPos, TextureUV},
 };
 pub use vao::{
-    vao_buffer::VaoBuffer, vao_buffer::VERTEX_SIZE, vao_builder::CuboidTextures,
-    vao_builder::VaoBuilder3DGeometry, vao_config::VaoConfig, vao_config::VaoConfigBuilder, Vao,
+    buffer::VaoBuffer,
+    config::{VaoConfig, VaoConfigBuilder},
+    renderer::{Phong3DRenderer, Phong3DRenderingInfo, PhongRenderingInfo, Renderer},
+    texture_vao::builder::{CuboidTextures, VaoBuilder3DGeometry},
+    vertex::{VertexType, VertexWithNormUv},
+    Vao,
 };
 pub use window::{EventLoop, Window};

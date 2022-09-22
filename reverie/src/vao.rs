@@ -1,4 +1,9 @@
 //! Vertex Array Object
+pub mod buffer;
+pub mod config;
+pub mod renderer;
+pub mod texture_vao;
+pub mod vertex;
 
 use std::mem;
 use std::os::raw::c_void;
@@ -7,12 +12,7 @@ use crate::gl;
 use crate::gl::types::{GLenum, GLfloat, GLint, GLsizei, GLsizeiptr};
 use crate::gl::Gl;
 use crate::shader::UniformVariables;
-
-use self::vao_config::VaoConfig;
-
-pub mod vao_buffer;
-pub mod vao_builder;
-pub mod vao_config;
+use crate::VaoConfig;
 
 /// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体
 #[derive(Debug)]
@@ -21,7 +21,7 @@ pub struct Vao<'a> {
     vao: u32,
     vbo: u32,
     vertex_num: i32,
-    config: &'a VaoConfig<'a>,
+    config: &'a VaoConfig,
 }
 
 impl<'a> Vao<'a> {
@@ -32,14 +32,14 @@ impl<'a> Vao<'a> {
         data: *const c_void,
         usage: GLenum,
         num_attributes: usize,
-        attribute_type_vec: std::vec::Vec<GLenum>,
-        attribute_size_vec: std::vec::Vec<GLint>,
+        attribute_types: &'static [GLenum],
+        attribute_sizes: &'static [GLint],
         stride: GLsizei,
         vertex_num: i32,
-        config: &'a VaoConfig<'a>,
-    ) -> Vao {
-        debug_assert_eq!(num_attributes, attribute_type_vec.len());
-        debug_assert_eq!(num_attributes, attribute_size_vec.len());
+        config: &'a VaoConfig,
+    ) -> Vao<'a> {
+        debug_assert_eq!(num_attributes, attribute_types.len());
+        debug_assert_eq!(num_attributes, attribute_sizes.len());
 
         let mut vao = 0;
         let mut vbo = 0;
@@ -59,13 +59,13 @@ impl<'a> Vao<'a> {
                 gl.EnableVertexAttribArray(i as u32);
                 gl.VertexAttribPointer(
                     i as u32,
-                    attribute_size_vec[i],
-                    attribute_type_vec[i],
+                    attribute_sizes[i],
+                    attribute_types[i],
                     gl::FALSE,
                     stride,
                     (offset * mem::size_of::<GLfloat>()) as *const c_void,
                 );
-                offset += attribute_size_vec[i] as usize;
+                offset += attribute_sizes[i] as usize;
             }
 
             // unbind
@@ -82,12 +82,9 @@ impl<'a> Vao<'a> {
         }
     }
 
+    /// Use [`crate::Renderer`] instead
     pub fn draw(&self, uniforms: &UniformVariables, draw_mode: GLenum) {
         unsafe {
-            if let Some(texture) = self.config.texture {
-                self.gl.BindTexture(gl::TEXTURE_2D, texture.gl_id);
-            }
-
             if self.config.depth_test {
                 self.gl.Enable(gl::DEPTH_TEST);
             } else {
@@ -113,25 +110,6 @@ impl<'a> Vao<'a> {
                 self.gl.Disable(gl::CULL_FACE);
             }
 
-            use crate::shader::Uniform::*;
-            use c_str_macro::c_str;
-            let program = self.config.program;
-            program.set_uniform(c_str!("uAlpha"), &Float(self.config.alpha));
-            program.set_uniform(
-                c_str!("uMaterial.specular"),
-                &Vector3(&self.config.material_specular),
-            );
-            program.set_uniform(
-                c_str!("uMaterial.shininess"),
-                &Float(self.config.material_shininess),
-            );
-            program.set_uniform(c_str!("uLight.direction"), &Vector3(&self.config.light_direction));
-            program.set_uniform(c_str!("uLight.ambient"), &Vector3(&self.config.ambient));
-            program.set_uniform(c_str!("uLight.diffuse"), &Vector3(&self.config.diffuse));
-            program.set_uniform(c_str!("uLight.specular"), &Vector3(&self.config.specular));
-
-            self.config.program.set_used();
-            self.config.program.set_uniforms(uniforms);
             self.gl.BindVertexArray(self.vao);
             self.gl.DrawArrays(draw_mode, 0, self.vertex_num);
             self.gl.BindVertexArray(0);
@@ -140,6 +118,7 @@ impl<'a> Vao<'a> {
     }
 
     /// ポリゴンを描画する
+    /// Use [`crate::Renderer`] instead
     pub fn draw_triangles(&self, uniforms: &UniformVariables) {
         self.draw(uniforms, gl::TRIANGLES);
     }

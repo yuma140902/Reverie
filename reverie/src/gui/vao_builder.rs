@@ -1,6 +1,6 @@
 use crate::gui::layout::{Origin, Position, Rect};
 use crate::texture::texture_atlas::TextureUV;
-use crate::VaoBuffer;
+use crate::{VaoBuffer, VertexWithNormUv};
 
 /// [`VaoBuffer`]上にGUIを追加する
 ///
@@ -29,7 +29,7 @@ pub trait VaoBuilder2DGui<T> {
 }
 
 impl<Width, Height, AtlasWidth, AtlasHeight>
-    VaoBuilder2DGui<TextureUV<Width, Height, AtlasWidth, AtlasHeight>> for VaoBuffer
+    VaoBuilder2DGui<TextureUV<Width, Height, AtlasWidth, AtlasHeight>> for VaoBuffer<VertexWithNormUv>
 {
     fn add_rectangle(
         &mut self,

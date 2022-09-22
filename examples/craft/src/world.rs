@@ -2,13 +2,14 @@ use nalgebra::Point3;
 use re::gl::Gl;
 use re::CuboidTextures;
 use re::Vao;
-use re::VaoBuffer;
 use re::VaoBuilder3DGeometry;
 use re::VaoConfig;
+use re::VertexWithNormUv;
 use reverie_engine as re;
 
 use crate::TextureUV;
 
+type VaoBuffer = re::VaoBuffer<VertexWithNormUv>;
 type Vector3 = nalgebra::Vector3<f32>;
 
 pub struct World {
@@ -57,13 +58,7 @@ impl World {
 
 const BLOCK_SIZE: Vector3 = Vector3::new(1.0, 1.0, 1.0);
 
-fn add_block(
-    builder: &mut VaoBuffer,
-    x: u32,
-    y: u32,
-    z: u32,
-    textures: &CuboidTextures<'_, TextureUV>,
-) {
+fn add_block(builder: &mut VaoBuffer, x: u32, y: u32, z: u32, textures: &CuboidTextures<'_, TextureUV>) {
     let begin = Point3::new(x, y, z).cast::<f32>();
     builder.add_cuboid(&begin, &(begin + BLOCK_SIZE), textures);
 }

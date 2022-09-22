@@ -1,39 +1,42 @@
 //! 頂点の情報を動的に追加・削除するためのバッファ
 
+use std::marker::PhantomData;
 use std::mem;
 
-use super::vao_config::VaoConfig;
-use super::Vao;
-
 use crate::gl;
+use crate::gl::types::{GLenum, GLint};
 use crate::gl::{types::GLfloat, Gl};
-
-/// 1つの頂点は[`VERTEX_SIZE`]個のf32から成る。
-///
-/// * 頂点のx, y, z座標
-/// * 頂点が属する面の法線ベクトルのx, y, z成分
-/// * テクスチャのu, v座標
-pub const VERTEX_SIZE: usize = 8;
+use crate::Vao;
+use crate::VaoConfig;
+use crate::VertexType;
 
 /// 頂点の情報を動的に追加・削除するためのバッファ
 #[derive(Debug)]
-pub struct VaoBuffer {
+pub struct VaoBuffer<V: VertexType> {
+    vertex_size: usize,
+    attribute_types: &'static [GLenum],
+    attribute_sizes: &'static [GLint],
     buffer: Vec<f32>,
     vertex_num: i32,
+    _phantom: PhantomData<V>,
 }
 
-impl Default for VaoBuffer {
+impl<V: VertexType> Default for VaoBuffer<V> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl VaoBuffer {
+impl<V: VertexType> VaoBuffer<V> {
     /// 空の[`VaoBuffer`]を作る
     pub fn new() -> Self {
         Self {
             buffer: Vec::<f32>::new(),
             vertex_num: 0,
+            vertex_size: V::vertex_size(),
+            attribute_sizes: V::attribute_sizes(),
+            attribute_types: V::attribute_types(),
+            _phantom: PhantomData,
         }
     }
 
@@ -41,9 +44,14 @@ impl VaoBuffer {
     ///
     /// `num_vertex_to_reserve`個の頂点が確保できるだけの初期容量になる。
     pub fn with_num_vertex(num_vertex_to_reserve: usize) -> Self {
+        let vertex_size = V::vertex_size();
         Self {
-            buffer: Vec::<f32>::with_capacity(num_vertex_to_reserve * VERTEX_SIZE),
+            buffer: Vec::<f32>::with_capacity(num_vertex_to_reserve * vertex_size),
             vertex_num: 0,
+            vertex_size,
+            attribute_types: V::attribute_types(),
+            attribute_sizes: V::attribute_sizes(),
+            _phantom: PhantomData,
         }
     }
 
@@ -52,8 +60,8 @@ impl VaoBuffer {
     /// * `v` - 頂点の情報がフラットに繰り返される`Vec`。したがって`v.len()`は[`VERTEX_SIZE`]の倍数になる。
     /// ※頂点情報の仕様については`[VERTEX_SIZE`]を参照
     pub fn append(&mut self, v: &mut Vec<f32>) {
-        debug_assert_eq!(v.len() % VERTEX_SIZE, 0);
-        self.vertex_num += (v.len() / VERTEX_SIZE) as i32;
+        debug_assert_eq!(v.len() % self.vertex_size, 0);
+        self.vertex_num += (v.len() / self.vertex_size) as i32;
         self.buffer.append(v);
     }
 
@@ -72,24 +80,24 @@ impl VaoBuffer {
     ///
     /// 少なくとも`additional_num_vertex`個の頂点が格納できるように確保する。
     pub fn reserve(&mut self, additional_num_vertex: usize) {
-        self.buffer.reserve(additional_num_vertex * VERTEX_SIZE);
+        self.buffer.reserve(additional_num_vertex * self.vertex_size);
     }
 
     /// 先頭の`num_vertex_to_preserve`個の頂点以外の頂点を削除する
     pub fn clear_preserving_first(&mut self, num_vertex_to_preserve: usize) {
-        self.buffer.truncate(num_vertex_to_preserve * VERTEX_SIZE);
+        self.buffer.truncate(num_vertex_to_preserve * self.vertex_size);
     }
 
     /// 現在のバッファの内容をもとに[`Vao`]を作る
-    pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig<'a>) -> Vao<'a> {
+    pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig) -> Vao<'a> {
         Vao::new(
             gl.clone(),
             (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
             self.buffer.as_ptr() as _,
             gl::STATIC_DRAW,
             3usize,
-            vec![gl::FLOAT, gl::FLOAT, gl::FLOAT],
-            vec![3, 3, 2],
+            self.attribute_types,
+            self.attribute_sizes,
             ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
             self.vertex_num,
             config,
