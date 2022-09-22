@@ -4,6 +4,7 @@ use re::CuboidTextures;
 use re::Vao;
 use re::VaoBuilder3DGeometry;
 use re::VaoConfig;
+use re::VertexWithNormUv;
 use reverie_engine as re;
 
 use crate::TextureUV;

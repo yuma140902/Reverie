@@ -2,7 +2,7 @@
 pub mod buffer;
 pub mod config;
 pub mod texture_vao;
-pub mod types;
+pub mod vertex;
 
 use std::mem;
 use std::os::raw::c_void;
