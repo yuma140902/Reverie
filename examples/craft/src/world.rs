@@ -38,6 +38,10 @@ impl World {
         self.blocks[pos_to_index(x, y, z)] = true;
     }
 
+    pub fn remove_block(&mut self, x: u32, y: u32, z: u32) {
+        self.blocks[pos_to_index(x, y, z)] = false;
+    }
+
     pub fn generate_collision_aabbs(&self) -> Vec<AABB> {
         let mut v = Vec::new();
         for x in 0..16 {
@@ -46,6 +50,21 @@ impl World {
                     let index = pos_to_index(x, y, z);
                     if self.blocks[index] {
                         v.push(get_block_aabb(x, y, z));
+                    }
+                }
+            }
+        }
+        v
+    }
+
+    pub fn generate_selection_aabbs(&self) -> Vec<(u32, u32, u32, AABB)> {
+        let mut v = Vec::new();
+        for x in 0..16 {
+            for y in 0..16 {
+                for z in 0..16 {
+                    let index = pos_to_index(x, y, z);
+                    if self.blocks[index] {
+                        v.push((x, y, z, get_block_aabb(x, y, z)));
                     }
                 }
             }

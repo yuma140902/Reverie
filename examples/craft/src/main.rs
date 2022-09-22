@@ -20,6 +20,7 @@ use reverie_engine as re;
 mod camera;
 mod collision;
 mod player;
+mod raycast;
 pub mod util;
 mod world;
 use world::World;
@@ -62,21 +63,18 @@ fn main() {
         east: &side_texture,
     };
 
-    let world = {
-        let mut world = World::new();
-        for i in 0..16 {
-            for j in 0..16 {
-                world.set_block(i, 0, j);
-                world.set_block(0, i, j);
-                world.set_block(i, j, 0);
-            }
+    let mut world = World::new();
+    for i in 0..16 {
+        for j in 0..16 {
+            world.set_block(i, 0, j);
+            world.set_block(0, i, j);
+            world.set_block(i, j, 0);
         }
-        for i in 1..15 {
-            world.set_block(i, i, 15);
-        }
-        world.set_block(3, 3, 3);
-        world
-    };
+    }
+    for i in 1..15 {
+        world.set_block(i, i, 15);
+    }
+    world.set_block(3, 3, 3);
 
     let vao_config = VaoConfigBuilder::new()
         .depth_test(true)
@@ -96,7 +94,7 @@ fn main() {
     };
 
     let renderer = Phong3DRenderer::new(shader);
-    let vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
+    let mut vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
 
     let mut player = Player::new();
 
@@ -150,6 +148,13 @@ fn main() {
         if dx != 0 {
             player.camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
             player.camera.yaw = player.camera.yaw.normalized();
+        }
+
+        if window.mouse_down(&winit::event::MouseButton::Left) {
+            if let Some((x, y, z)) = raycast::hit_block(&player, &world) {
+                world.remove_block(x, y, z);
+                vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
+            }
         }
 
         player.update_pos(&world);

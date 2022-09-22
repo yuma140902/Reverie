@@ -4,7 +4,7 @@ use crate::{camera::Camera, collision, world::World, Matrix4, Point3, Vector3};
 
 const VELOCITY_DECAY_RATE: f32 = 0.9;
 const MAX_VELOCITY: f32 = 0.5;
-const PLAYER_EYE: Vector3 = Vector3::new(0.0, 0.3, 0.0);
+pub const PLAYER_EYE: Vector3 = Vector3::new(0.0, 0.3, 0.0);
 
 #[derive(Debug)]
 pub struct Player {
