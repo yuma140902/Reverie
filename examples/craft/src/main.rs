@@ -1,4 +1,5 @@
 use c_str_macro::c_str;
+use player::Player;
 use re::gl;
 use re::math::Rad;
 use re::shader::Program;
@@ -16,9 +17,9 @@ use re::VaoConfigBuilder;
 use reverie_engine as re;
 
 mod camera;
+mod player;
 pub mod util;
 mod world;
-use camera::Camera;
 use world::World;
 
 #[allow(dead_code)]
@@ -95,7 +96,7 @@ fn main() {
     let renderer = Phong3DRenderer::new(shader);
     let vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
 
-    let mut camera = Camera::new();
+    let mut player = Player::new();
 
     while !window.process_event() {
         unsafe {
@@ -111,47 +112,47 @@ fn main() {
 
         const MOVE_SPEED: f32 = 0.08;
         const UP: Vector3 = Vector3::new(0.0, 1.0, 0.0);
-        let (front, right, _up) = camera::calc_front_right_up(camera.yaw, camera.pitch);
+        let (front, right, _up) = camera::calc_front_right_up(player.camera.yaw, player.camera.pitch);
         let front = util::take_xz_normalized(&front);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
-            camera.pos += front * MOVE_SPEED;
+            player.pos += front * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::S) {
-            camera.pos -= front * MOVE_SPEED;
+            player.pos -= front * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::D) {
-            camera.pos += right * MOVE_SPEED;
+            player.pos += right * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::A) {
-            camera.pos -= right * MOVE_SPEED;
+            player.pos -= right * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::Space) {
-            camera.pos += UP * MOVE_SPEED;
+            player.pos += UP * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::LShift) {
-            camera.pos -= UP * MOVE_SPEED;
+            player.pos -= UP * MOVE_SPEED;
         }
 
         const ROTATION_SPEED: f32 = 0.01;
         let (dx, dy) = window.cursor_delta();
         if dy != 0 {
-            camera.pitch += Rad(-dy as f32 * ROTATION_SPEED);
+            player.camera.pitch += Rad(-dy as f32 * ROTATION_SPEED);
         }
         if dx != 0 {
-            camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
+            player.camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
         }
 
         let model_matrix =
             nalgebra_glm::scale(&Matrix4::identity(), &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32));
-        let view_matrix = camera.view_matrix();
-        let projection_matrix: Matrix4 = camera.projection_matrix(width, height);
+        let view_matrix = player.view_matrix();
+        let projection_matrix: Matrix4 = player.projection_matrix(width, height);
 
         let info = &Phong3DRenderingInfo {
             phong: &phong_info,
             model_matrix: &model_matrix,
             view_matrix: &view_matrix,
             projection_matrix: &projection_matrix,
-            camera_pos: &camera.pos,
+            camera_pos: &player.pos,
             texture: &block_atlas_texture,
         };
         renderer.render(gl.clone(), &vertex_obj, info);

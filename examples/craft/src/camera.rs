@@ -1,8 +1,8 @@
 use nalgebra::{Matrix4, Point3, Vector3};
 use reverie_engine::math::{Deg, Rad};
 
+#[derive(Debug)]
 pub struct Camera {
-    pub pos: Point3<f32>,
     pub yaw: Rad<f32>,
     pub pitch: Rad<f32>,
 }
@@ -10,15 +10,14 @@ pub struct Camera {
 impl Camera {
     pub fn new() -> Self {
         Self {
-            pos: Point3::new(4.0, 3.6, 4.0),
             yaw: Deg(225_f32).to_rad(),
             pitch: Deg(-30_f32).to_rad(),
         }
     }
 
-    pub fn view_matrix(&self) -> Matrix4<f32> {
+    pub fn view_matrix(&self, pos: &Point3<f32>) -> Matrix4<f32> {
         let (front, _right, up) = calc_front_right_up(self.yaw, self.pitch);
-        Matrix4::<f32>::look_at_rh(&self.pos, &(self.pos + front), &up)
+        Matrix4::<f32>::look_at_rh(pos, &(pos + front), &up)
     }
 
     pub fn projection_matrix(&self, width: u32, height: u32) -> Matrix4<f32> {
