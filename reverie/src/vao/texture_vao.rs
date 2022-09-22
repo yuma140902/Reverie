@@ -8,7 +8,6 @@ use crate::shader::UniformVariables;
 
 use super::vao_config::VaoConfig;
 
-pub mod buffer;
 pub mod builder;
 
 /// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体

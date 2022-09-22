@@ -19,8 +19,8 @@ pub use texture::{
     texture_atlas::{TextureAtlasPos, TextureUV},
 };
 pub use vao::{
+    buffer::{VaoBuffer, SIZE_VERTEX_WITH_NORM_AND_UV},
     texture_vao::{
-        buffer::{VaoBuffer, SIZE_VERTEX_WITH_NORM_AND_UV},
         builder::{CuboidTextures, VaoBuilder3DGeometry},
         TextureVao,
     },
