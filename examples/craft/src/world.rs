@@ -1,7 +1,7 @@
 use nalgebra::Point3;
 use re::gl::Gl;
 use re::CuboidTextures;
-use re::TextureVao;
+use re::Vao;
 use re::VaoBuilder3DGeometry;
 use re::VaoConfig;
 use reverie_engine as re;
@@ -35,7 +35,7 @@ impl World {
         gl: &Gl,
         textures: &CuboidTextures<'a, TextureUV>,
         config: &'a VaoConfig,
-    ) -> TextureVao<'a> {
+    ) -> Vao<'a> {
         let mut buffer_builder = VaoBuffer::new();
 
         for x in 0..16 {
