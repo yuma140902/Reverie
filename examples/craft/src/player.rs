@@ -4,6 +4,7 @@ use crate::{camera::Camera, collision, world::World, Matrix4, Point3, Vector3};
 
 const VELOCITY_DECAY_RATE: f32 = 0.9;
 const MAX_VELOCITY: f32 = 0.5;
+const PLAYER_EYE: Vector3 = Vector3::new(0.0, 0.3, 0.0);
 
 #[derive(Debug)]
 pub struct Player {
@@ -39,7 +40,7 @@ impl Player {
     }
 
     pub fn view_matrix(&self) -> Matrix4 {
-        self.camera.view_matrix(&self.pos)
+        self.camera.view_matrix(&(self.pos + PLAYER_EYE))
     }
 
     pub fn projection_matrix(&self, width: u32, height: u32) -> Matrix4 {
