@@ -87,7 +87,7 @@ fn main() {
         material_specular: &Vector3::new(0.1, 0.1, 0.1),
         material_shininess: 0.4,
         light_direction: &Vector3::new(1.0, 1.0, 0.0),
-        ambient: &Vector3::new(0.3, 0.3, 0.3),
+        ambient: &Vector3::new(0.5, 0.5, 0.5),
         diffuse: &Vector3::new(0.6, 0.6, 0.6),
         specular: &Vector3::new(0.2, 0.2, 0.2),
         alpha: 1.0,
@@ -151,9 +151,19 @@ fn main() {
         }
 
         if window.mouse_down(&winit::event::MouseButton::Left) {
-            if let Some((x, y, z)) = raycast::hit_block(&player, &world) {
+            if let Some((x, y, z, ..)) = raycast::hit_block(&player, &world) {
                 world.remove_block(x, y, z);
                 vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
+            }
+        }
+
+        if window.mouse_down(&winit::event::MouseButton::Right) {
+            if let Some((x, y, z, Some(side))) = raycast::hit_block(&player, &world) {
+                let (x, y, z) = side.offset(x, y, z);
+                if world::is_valid_pos(x, y, z) {
+                    world.set_block(x, y, z);
+                    vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
+                }
             }
         }
 
