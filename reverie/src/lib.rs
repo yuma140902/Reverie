@@ -20,10 +20,14 @@ pub use texture::{
 };
 pub use vao::{
     buffer::VaoBuffer,
+    color_vao::VaoBuilder3DGeometryOutline,
     config::{VaoConfig, VaoConfigBuilder},
-    renderer::{Phong3DRenderer, Phong3DRenderingInfo, PhongRenderingInfo, Renderer},
+    renderer::{
+        Color3DRenderer, Color3DRenderingInfo, Phong3DRenderer, Phong3DRenderingInfo,
+        PhongRenderingInfo, Renderer,
+    },
     texture_vao::builder::{CuboidTextures, VaoBuilder3DGeometry},
-    vertex::{VertexType, VertexWithNormUv},
+    vertex::{VertexType, VertexWithColor, VertexWithNormUv},
     Vao,
 };
 pub use window::{EventLoop, Window};

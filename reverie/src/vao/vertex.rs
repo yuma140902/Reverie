@@ -9,6 +9,7 @@ pub trait VertexType {
     fn attribute_sizes() -> &'static [GLint];
 }
 
+#[derive(Debug)]
 pub struct VertexWithNormUv;
 
 const VNUV_ATTR_TY: [GLenum; 3] = [gl::FLOAT, gl::FLOAT, gl::FLOAT];
@@ -28,5 +29,25 @@ impl VertexType for VertexWithNormUv {
 
     fn attribute_sizes() -> &'static [GLint] {
         &VNUV_ATTR_SZ
+    }
+}
+
+#[derive(Debug)]
+pub struct VertexWithColor;
+
+const VC_ATTR_TY: [GLenum; 2] = [gl::FLOAT, gl::FLOAT];
+const VC_ATTR_SZ: [GLint; 2] = [3, 3];
+
+impl VertexType for VertexWithColor {
+    fn vertex_size() -> usize {
+        3 + 3
+    }
+
+    fn attribute_types() -> &'static [GLenum] {
+        &VC_ATTR_TY
+    }
+
+    fn attribute_sizes() -> &'static [GLint] {
+        &VC_ATTR_SZ
     }
 }

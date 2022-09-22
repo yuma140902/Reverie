@@ -14,6 +14,7 @@ use crate::VertexType;
 #[derive(Debug)]
 pub struct VaoBuffer<V: VertexType> {
     vertex_size: usize,
+    num_attributes: usize,
     attribute_types: &'static [GLenum],
     attribute_sizes: &'static [GLint],
     buffer: Vec<f32>,
@@ -34,6 +35,7 @@ impl<V: VertexType> VaoBuffer<V> {
             buffer: Vec::<f32>::new(),
             vertex_num: 0,
             vertex_size: V::vertex_size(),
+            num_attributes: V::attribute_sizes().len(),
             attribute_sizes: V::attribute_sizes(),
             attribute_types: V::attribute_types(),
             _phantom: PhantomData,
@@ -49,6 +51,7 @@ impl<V: VertexType> VaoBuffer<V> {
             buffer: Vec::<f32>::with_capacity(num_vertex_to_reserve * vertex_size),
             vertex_num: 0,
             vertex_size,
+            num_attributes: V::attribute_sizes().len(),
             attribute_types: V::attribute_types(),
             attribute_sizes: V::attribute_sizes(),
             _phantom: PhantomData,
@@ -95,7 +98,7 @@ impl<V: VertexType> VaoBuffer<V> {
             (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
             self.buffer.as_ptr() as _,
             gl::STATIC_DRAW,
-            3usize,
+            self.num_attributes,
             self.attribute_types,
             self.attribute_sizes,
             ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,

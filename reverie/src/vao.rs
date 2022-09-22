@@ -1,5 +1,6 @@
 //! Vertex Array Object
 pub mod buffer;
+pub mod color_vao;
 pub mod config;
 pub mod renderer;
 pub mod texture_vao;
