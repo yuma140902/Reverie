@@ -21,6 +21,10 @@ fn pos_to_index(x: u32, y: u32, z: u32) -> usize {
     (16 * 16 * y + 16 * z + x) as usize
 }
 
+pub fn is_valid_pos(x: u32, y: u32, z: u32) -> bool {
+    0 <= x && x < 16 && 0 <= y && y < 16 && 0 <= z && z < 16
+}
+
 fn get_block_aabb(x: u32, y: u32, z: u32) -> AABB {
     let min = Point3::new(x as f32, y as f32, z as f32) * 0.5;
     let max = min + BLOCK_SIZE * 0.5;
