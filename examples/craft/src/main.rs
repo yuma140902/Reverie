@@ -87,7 +87,7 @@ fn main() {
         material_specular: &Vector3::new(0.1, 0.1, 0.1),
         material_shininess: 0.4,
         light_direction: &Vector3::new(1.0, 1.0, 0.0),
-        ambient: &Vector3::new(0.3, 0.3, 0.3),
+        ambient: &Vector3::new(0.5, 0.5, 0.5),
         diffuse: &Vector3::new(0.6, 0.6, 0.6),
         specular: &Vector3::new(0.2, 0.2, 0.2),
         alpha: 1.0,
