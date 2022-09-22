@@ -5,8 +5,7 @@ use crate::gl;
 use crate::gl::types::{GLenum, GLfloat, GLint, GLsizei, GLsizeiptr};
 use crate::gl::Gl;
 use crate::shader::UniformVariables;
-
-use super::vao_config::VaoConfig;
+use crate::VaoConfig;
 
 pub mod builder;
 
