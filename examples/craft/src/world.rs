@@ -22,8 +22,8 @@ fn pos_to_index(x: u32, y: u32, z: u32) -> usize {
 }
 
 fn get_block_aabb(x: u32, y: u32, z: u32) -> AABB {
-    let min = Point3::new(x as f32, y as f32, z as f32);
-    let max = min + BLOCK_SIZE;
+    let min = Point3::new(x as f32, y as f32, z as f32) * 0.5;
+    let max = min + BLOCK_SIZE * 0.5;
     AABB::new(min, max)
 }
 
@@ -38,7 +38,7 @@ impl World {
         self.blocks[pos_to_index(x, y, z)] = true;
     }
 
-    pub fn collision_aabbs(&self) -> Vec<AABB> {
+    pub fn generate_collision_aabbs(&self) -> Vec<AABB> {
         let mut v = Vec::new();
         for x in 0..16 {
             for y in 0..16 {

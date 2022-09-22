@@ -17,6 +17,7 @@ use re::VaoConfigBuilder;
 use reverie_engine as re;
 
 mod camera;
+mod collision;
 mod player;
 pub mod util;
 mod world;
@@ -142,7 +143,7 @@ fn main() {
             player.camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
         }
 
-        player.update_pos();
+        player.update_pos(&world);
 
         let model_matrix =
             nalgebra_glm::scale(&Matrix4::identity(), &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32));
