@@ -1,6 +1,7 @@
 //! Vertex Array Object
 pub mod buffer;
 pub mod config;
+pub mod renderer;
 pub mod texture_vao;
 pub mod vertex;
 
@@ -81,6 +82,7 @@ impl<'a> Vao<'a> {
         }
     }
 
+    /// Use [`crate::Renderer`] instead
     pub fn draw(&self, uniforms: &UniformVariables, draw_mode: GLenum) {
         unsafe {
             if let Some(texture) = self.config.texture {
@@ -139,6 +141,7 @@ impl<'a> Vao<'a> {
     }
 
     /// ポリゴンを描画する
+    /// Use [`crate::Renderer`] instead
     pub fn draw_triangles(&self, uniforms: &UniformVariables) {
         self.draw(uniforms, gl::TRIANGLES);
     }

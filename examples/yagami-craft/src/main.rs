@@ -7,6 +7,9 @@ use re::shader::UniformVariables;
 use re::types::Const;
 use re::CuboidTextures;
 use re::ImageManager;
+use re::PhongRenderer;
+use re::Renderer;
+use re::RenderingInfo;
 use re::ReverieEngine;
 use re::TextureAtlasPos;
 use re::VaoConfigBuilder;
@@ -101,6 +104,7 @@ fn main() {
             .build()
     };
 
+    let renderer = PhongRenderer::new();
     let vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
 
     let mut camera = Camera::new();
@@ -154,24 +158,14 @@ fn main() {
         let view_matrix = camera.view_matrix();
         let projection_matrix: Matrix4 = camera.projection_matrix(width, height);
 
-        let uniforms = {
-            use re::shader::Uniform::*;
-            let mut uniforms = UniformVariables::new();
-            uniforms.add(c_str!("uModel"), Matrix4(&model_matrix));
-            uniforms.add(c_str!("uView"), Matrix4(&view_matrix));
-            uniforms.add(c_str!("uProjection"), Matrix4(&projection_matrix));
-            uniforms.add(
-                c_str!("uViewPosition"),
-                TripleFloat(camera.pos.x, camera.pos.y, camera.pos.z),
-            );
-            uniforms
+        let info = &RenderingInfo {
+            model_matrix: &model_matrix,
+            view_matrix: &view_matrix,
+            projection_matrix: &projection_matrix,
+            camera_pos: &camera.pos,
+            texture: &block_atlas_texture,
         };
-
-        unsafe {
-            gl.BindTexture(gl::TEXTURE_2D, block_atlas_texture.gl_id);
-            vertex_obj.draw_triangles(&uniforms);
-            gl.BindTexture(gl::TEXTURE_2D, 0);
-        }
+        renderer.render(gl.clone(), &vertex_obj, info);
 
         context.swap_buffers();
 
