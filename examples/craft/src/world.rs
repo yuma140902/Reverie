@@ -8,7 +8,7 @@ use reverie_engine as re;
 
 use crate::TextureUV;
 
-type VaoBuffer = re::VaoBuffer<{ re::SIZE_VERTEX_WITH_NORM_AND_UV }>;
+type VaoBuffer = re::VaoBuffer<VertexWithNormUv>;
 type Vector3 = nalgebra::Vector3<f32>;
 
 pub struct World {

@@ -2,6 +2,7 @@
 pub mod buffer;
 pub mod config;
 pub mod texture_vao;
+pub mod types;
 
 use std::mem;
 use std::os::raw::c_void;
@@ -11,13 +12,6 @@ use crate::gl::types::{GLenum, GLfloat, GLint, GLsizei, GLsizeiptr};
 use crate::gl::Gl;
 use crate::shader::UniformVariables;
 use crate::VaoConfig;
-
-/// 1つの頂点は[`SIZE_VERTEX_WITH_NORM_AND_UV`]個のf32から成る。
-///
-/// * 頂点のx, y, z座標
-/// * 頂点が属する面の法線ベクトルのx, y, z成分
-/// * テクスチャのu, v座標
-pub const SIZE_VERTEX_WITH_NORM_AND_UV: usize = 8;
 
 /// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体
 #[derive(Debug)]
@@ -37,14 +31,14 @@ impl<'a> Vao<'a> {
         data: *const c_void,
         usage: GLenum,
         num_attributes: usize,
-        attribute_type_vec: std::vec::Vec<GLenum>,
-        attribute_size_vec: std::vec::Vec<GLint>,
+        attribute_types: &'static [GLenum],
+        attribute_sizes: &'static [GLint],
         stride: GLsizei,
         vertex_num: i32,
         config: &'a VaoConfig<'a>,
-    ) -> Vao {
-        debug_assert_eq!(num_attributes, attribute_type_vec.len());
-        debug_assert_eq!(num_attributes, attribute_size_vec.len());
+    ) -> Vao<'a> {
+        debug_assert_eq!(num_attributes, attribute_types.len());
+        debug_assert_eq!(num_attributes, attribute_sizes.len());
 
         let mut vao = 0;
         let mut vbo = 0;
@@ -64,13 +58,13 @@ impl<'a> Vao<'a> {
                 gl.EnableVertexAttribArray(i as u32);
                 gl.VertexAttribPointer(
                     i as u32,
-                    attribute_size_vec[i],
-                    attribute_type_vec[i],
+                    attribute_sizes[i],
+                    attribute_types[i],
                     gl::FALSE,
                     stride,
                     (offset * mem::size_of::<GLfloat>()) as *const c_void,
                 );
-                offset += attribute_size_vec[i] as usize;
+                offset += attribute_sizes[i] as usize;
             }
 
             // unbind

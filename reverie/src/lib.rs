@@ -22,6 +22,7 @@ pub use vao::{
     buffer::VaoBuffer,
     config::{VaoConfig, VaoConfigBuilder},
     texture_vao::builder::{CuboidTextures, VaoBuilder3DGeometry},
-    Vao, SIZE_VERTEX_WITH_NORM_AND_UV,
+    types::{VertexType, VertexWithNormUv},
+    Vao,
 };
 pub use window::{EventLoop, Window};
