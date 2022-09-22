@@ -110,27 +110,27 @@ fn main() {
             break;
         }
 
-        const MOVE_SPEED: f32 = 0.08;
+        const MOVE_SPEED: f32 = 0.01;
         const UP: Vector3 = Vector3::new(0.0, 1.0, 0.0);
         let (front, right, _up) = camera::calc_front_right_up(player.camera.yaw, player.camera.pitch);
         let front = util::take_xz_normalized(&front);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
-            player.pos += front * MOVE_SPEED;
+            player.velocity += front * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::S) {
-            player.pos -= front * MOVE_SPEED;
+            player.velocity -= front * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::D) {
-            player.pos += right * MOVE_SPEED;
+            player.velocity += right * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::A) {
-            player.pos -= right * MOVE_SPEED;
+            player.velocity -= right * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::Space) {
-            player.pos += UP * MOVE_SPEED;
+            player.velocity += UP * MOVE_SPEED;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::LShift) {
-            player.pos -= UP * MOVE_SPEED;
+            player.velocity -= UP * MOVE_SPEED;
         }
 
         const ROTATION_SPEED: f32 = 0.01;
@@ -141,6 +141,8 @@ fn main() {
         if dx != 0 {
             player.camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
         }
+
+        player.update_pos();
 
         let model_matrix =
             nalgebra_glm::scale(&Matrix4::identity(), &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32));
