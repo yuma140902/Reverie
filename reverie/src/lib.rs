@@ -23,7 +23,7 @@ pub use vao::{
     config::{VaoConfig, VaoConfigBuilder},
     renderer::{Phong3DRenderer, Phong3DRenderingInfo, PhongRenderingInfo, Renderer},
     texture_vao::builder::{CuboidTextures, VaoBuilder3DGeometry},
-    vertex::{VertexType, VertexWithNormUv},
+    vertex::{VertexType, VertexWithColor, VertexWithNormUv},
     Vao,
 };
 pub use window::{EventLoop, Window};
