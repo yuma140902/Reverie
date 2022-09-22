@@ -2,6 +2,7 @@
 
 use crate::texture::texture_atlas::TextureUV;
 use crate::types::*;
+use crate::SIZE_VERTEX_WITH_NORM_AND_UV;
 
 use crate::VaoBuffer;
 
@@ -32,7 +33,8 @@ pub trait VaoBuilder3DGeometry<T> {
 }
 
 impl<Width, Height, AtlasWidth, AtlasHeight>
-    VaoBuilder3DGeometry<TextureUV<Width, Height, AtlasWidth, AtlasHeight>> for VaoBuffer
+    VaoBuilder3DGeometry<TextureUV<Width, Height, AtlasWidth, AtlasHeight>>
+    for VaoBuffer<{ SIZE_VERTEX_WITH_NORM_AND_UV }>
 {
     fn add_cuboid<'b>(
         &mut self,

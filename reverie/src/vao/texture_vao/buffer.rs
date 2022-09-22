@@ -13,22 +13,22 @@ use crate::gl::{types::GLfloat, Gl};
 /// * 頂点のx, y, z座標
 /// * 頂点が属する面の法線ベクトルのx, y, z成分
 /// * テクスチャのu, v座標
-pub const VERTEX_SIZE: usize = 8;
+pub const SIZE_VERTEX_WITH_NORM_AND_UV: usize = 8;
 
 /// 頂点の情報を動的に追加・削除するためのバッファ
 #[derive(Debug)]
-pub struct VaoBuffer {
+pub struct VaoBuffer<const VERTEX_SIZE: usize> {
     buffer: Vec<f32>,
     vertex_num: i32,
 }
 
-impl Default for VaoBuffer {
+impl<const VERTEX_SIZE: usize> Default for VaoBuffer<VERTEX_SIZE> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl VaoBuffer {
+impl<const VERTEX_SIZE: usize> VaoBuffer<VERTEX_SIZE> {
     /// 空の[`VaoBuffer`]を作る
     pub fn new() -> Self {
         Self {

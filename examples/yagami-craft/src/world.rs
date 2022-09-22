@@ -2,13 +2,13 @@ use nalgebra::Point3;
 use re::gl::Gl;
 use re::CuboidTextures;
 use re::TextureVao;
-use re::VaoBuffer;
 use re::VaoBuilder3DGeometry;
 use re::VaoConfig;
 use reverie_engine as re;
 
 use crate::TextureUV;
 
+type VaoBuffer = re::VaoBuffer<{ re::SIZE_VERTEX_WITH_NORM_AND_UV }>;
 type Vector3 = nalgebra::Vector3<f32>;
 
 pub struct World {

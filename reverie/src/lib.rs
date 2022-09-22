@@ -20,7 +20,7 @@ pub use texture::{
 };
 pub use vao::{
     texture_vao::{
-        buffer::{VaoBuffer, VERTEX_SIZE},
+        buffer::{VaoBuffer, SIZE_VERTEX_WITH_NORM_AND_UV},
         builder::{CuboidTextures, VaoBuilder3DGeometry},
         TextureVao,
     },
