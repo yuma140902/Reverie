@@ -56,6 +56,7 @@ fn main() {
     let side_texture = TextureUV::of_atlas(&TextureAtlasPos::new(0, 0));
     let manual1_texture = TextureUV::of_atlas(&TextureAtlasPos::new(1, 0));
     let manual2_texture = TextureUV::of_atlas(&TextureAtlasPos::new(1, 1));
+    let highlight_texture = TextureUV::of_atlas(&TextureAtlasPos::new(0, 3));
     let cuboid_texture = CuboidTextures {
         top: &top_texture,
         bottom: &bottom_texture,
@@ -63,6 +64,14 @@ fn main() {
         south: &side_texture,
         west: &side_texture,
         east: &side_texture,
+    };
+    let highlight_cuboid_texture = CuboidTextures {
+        top: &highlight_texture,
+        bottom: &highlight_texture,
+        south: &highlight_texture,
+        north: &highlight_texture,
+        west: &highlight_texture,
+        east: &highlight_texture,
     };
 
     let mut world = World::new();
@@ -101,6 +110,8 @@ fn main() {
         &cuboid_texture,
         &manual1_texture,
         &manual2_texture,
+        None,
+        &highlight_cuboid_texture,
         &vao_config,
     );
 
@@ -159,32 +170,40 @@ fn main() {
         }
 
         if window.mouse_down(&winit::event::MouseButton::Left) {
-            if let Some((x, y, z, ..)) = raycast::hit_block(&player, &world) {
+            if let Some((x, y, z)) = raycast::hit_block(&player, &world) {
                 world.remove_block(x, y, z);
-                vertex_obj = world.generate_vertex_obj(
-                    &gl,
-                    &cuboid_texture,
-                    &manual1_texture,
-                    &manual2_texture,
-                    &vao_config,
-                );
             }
         }
 
         if window.mouse_down(&winit::event::MouseButton::Right) {
-            if let Some((x, y, z, Some(side))) = raycast::hit_block(&player, &world) {
+            if let Some((x, y, z, Some(side))) = raycast::hit_block_and_side(&player, &world) {
                 let (x, y, z) = side.offset(x, y, z);
                 if world::is_valid_pos(x, y, z) {
                     world.set_block(x, y, z);
-                    vertex_obj = world.generate_vertex_obj(
-                        &gl,
-                        &cuboid_texture,
-                        &manual1_texture,
-                        &manual2_texture,
-                        &vao_config,
-                    );
                 }
             }
+        }
+
+        if let Some((x, y, z)) = raycast::hit_block(&player, &world) {
+            vertex_obj = world.generate_vertex_obj(
+                &gl,
+                &cuboid_texture,
+                &manual1_texture,
+                &manual2_texture,
+                Some((x, y, z)),
+                &highlight_cuboid_texture,
+                &vao_config,
+            );
+        } else {
+            vertex_obj = world.generate_vertex_obj(
+                &gl,
+                &cuboid_texture,
+                &manual1_texture,
+                &manual2_texture,
+                None,
+                &highlight_cuboid_texture,
+                &vao_config,
+            );
         }
 
         player.update_pos(&world);
