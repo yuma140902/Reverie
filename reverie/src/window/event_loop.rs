@@ -38,11 +38,14 @@ impl EventLoop {
                         (false, false)
                     }
                     winit::event::WindowEvent::Resized(size) => {
-                        println!("resized {:?}", size);
-                        let logical_size: winit::dpi::LogicalSize<i32> =
-                            size.to_logical(winit_window.scale_factor());
                         unsafe {
-                            gl.Viewport(0, 0, logical_size.width, logical_size.height);
+                            gl.Viewport(0, 0, size.width as i32, size.height as i32);
+                        }
+                        (false, true)
+                    }
+                    winit::event::WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
+                        unsafe {
+                            gl.Viewport(0, 0, new_inner_size.width as i32, new_inner_size.height as i32);
                         }
                         (false, true)
                     }
