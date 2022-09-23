@@ -82,6 +82,8 @@ impl World {
         textures: &CuboidTextures<'a, TextureUV>,
         manual1_texture: &TextureUV,
         manual2_texture: &TextureUV,
+        selected_xyz: Option<(u32, u32, u32)>,
+        selected_texture: &CuboidTextures<'a, TextureUV>,
         config: &'a VaoConfig,
     ) -> Vao<'a> {
         let mut buffer_builder = VaoBuffer::new();
@@ -114,6 +116,10 @@ impl World {
             manual2_texture,
         );
 
+        if let Some((x, y, z)) = selected_xyz {
+            add_block_highlight(&mut buffer_builder, x, y, z, selected_texture);
+        }
+
         buffer_builder.build(gl, config)
     }
 }
@@ -123,4 +129,20 @@ const BLOCK_SIZE: Vector3 = Vector3::new(1.0, 1.0, 1.0);
 fn add_block(builder: &mut VaoBuffer, x: u32, y: u32, z: u32, textures: &CuboidTextures<'_, TextureUV>) {
     let begin = Point3::new(x, y, z).cast::<f32>();
     builder.add_cuboid(&begin, &(begin + BLOCK_SIZE), textures);
+}
+
+fn add_block_highlight(
+    builder: &mut VaoBuffer,
+    x: u32,
+    y: u32,
+    z: u32,
+    textures: &CuboidTextures<'_, TextureUV>,
+) {
+    let e = 0.01;
+    let x = x as f32;
+    let y = y as f32;
+    let z = z as f32;
+    let begin = Point3::new(x - e, y - e, z - e);
+    let end = Point3::new(x + 1.0 + e, y + 1.0 + e, z + 1.0 + e);
+    builder.add_cuboid(&begin, &end, textures);
 }
