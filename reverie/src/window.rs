@@ -1,3 +1,4 @@
+use crate::gl::Gl;
 use crate::{Context, ContextBackend};
 use input::cursor::{CursorPosition, DesktopOrigin};
 use input::Input;
@@ -57,8 +58,8 @@ impl Window {
     }
 
     #[cfg(feature = "winit")]
-    pub fn process_event(&mut self) -> bool {
-        self.event_loop.process_event(&mut self.input, &self.window)
+    pub fn process_event(&mut self, gl: &Gl) -> bool {
+        self.event_loop.process_event(&mut self.input, &self.window, gl)
     }
 
     #[cfg(feature = "winit")]

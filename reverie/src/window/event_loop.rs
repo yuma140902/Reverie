@@ -3,7 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use crate::window::input::Input;
+use crate::{gl::Gl, window::input::Input};
 
 #[derive(Debug)]
 pub struct EventLoop {
@@ -25,6 +25,7 @@ impl EventLoop {
         &mut self,
         input: &mut Input,
         winit_window: &winit::window::Window,
+        gl: &Gl,
     ) -> bool {
         use winit::platform::run_return::EventLoopExtRunReturn;
         let queue = Arc::clone(&self.queue);
@@ -35,6 +36,15 @@ impl EventLoop {
                     winit::event::WindowEvent::CloseRequested => {
                         exit = true;
                         (false, false)
+                    }
+                    winit::event::WindowEvent::Resized(size) => {
+                        println!("resized {:?}", size);
+                        let logical_size: winit::dpi::LogicalSize<i32> =
+                            size.to_logical(winit_window.scale_factor());
+                        unsafe {
+                            gl.Viewport(0, 0, logical_size.width, logical_size.height);
+                        }
+                        (false, true)
                     }
                     winit::event::WindowEvent::KeyboardInput {
                         input:

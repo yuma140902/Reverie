@@ -119,10 +119,8 @@ fn main() {
 
     let mut player = Player::new();
 
-    while !window.process_event() {
+    while !window.process_event(&gl) {
         unsafe {
-            gl.Viewport(0, 0, width as i32, height as i32);
-
             gl.ClearColor(1.0, 1.0, 1.0, 1.0);
             gl.Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
         }
