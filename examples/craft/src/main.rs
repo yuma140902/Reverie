@@ -1,7 +1,10 @@
 #![cfg_attr(all(windows, not(debug_assertions)), windows_subsystem = "windows")]
 
 use c_str_macro::c_str;
+
 use player::Player;
+use world::World;
+
 use re::gl;
 use re::math::Deg;
 use re::math::Rad;
@@ -19,13 +22,16 @@ use re::TextureAtlasPos;
 use re::VaoConfigBuilder;
 use reverie_engine as re;
 
+use crate::config::CONFIG;
+use crate::config::CONFIG_FILE;
+
 mod camera;
 mod collision;
+mod config;
 mod player;
 mod raycast;
 pub mod util;
 mod world;
-use world::World;
 
 #[allow(dead_code)]
 type Point3 = nalgebra::Point3<f32>;
@@ -37,6 +43,12 @@ pub type TextureUV = re::TextureUV<Const<64>, Const<64>, Const<256>, Const<256>>
 fn main() {
     let width = 900;
     let height = 480;
+
+    let config = CONFIG.get_or_init(|| {
+        let string = std::fs::read_to_string(CONFIG_FILE).unwrap_or("{}".to_string());
+        serde_json::from_str(&string).unwrap_or_default()
+    });
+    println!("{:?}", config);
 
     let engine = ReverieEngine::new();
     let mut window = engine
@@ -102,13 +114,13 @@ fn main() {
         .build();
 
     let phong_info = PhongRenderingInfo {
-        material_specular: &Vector3::new(0.1, 0.1, 0.1),
-        material_shininess: 0.4,
-        light_direction: &Vector3::new(1.0, 1.0, 0.0),
-        ambient: &Vector3::new(0.5, 0.5, 0.5),
-        diffuse: &Vector3::new(0.6, 0.6, 0.6),
-        specular: &Vector3::new(0.2, 0.2, 0.2),
-        alpha: 1.0,
+        material_specular: &config.shader_material_specular,
+        material_shininess: config.shader_material_shininess,
+        light_direction: &config.shader_light_direction,
+        ambient: &config.shader_ambient,
+        diffuse: &config.shader_diffuse,
+        specular: &config.shader_specular,
+        alpha: config.shader_alpha,
     };
 
     let renderer = Phong3DRenderer::new(shader);
@@ -134,33 +146,31 @@ fn main() {
             break;
         }
 
-        const MOVE_SPEED: f32 = 0.01;
         const UP: Vector3 = Vector3::new(0.0, 1.0, 0.0);
         let (front, right, _up) = camera::calc_front_right_up(player.camera.yaw, player.camera.pitch);
         let front = util::take_xz_normalized(&front);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
-            player.velocity += front * MOVE_SPEED;
+            player.velocity += front * config.move_speed;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::S) {
-            player.velocity -= front * MOVE_SPEED;
+            player.velocity -= front * config.move_speed;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::D) {
-            player.velocity += right * MOVE_SPEED;
+            player.velocity += right * config.move_speed;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::A) {
-            player.velocity -= right * MOVE_SPEED;
+            player.velocity -= right * config.move_speed;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::Space) {
-            player.velocity += UP * MOVE_SPEED;
+            player.velocity += UP * config.move_speed;
         }
         if window.keypressed(&winit::event::VirtualKeyCode::LShift) {
-            player.velocity -= UP * MOVE_SPEED;
+            player.velocity -= UP * config.move_speed;
         }
 
-        const ROTATION_SPEED: f32 = 0.01;
         let (dx, dy) = window.cursor_delta();
         if dy != 0 {
-            player.camera.pitch += Rad(-dy as f32 * ROTATION_SPEED);
+            player.camera.pitch += Rad(-dy as f32 * config.rotation_speed);
             player.camera.pitch = player.camera.pitch.normalized();
             if player.camera.pitch < Deg(-90_f32).to_rad() {
                 player.camera.pitch = Deg(-90_f32).to_rad();
@@ -170,7 +180,7 @@ fn main() {
             }
         }
         if dx != 0 {
-            player.camera.yaw += Rad(-dx as f32 * ROTATION_SPEED);
+            player.camera.yaw += Rad(-dx as f32 * config.rotation_speed);
             player.camera.yaw = player.camera.yaw.normalized();
         }
 
@@ -231,5 +241,11 @@ fn main() {
         context.swap_buffers();
 
         std::thread::sleep(std::time::Duration::from_millis(1));
+    }
+
+    println!("exit");
+    let config = CONFIG.get().unwrap();
+    if let Ok(string) = serde_json::to_string_pretty(config) {
+        std::fs::write(CONFIG_FILE, string).unwrap();
     }
 }
