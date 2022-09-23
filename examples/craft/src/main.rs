@@ -1,7 +1,12 @@
 #![cfg_attr(all(windows, not(debug_assertions)), windows_subsystem = "windows")]
 
 use c_str_macro::c_str;
+use once_cell::sync::OnceCell;
+
+use config::GameConfig;
 use player::Player;
+use world::World;
+
 use re::gl;
 use re::math::Deg;
 use re::math::Rad;
@@ -21,11 +26,11 @@ use reverie_engine as re;
 
 mod camera;
 mod collision;
+mod config;
 mod player;
 mod raycast;
 pub mod util;
 mod world;
-use world::World;
 
 #[allow(dead_code)]
 type Point3 = nalgebra::Point3<f32>;
@@ -34,9 +39,18 @@ type Matrix4 = nalgebra::Matrix4<f32>;
 
 pub type TextureUV = re::TextureUV<Const<64>, Const<64>, Const<256>, Const<256>>;
 
+const CONFIG_FILE: &'static str = "./craft-config.json";
+pub static CONFIG: OnceCell<GameConfig> = OnceCell::new();
+
 fn main() {
     let width = 900;
     let height = 480;
+
+    let config = CONFIG.get_or_init(|| {
+        let string = std::fs::read_to_string(CONFIG_FILE).unwrap_or("{}".to_string());
+        serde_json::from_str(&string).unwrap_or_default()
+    });
+    println!("{:?}", config);
 
     let engine = ReverieEngine::new();
     let mut window = engine
@@ -231,5 +245,11 @@ fn main() {
         context.swap_buffers();
 
         std::thread::sleep(std::time::Duration::from_millis(1));
+    }
+
+    println!("exit");
+    let config = CONFIG.get().unwrap();
+    if let Ok(string) = serde_json::to_string_pretty(config) {
+        std::fs::write(CONFIG_FILE, string).unwrap();
     }
 }

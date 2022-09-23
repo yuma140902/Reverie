@@ -2,3 +2,4 @@
 Cargo.lock
 /lib/*/target
 *.xcf
+craft-config.json
