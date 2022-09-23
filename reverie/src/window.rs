@@ -1,3 +1,4 @@
+use self::builder::WindowConfig;
 use crate::gl::Gl;
 use crate::{Context, ContextBackend};
 use input::cursor::{CursorPosition, DesktopOrigin};
@@ -22,11 +23,15 @@ pub struct Window {
 
 impl Window {
     #[cfg(feature = "winit")]
-    pub(crate) fn new(title: Option<String>, width: u32, height: u32) -> Self {
+    pub(crate) fn new(config: WindowConfig) -> Self {
         let event_loop = EventLoop::new();
         let window = winit::window::WindowBuilder::new()
-            .with_title(title.unwrap_or_else(|| "ReverieEngine".to_owned()))
-            .with_inner_size(winit::dpi::LogicalSize::new(width as f32, height as f32))
+            .with_title(config.title.unwrap_or_else(|| "ReverieEngine".to_owned()))
+            .with_inner_size(winit::dpi::LogicalSize::new(
+                config.width as f32,
+                config.height as f32,
+            ))
+            .with_maximized(config.maximize)
             .build(&event_loop.event_loop)
             .unwrap();
         let input = Input::new();

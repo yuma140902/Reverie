@@ -39,7 +39,12 @@ fn main() {
     let height = 480;
 
     let engine = ReverieEngine::new();
-    let mut window = engine.window_builder().title("Craft").size(width, height).build();
+    let mut window = engine
+        .window_builder()
+        .title("Craft")
+        .size(width, height)
+        .maximize()
+        .build();
     let context = window.create_context_glutin();
     let gl = context.gl();
 

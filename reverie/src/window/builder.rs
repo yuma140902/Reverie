@@ -1,33 +1,52 @@
 use crate::Window;
 
-pub struct WindowBuilder {
-    title: Option<String>,
-    width: u32,
-    height: u32,
+pub(crate) struct WindowConfig {
+    pub(crate) title: Option<String>,
+    pub(crate) width: u32,
+    pub(crate) height: u32,
+    pub(crate) maximize: bool,
 }
 
-impl WindowBuilder {
+impl WindowConfig {
     pub(crate) fn new() -> Self {
         Self {
             title: None,
             width: 800,
             height: 600,
+            maximize: false,
+        }
+    }
+}
+
+pub struct WindowBuilder {
+    config: WindowConfig,
+}
+
+impl WindowBuilder {
+    pub(crate) fn new() -> Self {
+        Self {
+            config: WindowConfig::new(),
         }
     }
 
     pub fn title(mut self, title: impl Into<String>) -> Self {
-        self.title = Some(title.into());
+        self.config.title = Some(title.into());
         self
     }
 
     pub fn size(mut self, width: u32, height: u32) -> Self {
-        self.width = width;
-        self.height = height;
+        self.config.width = width;
+        self.config.height = height;
+        self
+    }
+
+    pub fn maximize(mut self) -> Self {
+        self.config.maximize = true;
         self
     }
 
     #[cfg(feature = "winit")]
     pub fn build(self) -> Window {
-        Window::new(self.title, self.width, self.height)
+        Window::new(self.config)
     }
 }
