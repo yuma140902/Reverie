@@ -80,6 +80,8 @@ impl World {
         &self,
         gl: &Gl,
         textures: &CuboidTextures<'a, TextureUV>,
+        manual1_texture: &TextureUV,
+        manual2_texture: &TextureUV,
         config: &'a VaoConfig,
     ) -> Vao<'a> {
         let mut buffer_builder = VaoBuffer::new();
@@ -96,6 +98,21 @@ impl World {
                 }
             }
         }
+
+        buffer_builder.add_face(
+            &Point3::new(1.1, 3.0, 6.0),
+            &Point3::new(1.1, 1.0, 6.0),
+            &Point3::new(1.1, 1.0, 4.0),
+            &Point3::new(1.1, 3.0, 4.0),
+            manual1_texture,
+        );
+        buffer_builder.add_face(
+            &Point3::new(1.1, 3.0, 4.0),
+            &Point3::new(1.1, 1.0, 4.0),
+            &Point3::new(1.1, 1.0, 2.0),
+            &Point3::new(1.1, 3.0, 2.0),
+            manual2_texture,
+        );
 
         buffer_builder.build(gl, config)
     }

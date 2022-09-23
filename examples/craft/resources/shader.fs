@@ -24,7 +24,9 @@ uniform Light uLight;
 
 void main()
 {
-    vec3 texRGB = texture(uScreenTexture, TexCoords).rgb;
+    vec4 tex = texture(uScreenTexture, TexCoords);
+    vec3 texRGB = tex.rgb;
+    float texAlpha = tex.a;
 
     /* ambient*/
     vec3 ambient = uLight.ambient * texRGB;
@@ -42,5 +44,5 @@ void main()
     vec3 result = ambient + diffuse + specular;
 
     // gl_FragColor = vec4(FragPosition, 1.0);
-    gl_FragColor = vec4(result, Alpha);
+    gl_FragColor = vec4(result, Alpha * texAlpha);
 }

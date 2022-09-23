@@ -54,6 +54,8 @@ fn main() {
     let top_texture = TextureUV::of_atlas(&TextureAtlasPos::new(0, 1));
     let bottom_texture = TextureUV::of_atlas(&TextureAtlasPos::new(0, 2));
     let side_texture = TextureUV::of_atlas(&TextureAtlasPos::new(0, 0));
+    let manual1_texture = TextureUV::of_atlas(&TextureAtlasPos::new(1, 0));
+    let manual2_texture = TextureUV::of_atlas(&TextureAtlasPos::new(1, 1));
     let cuboid_texture = CuboidTextures {
         top: &top_texture,
         bottom: &bottom_texture,
@@ -94,7 +96,13 @@ fn main() {
     };
 
     let renderer = Phong3DRenderer::new(shader);
-    let mut vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
+    let mut vertex_obj = world.generate_vertex_obj(
+        &gl,
+        &cuboid_texture,
+        &manual1_texture,
+        &manual2_texture,
+        &vao_config,
+    );
 
     let mut player = Player::new();
 
@@ -153,7 +161,13 @@ fn main() {
         if window.mouse_down(&winit::event::MouseButton::Left) {
             if let Some((x, y, z, ..)) = raycast::hit_block(&player, &world) {
                 world.remove_block(x, y, z);
-                vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
+                vertex_obj = world.generate_vertex_obj(
+                    &gl,
+                    &cuboid_texture,
+                    &manual1_texture,
+                    &manual2_texture,
+                    &vao_config,
+                );
             }
         }
 
@@ -162,7 +176,13 @@ fn main() {
                 let (x, y, z) = side.offset(x, y, z);
                 if world::is_valid_pos(x, y, z) {
                     world.set_block(x, y, z);
-                    vertex_obj = world.generate_vertex_obj(&gl, &cuboid_texture, &vao_config);
+                    vertex_obj = world.generate_vertex_obj(
+                        &gl,
+                        &cuboid_texture,
+                        &manual1_texture,
+                        &manual2_texture,
+                        &vao_config,
+                    );
                 }
             }
         }
