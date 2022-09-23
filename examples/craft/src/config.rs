@@ -55,7 +55,7 @@ impl Default for GameConfig {
             shader_diffuse: Vector3::new(0.6, 0.6, 0.6),
             shader_specular: Vector3::new(0.2, 0.2, 0.2),
             shader_alpha: 1.0,
-            ray: 4.0,
+            ray: 3.0,
             highlight_e: 0.01,
             show_manual: true,
         }
