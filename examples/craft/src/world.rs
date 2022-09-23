@@ -8,6 +8,7 @@ use re::VaoConfig;
 use re::VertexWithNormUv;
 use reverie_engine as re;
 
+use crate::config;
 use crate::TextureUV;
 
 type VaoBuffer = re::VaoBuffer<VertexWithNormUv>;
@@ -86,6 +87,7 @@ impl World {
         selected_texture: &CuboidTextures<'a, TextureUV>,
         config: &'a VaoConfig,
     ) -> Vao<'a> {
+        let game_config = config::get();
         let mut buffer_builder = VaoBuffer::new();
 
         for x in 0..16 {
@@ -101,23 +103,32 @@ impl World {
             }
         }
 
-        buffer_builder.add_face(
-            &Point3::new(1.1, 3.0, 6.0),
-            &Point3::new(1.1, 1.0, 6.0),
-            &Point3::new(1.1, 1.0, 4.0),
-            &Point3::new(1.1, 3.0, 4.0),
-            manual1_texture,
-        );
-        buffer_builder.add_face(
-            &Point3::new(1.1, 3.0, 4.0),
-            &Point3::new(1.1, 1.0, 4.0),
-            &Point3::new(1.1, 1.0, 2.0),
-            &Point3::new(1.1, 3.0, 2.0),
-            manual2_texture,
-        );
+        if game_config.show_manual {
+            buffer_builder.add_face(
+                &Point3::new(1.1, 3.0, 6.0),
+                &Point3::new(1.1, 1.0, 6.0),
+                &Point3::new(1.1, 1.0, 4.0),
+                &Point3::new(1.1, 3.0, 4.0),
+                manual1_texture,
+            );
+            buffer_builder.add_face(
+                &Point3::new(1.1, 3.0, 4.0),
+                &Point3::new(1.1, 1.0, 4.0),
+                &Point3::new(1.1, 1.0, 2.0),
+                &Point3::new(1.1, 3.0, 2.0),
+                manual2_texture,
+            );
+        }
 
         if let Some((x, y, z)) = selected_xyz {
-            add_block_highlight(&mut buffer_builder, x, y, z, selected_texture);
+            add_block_highlight(
+                &mut buffer_builder,
+                x,
+                y,
+                z,
+                selected_texture,
+                game_config.highlight_e,
+            );
         }
 
         buffer_builder.build(gl, config)
@@ -137,8 +148,8 @@ fn add_block_highlight(
     y: u32,
     z: u32,
     textures: &CuboidTextures<'_, TextureUV>,
+    e: f32,
 ) {
-    let e = 0.01;
     let x = x as f32;
     let y = y as f32;
     let z = z as f32;

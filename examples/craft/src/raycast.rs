@@ -1,10 +1,6 @@
 use parry3d::query::{Ray, RayCast};
 
-use crate::{
-    camera,
-    player::{Player, PLAYER_EYE},
-    world::World,
-};
+use crate::{camera, config, player::Player, world::World};
 
 #[derive(Debug, PartialEq, PartialOrd, Eq, Ord, Clone, Copy)]
 pub enum Side {
@@ -48,7 +44,7 @@ impl Side {
 }
 
 pub fn hit_block_and_side(player: &Player, world: &World) -> Option<(u32, u32, u32, Option<Side>)> {
-    let eye_pos = player.pos + PLAYER_EYE;
+    let eye_pos = player.camera_pos();
     let (front, _right, _up) = camera::calc_front_right_up(player.camera.yaw, player.camera.pitch);
     let ray = Ray::new(eye_pos, front);
 
@@ -60,7 +56,7 @@ pub fn hit_block_and_side(player: &Player, world: &World) -> Option<(u32, u32, u
             return Some((*x, *y, *z, None));
         }
 
-        if let Some(result) = aabb.cast_local_ray_and_get_normal(&ray, 3_f32, true) {
+        if let Some(result) = aabb.cast_local_ray_and_get_normal(&ray, config::get().ray, true) {
             if result.toi < nearest_toi {
                 nearest_toi = result.toi;
                 let side = if result.normal.y > 0.0 {
@@ -87,7 +83,7 @@ pub fn hit_block_and_side(player: &Player, world: &World) -> Option<(u32, u32, u
 }
 
 pub fn hit_block(player: &Player, world: &World) -> Option<(u32, u32, u32)> {
-    let eye_pos = player.pos + PLAYER_EYE;
+    let eye_pos = player.camera_pos();
     let (front, _right, _up) = camera::calc_front_right_up(player.camera.yaw, player.camera.pitch);
     let ray = Ray::new(eye_pos, front);
 
@@ -99,7 +95,7 @@ pub fn hit_block(player: &Player, world: &World) -> Option<(u32, u32, u32)> {
             return Some((*x, *y, *z));
         }
 
-        if let Some(result_toi) = aabb.cast_local_ray(&ray, 3_f32, true) {
+        if let Some(result_toi) = aabb.cast_local_ray(&ray, config::get().ray, true) {
             if result_toi < nearest_toi {
                 nearest_toi = result_toi;
                 nearest_xyz = Some((*x, *y, *z));

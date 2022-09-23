@@ -1,6 +1,8 @@
 use nalgebra::{Matrix4, Point3, Vector3};
 use reverie_engine::math::{Deg, Rad};
 
+use crate::config;
+
 #[derive(Debug)]
 pub struct Camera {
     pub yaw: Rad<f32>,
@@ -9,9 +11,10 @@ pub struct Camera {
 
 impl Camera {
     pub fn new() -> Self {
+        let config = config::get();
         Self {
-            yaw: Deg(225_f32).to_rad(),
-            pitch: Deg(-30_f32).to_rad(),
+            yaw: Deg(config.player_init_yaw_deg).to_rad(),
+            pitch: Deg(config.player_init_pitch_deg).to_rad(),
         }
     }
 
@@ -23,7 +26,7 @@ impl Camera {
     pub fn projection_matrix(&self, width: u32, height: u32) -> Matrix4<f32> {
         Matrix4::new_perspective(
             width as f32 / height as f32,
-            Deg(60.0f32).to_rad().into(),
+            Deg(config::get().fov).to_rad().into(),
             0.1,
             100.0,
         )
