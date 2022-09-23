@@ -23,7 +23,7 @@ impl Camera {
     pub fn projection_matrix(&self, width: u32, height: u32) -> Matrix4<f32> {
         Matrix4::new_perspective(
             width as f32 / height as f32,
-            Deg(45.0f32).to_rad().into(),
+            Deg(60.0f32).to_rad().into(),
             0.1,
             100.0,
         )
