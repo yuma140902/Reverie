@@ -81,8 +81,7 @@ pub fn main() {
         gl.EnableVertexAttribArray(0);
         println!("VertexAttribPointer setup");
 
-        while !window.process_event() {
-            gl.Viewport(0, 0, width as i32, height as i32);
+        while !window.process_event(&gl) {
             gl.ClearColor(1.0, 1.0, 0.0, 1.0);
             gl.Clear(gl::COLOR_BUFFER_BIT);
 
