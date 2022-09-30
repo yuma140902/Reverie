@@ -2,12 +2,12 @@
 name = "reverie-engine"
 version = "0.0.5"
 license = "MPL-2.0"
+edition = "2018"
 authors  = ["yuma140902 <yuma140902@gmail.com>"]
 description = "A toy game engine"
 readme = "README.md"
 repository = "https://github.com/yuma140902/Reverie"
 categories = ["game-engines"]
-edition = "2018"
 build = "src/build.rs"
 
 [package.metadata.docs.rs]
@@ -25,14 +25,12 @@ glutin = ["dep:glutin", "winit"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-approx = "0.5.1"
 image = "0.24.3"
-nalgebra = "0.31.1"
 c_str_macro = "1.0.3"
+reverie-util = { version = "0.0.0", path = "../reverie-util" }
 raw-gl-context = { version = "0.1.2", optional = true }
 winit = { version = "0.27.2", optional = true }
 glutin = { version = "0.29.1", optional = true }
-newtype-ops = "0.1.4"
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.40.0", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
