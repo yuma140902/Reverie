@@ -6,13 +6,13 @@ use player::Player;
 use world::World;
 
 use re::gl;
-use re::math::Deg;
-use re::math::Rad;
 use re::shader::Program;
 use re::shader::Shader;
 use re::texture::ImageManager;
 use re::texture::TextureAtlasPos;
 use re::types::Const;
+use re::util::math::Deg;
+use re::util::math::Rad;
 use re::vao::CuboidTextures;
 use re::vao::Phong3DRenderer;
 use re::vao::Phong3DRenderingInfo;

@@ -1,6 +1,8 @@
 //! 補間に関するモジュール
 
-use crate::types::interpolation::*;
+use self::types::*;
+
+pub mod types;
 
 /// 補間をする構造体
 ///

@@ -4,6 +4,7 @@ use crate::gl;
 use crate::gl::types::*;
 use crate::gl::Gl;
 
+use reverie_util::math::nalgebra;
 use std::collections::HashMap;
 use std::ffi::{CStr, CString};
 use std::fs::File;

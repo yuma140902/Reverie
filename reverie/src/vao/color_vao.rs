@@ -1,4 +1,4 @@
-use nalgebra::Point3;
+use reverie_util::math::nalgebra::Point3;
 
 use crate::vao::{VaoBuffer, VertexWithColor};
 

@@ -1,4 +1,4 @@
-pub use nalgebra as na;
+pub use reverie_util::math::nalgebra as na;
 
 pub type Vector3 = na::Vector3<f32>;
 pub type Matrix4 = na::Matrix4<f32>;
@@ -11,9 +11,3 @@ pub struct Const<const C: u32>;
 /// 定数ジェネリクスの値が定まっていないことを表す型
 #[derive(Debug)]
 pub struct Dynamic;
-
-pub mod interpolation {
-    pub type Time = i64;
-    pub type TimeSpan = u32;
-    pub(crate) type NormalizedTime = f32;
-}

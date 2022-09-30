@@ -1,5 +1,5 @@
 use nalgebra::{Matrix4, Point3, Vector3};
-use reverie_engine::math::{Deg, Rad};
+use reverie_engine::util::math::{Deg, Rad};
 
 use crate::config;
 

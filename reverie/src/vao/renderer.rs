@@ -1,5 +1,5 @@
 use c_str_macro::c_str;
-use nalgebra::{Matrix4, Point3, Vector3};
+use reverie_util::math::nalgebra::{Matrix4, Point3, Vector3};
 
 use crate::{
     gl::{self, Gl},
