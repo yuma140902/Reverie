@@ -1,4 +1,4 @@
-use crate::Window;
+use crate::window::Window;
 
 pub(crate) struct WindowConfig {
     pub(crate) title: Option<String>,

@@ -1,15 +1,15 @@
 use self::builder::WindowConfig;
 use crate::gl::Gl;
 use crate::{Context, ContextBackend};
-use input::cursor::{CursorPosition, DesktopOrigin};
 use input::Input;
 
 mod builder;
 mod event_loop;
-pub mod input;
+pub(crate) mod input;
 
 pub use builder::WindowBuilder;
 pub use event_loop::EventLoop;
+pub use input::cursor::{CursorPosition, DesktopOrigin, WindowCenter, WindowOrigin};
 
 #[derive(Debug)]
 pub struct Window {

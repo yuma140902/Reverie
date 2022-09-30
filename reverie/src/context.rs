@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 
-use crate::{gl::Gl, Window};
+use crate::{gl::Gl, window::Window};
 
 pub trait ContextBackend {
     fn new(window: &Window) -> Self;

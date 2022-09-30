@@ -9,7 +9,7 @@ pub mod shader;
 mod texture;
 pub mod types;
 mod vao;
-mod window;
+pub mod window;
 pub use context::{Context, ContextBackend};
 pub use engine::ReverieEngine;
 pub use gui::VaoBuilder2DGui;
@@ -30,4 +30,3 @@ pub use vao::{
     vertex::{VertexType, VertexWithColor, VertexWithNormUv},
     Vao,
 };
-pub use window::{EventLoop, Window};
