@@ -1,6 +1,6 @@
 //! [`VaoBuffer`]を操作するユーティリティ
 
-use crate::texture::texture_atlas::TextureUV;
+use crate::texture::TextureUV;
 use crate::types::*;
 use crate::VertexWithNormUv;
 

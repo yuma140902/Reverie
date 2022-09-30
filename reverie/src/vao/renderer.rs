@@ -4,7 +4,8 @@ use nalgebra::{Matrix4, Point3, Vector3};
 use crate::{
     gl::{self, Gl},
     shader::{Program, Shader, Uniform::*, UniformVariables},
-    ImageLoadInfo, Vao,
+    texture::ImageLoadInfo,
+    Vao,
 };
 
 pub trait Renderer<T> {

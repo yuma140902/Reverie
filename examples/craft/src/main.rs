@@ -10,15 +10,15 @@ use re::math::Deg;
 use re::math::Rad;
 use re::shader::Program;
 use re::shader::Shader;
+use re::texture::ImageManager;
+use re::texture::TextureAtlasPos;
 use re::types::Const;
 use re::CuboidTextures;
-use re::ImageManager;
 use re::Phong3DRenderer;
 use re::Phong3DRenderingInfo;
 use re::PhongRenderingInfo;
 use re::Renderer;
 use re::ReverieEngine;
-use re::TextureAtlasPos;
 use re::VaoConfigBuilder;
 use reverie_engine as re;
 
@@ -38,7 +38,7 @@ type Point3 = nalgebra::Point3<f32>;
 type Vector3 = nalgebra::Vector3<f32>;
 type Matrix4 = nalgebra::Matrix4<f32>;
 
-pub type TextureUV = re::TextureUV<Const<64>, Const<64>, Const<256>, Const<256>>;
+pub type TextureUV = re::texture::TextureUV<Const<64>, Const<64>, Const<256>, Const<256>>;
 
 fn main() {
     let width = 900;
