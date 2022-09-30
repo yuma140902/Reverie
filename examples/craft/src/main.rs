@@ -19,6 +19,7 @@ use re::vao::Phong3DRenderingInfo;
 use re::vao::PhongRenderingInfo;
 use re::vao::Renderer;
 use re::vao::VaoConfigBuilder;
+use re::window::winit;
 use re::ReverieEngine;
 use reverie_engine as re;
 

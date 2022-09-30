@@ -3,6 +3,11 @@ use crate::gl::Gl;
 use crate::{Context, ContextBackend};
 use input::Input;
 
+#[cfg(feature = "glutin")]
+pub use glutin;
+#[cfg(feature = "winit")]
+pub use winit;
+
 mod builder;
 mod event_loop;
 pub(crate) mod input;
