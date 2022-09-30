@@ -1,5 +1,7 @@
 use newtype_ops::newtype_ops;
 
+pub use nalgebra;
+
 #[macro_use]
 mod macros;
 

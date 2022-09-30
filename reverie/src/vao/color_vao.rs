@@ -1,6 +1,6 @@
 use nalgebra::Point3;
 
-use crate::{VaoBuffer, VertexWithColor};
+use crate::vao::{VaoBuffer, VertexWithColor};
 
 pub trait VaoBuilder3DGeometryOutline {
     fn add_cuboid_outline(&mut self, begin: &Point3<f32>, end: &Point3<f32>, r: f32, g: f32, b: f32);

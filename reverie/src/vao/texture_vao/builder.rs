@@ -1,10 +1,10 @@
 //! [`VaoBuffer`]を操作するユーティリティ
 
-use crate::texture::texture_atlas::TextureUV;
+use crate::texture::TextureUV;
 use crate::types::*;
-use crate::VertexWithNormUv;
+use crate::vao::VertexWithNormUv;
 
-use crate::VaoBuffer;
+use crate::vao::VaoBuffer;
 
 /// [`VaoBuffer`]上に立方体などの立体を追加する
 ///

@@ -6,9 +6,9 @@ use std::mem;
 use crate::gl;
 use crate::gl::types::{GLenum, GLint};
 use crate::gl::{types::GLfloat, Gl};
-use crate::Vao;
-use crate::VaoConfig;
-use crate::VertexType;
+use crate::vao::Vao;
+use crate::vao::VaoConfig;
+use crate::vao::VertexType;
 
 /// 頂点の情報を動的に追加・削除するためのバッファ
 #[derive(Debug)]

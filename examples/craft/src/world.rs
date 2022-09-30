@@ -1,17 +1,17 @@
 use nalgebra::Point3;
 use parry3d::bounding_volume::AABB;
 use re::gl::Gl;
-use re::CuboidTextures;
-use re::Vao;
-use re::VaoBuilder3DGeometry;
-use re::VaoConfig;
-use re::VertexWithNormUv;
+use re::vao::CuboidTextures;
+use re::vao::Vao;
+use re::vao::VaoBuilder3DGeometry;
+use re::vao::VaoConfig;
+use re::vao::VertexWithNormUv;
 use reverie_engine as re;
 
 use crate::config;
 use crate::TextureUV;
 
-type VaoBuffer = re::VaoBuffer<VertexWithNormUv>;
+type VaoBuffer = re::vao::VaoBuffer<VertexWithNormUv>;
 type Vector3 = nalgebra::Vector3<f32>;
 
 pub struct World {
