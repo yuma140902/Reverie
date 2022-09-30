@@ -5,7 +5,7 @@ use crate::{
     gl::{self, Gl},
     shader::{Program, Shader, Uniform::*, UniformVariables},
     texture::ImageLoadInfo,
-    Vao,
+    vao::Vao,
 };
 
 pub trait Renderer<T> {

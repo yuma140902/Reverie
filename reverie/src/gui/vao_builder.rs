@@ -1,6 +1,6 @@
 use crate::gui::layout::{Origin, Position, Rect};
 use crate::texture::TextureUV;
-use crate::{VaoBuffer, VertexWithNormUv};
+use crate::vao::{VaoBuffer, VertexWithNormUv};
 
 /// [`VaoBuffer`]上にGUIを追加する
 ///

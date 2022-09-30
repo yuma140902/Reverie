@@ -13,7 +13,18 @@ use crate::gl;
 use crate::gl::types::{GLenum, GLfloat, GLint, GLsizei, GLsizeiptr};
 use crate::gl::Gl;
 use crate::shader::UniformVariables;
-use crate::VaoConfig;
+
+pub use {
+    buffer::VaoBuffer,
+    color_vao::VaoBuilder3DGeometryOutline,
+    config::{VaoConfig, VaoConfigBuilder},
+    renderer::{
+        Color3DRenderer, Color3DRenderingInfo, Phong3DRenderer, Phong3DRenderingInfo,
+        PhongRenderingInfo, Renderer,
+    },
+    texture_vao::builder::{CuboidTextures, VaoBuilder3DGeometry},
+    vertex::{VertexType, VertexWithColor, VertexWithNormUv},
+};
 
 /// OpenGLのVertex Array ObjectとVertex Buffer Objectに対応する構造体
 #[derive(Debug)]
