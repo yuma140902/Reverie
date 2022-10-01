@@ -26,7 +26,7 @@ A toy game engine
 
 See [CHANGELOG.md](./CHANGELOG.md).
 
-Install [git-chglog](https://github.com/git-chglog/git-chglog) and run `git-chglog --output CHANGELOG.md`.
+Install [git-chglog](https://github.com/git-chglog/git-chglog) and run `git-chglog --output CHANGELOG.md --next-tag <NEXT TAG>`.
 
 ### Commit message
 
