@@ -1,6 +1,6 @@
 [package]
 name = "reverie-engine"
-version = "0.0.5"
+version = "0.0.6"
 license = "MPL-2.0"
 edition = "2021"
 authors  = ["yuma140902 <yuma140902@gmail.com>"]
