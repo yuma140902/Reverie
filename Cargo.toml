@@ -2,6 +2,7 @@
 
 members = [
   "reverie",
+  "reverie-util",
   "examples/*"
 ]
 
