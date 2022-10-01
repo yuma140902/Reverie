@@ -19,3 +19,15 @@ A toy game engine
 - [GitHub](https://github.com/yuma140902/Reverie)
 - [crates.io](https://crates.io/crates/reverie-engine)
 - [Docs.rs](https://docs.rs/reverie-engine/)
+
+## Development
+
+### Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md).
+
+Install [git-chglog](https://github.com/git-chglog/git-chglog) and run `git-chglog --output CHANGELOG.md`.
+
+### Commit message
+
+See [.gitmessage](./.gitmessage). It is recommended to run `git config commit.template .gitmessage`.
