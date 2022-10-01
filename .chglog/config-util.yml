@@ -4,14 +4,11 @@ info:
   title: CHANGELOG
   repository_url: https://github.com/yuma140902/Reverie
 options:
-  tag_filter_pattern: '^v'
+  tag_filter_pattern: '^util-v'
   commits:
-    # filters:
-    #   Type:
-    #     - feat
-    #     - fix
-    #     - perf
-    #     - refactor
+     filters:
+       Scope:
+         - util
   commit_groups:
     # title_maps:
     #   feat: Features
@@ -24,6 +21,13 @@ options:
       - Type
       - Scope
       - Subject
+
+  merges:
+    pattern: "^Merge pull request #[0-9]+ from '?(\\w+)/(util-\\w+)'?$"
+    pattern_maps:
+      - Contributor
+      - Source
+
   notes:
     keywords:
       - BREAKING CHANGE
