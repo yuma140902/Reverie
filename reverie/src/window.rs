@@ -24,6 +24,7 @@ pub struct Window {
     pub(crate) window: winit::window::Window,
     #[cfg(feature = "winit")]
     input: Input,
+    should_stop: bool,
 }
 
 impl Window {
@@ -45,12 +46,13 @@ impl Window {
             event_loop,
             window,
             input,
+            should_stop: false,
         }
     }
 
     #[cfg(not(feature = "winit"))]
     pub(crate) fn new() -> Self {
-        Self {}
+        Self { should_stop: false }
     }
 
     #[cfg(feature = "raw_gl_context")]
@@ -68,8 +70,12 @@ impl Window {
     }
 
     #[cfg(feature = "winit")]
-    pub fn process_event(&mut self, gl: &Gl) -> bool {
-        self.event_loop.process_event(&mut self.input, &self.window, gl)
+    pub fn update(&mut self, gl: &Gl) {
+        self.should_stop = self.event_loop.process_event(&mut self.input, &self.window, gl);
+    }
+
+    pub fn should_stop(&self) -> bool {
+        self.should_stop
     }
 
     #[cfg(feature = "winit")]
