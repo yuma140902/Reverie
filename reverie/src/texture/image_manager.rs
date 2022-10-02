@@ -17,7 +17,7 @@ pub struct ImageManager {
 }
 
 impl ImageManager {
-    pub fn new(gl: Gl) -> ImageManager {
+    pub(crate) fn new(gl: Gl) -> ImageManager {
         ImageManager {
             gl,
             image_map: HashMap::new(),
