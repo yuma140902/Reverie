@@ -124,11 +124,21 @@ impl ImageManager {
 #[derive(Debug)]
 pub struct ImageLoadInfo<'a> {
     /// OpenGLの関数に渡すためのテクスチャID
-    pub gl_id: u32,
+    gl_id: u32,
     /// `ImageManager`で管理される(ヒューマンリーダブルな)管理用ID
     pub id: &'a str,
     /// 画像の幅
     pub width: u32,
     /// 画像の高さ
     pub height: u32,
+}
+
+impl<'a> ImageLoadInfo<'a> {
+    /// OpenGLの関数に渡すためのテクスチャID
+    ///
+    /// # Safety
+    /// OpenGLにテクスチャ読み込まれている限り安全
+    pub unsafe fn raw_gl_id(&self) -> u32 {
+        self.gl_id
+    }
 }

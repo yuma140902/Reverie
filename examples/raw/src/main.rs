@@ -34,7 +34,7 @@ pub fn main() {
         let vert_shader =
             Shader::from_vert_code(context.gl(), c_str_macro::c_str!(include_str!("./shader.vert")))
                 .unwrap();
-        println!("vert shader setup {}", vert_shader.id());
+        println!("vert shader setup {}", vert_shader.raw_id());
 
         //let frag_shader = gl.CreateShader(gl::FRAGMENT_SHADER);
         //let source = c_str_macro::c_str!(include_str!("./shader.frag"));
@@ -43,7 +43,7 @@ pub fn main() {
         let frag_shader =
             Shader::from_frag_code(context.gl(), c_str_macro::c_str!(include_str!("./shader.frag")))
                 .unwrap();
-        println!("frag shader setup {}", frag_shader.id());
+        println!("frag shader setup {}", frag_shader.raw_id());
 
         //let program = gl.CreateProgram();
         //gl.AttachShader(program, vert_shader);
@@ -52,7 +52,7 @@ pub fn main() {
         //gl.DeleteShader(vert_shader);
         //gl.DeleteShader(frag_shader);
         let program = Program::from_shaders(context.gl(), &[vert_shader, frag_shader]).unwrap();
-        println!("program setup {}", program.id());
+        println!("program setup {}", program.raw_id());
 
         let mut vao = 0;
         gl.GenVertexArrays(1, &mut vao);
@@ -87,7 +87,7 @@ pub fn main() {
             gl.ClearColor(1.0, 1.0, 0.0, 1.0);
             gl.Clear(gl::COLOR_BUFFER_BIT);
 
-            gl.UseProgram(program.id());
+            gl.UseProgram(program.raw_id());
             gl.BindVertexArray(vao);
             gl.DrawArrays(gl::TRIANGLES, 0, 3);
 
