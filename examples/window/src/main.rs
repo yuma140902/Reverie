@@ -19,7 +19,8 @@ pub fn main() {
 
     let mut start = Instant::now();
 
-    while !window.process_event(&gl) {
+    while !window.should_stop() {
+        window.update(&gl);
         let elapsed = start.elapsed();
         println!(
             "{} FPS",

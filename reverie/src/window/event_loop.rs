@@ -21,6 +21,10 @@ impl EventLoop {
         Self { event_loop, queue }
     }
 
+    /// OSのイベントを処理する
+    ///
+    /// # Returns
+    /// プログラムを終了すべきなら`true`、そうでないなら`false`
     pub(super) fn process_event(
         &mut self,
         input: &mut Input,
