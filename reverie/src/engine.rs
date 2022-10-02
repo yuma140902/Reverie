@@ -1,4 +1,4 @@
-use crate::window::WindowBuilder;
+use crate::{gl::Gl, texture::ImageManager, window::WindowBuilder};
 
 #[derive(Debug)]
 pub struct ReverieEngine {}
@@ -10,5 +10,9 @@ impl ReverieEngine {
 
     pub fn window_builder(&self) -> WindowBuilder {
         WindowBuilder::new()
+    }
+
+    pub fn create_image_manager(&self, gl: Gl) -> ImageManager {
+        ImageManager::new(gl)
     }
 }
