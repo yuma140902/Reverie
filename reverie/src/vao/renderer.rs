@@ -84,7 +84,7 @@ impl Renderer<&Phong3DRenderingInfo<'_>> for Phong3DRenderer {
         }
 
         unsafe {
-            gl.BindTexture(gl::TEXTURE_2D, extra.texture.gl_id);
+            gl.BindTexture(gl::TEXTURE_2D, extra.texture.raw_gl_id());
             vao.draw_triangles(&uniforms);
             gl.BindTexture(gl::TEXTURE_2D, 0);
         }

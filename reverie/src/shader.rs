@@ -40,7 +40,7 @@ impl Program {
         let program_id = unsafe { gl.CreateProgram() };
         for shader in shaders {
             unsafe {
-                gl.AttachShader(program_id, shader.id());
+                gl.AttachShader(program_id, shader.raw_id());
             }
         }
 
@@ -70,13 +70,16 @@ impl Program {
         }
 
         for shader in shaders {
-            unsafe { gl.DetachShader(program_id, shader.id()) }
+            unsafe { gl.DetachShader(program_id, shader.raw_id()) }
         }
         Ok(Program { gl, id: program_id })
     }
 
     /// OpenGLの関数に渡すためのプログラムID
-    pub fn id(&self) -> GLuint {
+    ///
+    /// # Safety
+    /// glDeleteProgramされていない限り安全
+    pub unsafe fn raw_id(&self) -> GLuint {
         self.id
     }
 
@@ -235,7 +238,10 @@ impl Shader {
     }
 
     /// OpenGLの関数に渡すためのシェーダーID
-    pub fn id(&self) -> GLuint {
+    ///
+    /// # Safety
+    /// glDeleteShaderされていない限り安全
+    pub unsafe fn raw_id(&self) -> GLuint {
         self.id
     }
 }
