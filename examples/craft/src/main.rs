@@ -60,11 +60,7 @@ fn main() {
     let context = window.create_context_glutin();
     let gl = context.gl();
 
-    let vert_shader =
-        Shader::from_vert_code(gl.clone(), c_str!(include_str!("../resources/shader.vs"))).unwrap();
-    let frag_shader =
-        Shader::from_frag_code(gl.clone(), c_str!(include_str!("../resources/shader.fs"))).unwrap();
-    let shader = Program::from_shaders(gl.clone(), &[vert_shader, frag_shader]).unwrap();
+    let shader = Program::default_uv(gl.clone()).unwrap();
 
     let mut image_manager = engine.create_image_manager(gl.clone());
     let image = image::load_from_memory(include_bytes!("../resources/blocks.png")).unwrap();
