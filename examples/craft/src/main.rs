@@ -63,8 +63,9 @@ fn main() {
     let shader = Program::default_uv(gl.clone()).unwrap();
 
     let mut image_manager = engine.create_image_manager(gl.clone());
-    let image = image::load_from_memory(include_bytes!("../resources/blocks.png")).unwrap();
-    let block_atlas_texture = image_manager.load_image(image, "atlas/blocks", true).unwrap();
+    let block_atlas_texture = image_manager
+        .load_from_memory(include_bytes!("../resources/blocks.png"), "atlas/blocks", true)
+        .unwrap();
 
     let top_texture = TextureUV::of_atlas(&TextureAtlasPos::new(0, 1));
     let bottom_texture = TextureUV::of_atlas(&TextureAtlasPos::new(0, 2));
