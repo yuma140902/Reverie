@@ -1,3 +1,4 @@
+use nalgebra::Vector3;
 use newtype_ops::newtype_ops;
 
 pub use nalgebra;
@@ -29,6 +30,27 @@ impl_deg!(f32);
 
 impl_rad!(f64);
 impl_rad!(f32);
+
+pub fn calc_front_right_up(
+    yaw: Rad<f32>,
+    pitch: Rad<f32>,
+) -> (Vector3<f32>, Vector3<f32>, Vector3<f32>) {
+    let front = Vector3::new(pitch.cos() * yaw.sin(), pitch.sin(), pitch.cos() * yaw.cos()).normalize();
+
+    let right_rad = yaw - Deg(90.0f32).to_rad();
+    // 右方向のベクトル
+    let right = Vector3::new(
+        right_rad.sin(),
+        0.0f32, /* ロールは0なので常に床と水平 */
+        right_rad.cos(),
+    )
+    .normalize();
+
+    // 上方向のベクトル
+    let up = right.cross(&front);
+
+    (front, right, up)
+}
 
 #[cfg(test)]
 mod test {
