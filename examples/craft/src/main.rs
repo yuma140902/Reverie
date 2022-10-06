@@ -3,6 +3,7 @@
 use c_str_macro::c_str;
 
 use player::Player;
+use re::util::math;
 use world::World;
 
 use re::gl;
@@ -25,7 +26,6 @@ use reverie_engine as re;
 use crate::config::CONFIG;
 use crate::config::CONFIG_FILE;
 
-mod camera;
 mod collision;
 mod config;
 mod player;
@@ -131,7 +131,7 @@ fn main() {
         &vao_config,
     );
 
-    let mut player = Player::new();
+    let mut player = Player::new(gl.clone());
 
     while !window.should_stop() {
         window.update(&gl);
@@ -146,7 +146,7 @@ fn main() {
         }
 
         const UP: Vector3 = Vector3::new(0.0, 1.0, 0.0);
-        let (front, right, _up) = camera::calc_front_right_up(player.camera.yaw, player.camera.pitch);
+        let (front, right, _up) = math::calc_front_right_up(player.camera.yaw(), player.camera.pitch());
         let front = util::take_xz_normalized(&front);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
             player.velocity += front * config.move_speed;
@@ -169,18 +169,18 @@ fn main() {
 
         let (dx, dy) = window.cursor_delta();
         if dy != 0 {
-            player.camera.pitch += Rad(-dy as f32 * config.rotation_speed);
-            player.camera.pitch = player.camera.pitch.normalized();
-            if player.camera.pitch < Deg(-90_f32).to_rad() {
-                player.camera.pitch = Deg(-90_f32).to_rad();
+            player.camera.add_pitch(Rad(-dy as f32 * config.rotation_speed));
+            // player.camera.pitch = player.camera.pitch.normalized();
+            if player.camera.pitch() < Deg(-90_f32).to_rad() {
+                player.camera.set_pitch(Deg(-90_f32).to_rad());
             }
-            if Deg(90_f32).to_rad() < player.camera.pitch {
-                player.camera.pitch = Deg(90_f32).to_rad();
+            if Deg(90_f32).to_rad() < player.camera.pitch() {
+                player.camera.set_pitch(Deg(90_f32).to_rad());
             }
         }
         if dx != 0 {
-            player.camera.yaw += Rad(-dx as f32 * config.rotation_speed);
-            player.camera.yaw = player.camera.yaw.normalized();
+            player.camera.add_yaw(Rad(-dx as f32 * config.rotation_speed));
+            // player.camera.yaw = player.camera.yaw.normalized();
         }
 
         if window.mouse_down(&winit::event::MouseButton::Left) {
@@ -224,18 +224,15 @@ fn main() {
 
         let model_matrix =
             nalgebra_glm::scale(&Matrix4::identity(), &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32));
-        let view_matrix = player.view_matrix();
-        let projection_matrix: Matrix4 = player.projection_matrix(width, height);
 
-        let info = &Phong3DRenderingInfo {
-            phong: &phong_info,
-            model_matrix: &model_matrix,
-            view_matrix: &view_matrix,
-            projection_matrix: &projection_matrix,
-            camera_pos: &player.pos,
-            texture: &block_atlas_texture,
-        };
-        renderer.render(gl.clone(), &vertex_obj, info);
+        player.camera.render(
+            &vertex_obj,
+            &model_matrix,
+            width,
+            height,
+            &phong_info,
+            &block_atlas_texture,
+        );
 
         context.swap_buffers();
 
