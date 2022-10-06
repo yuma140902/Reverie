@@ -1,6 +1,7 @@
 use parry3d::shape::Cuboid;
+use reverie_engine::{camera::Camera, gl::Gl, math::Deg};
 
-use crate::{camera::Camera, collision, config, world::World, Matrix4, Point3, Vector3};
+use crate::{collision, config, world::World, Point3, Vector3};
 
 #[derive(Debug)]
 pub struct Player {
@@ -12,20 +13,22 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new() -> Self {
+    pub fn new(gl: Gl) -> Self {
         let config = config::get();
 
         Self {
-            camera: Camera::new(),
+            camera: Camera::new(
+                gl,
+                config.player_init_pos + config.eye,
+                Deg(config.player_init_yaw_deg).to_rad(),
+                Deg(config.player_init_pitch_deg).to_rad(),
+                Deg(config.fov),
+            ),
             pos: config.player_init_pos.clone(),
             velocity: Vector3::zeros(),
             bounding_box: Cuboid::new(config.player_bounding_vec),
             eye: config.eye,
         }
-    }
-
-    pub fn camera_pos(&self) -> Point3 {
-        self.pos + self.eye
     }
 
     pub fn update_pos(&mut self, world: &World) {
@@ -42,14 +45,7 @@ impl Player {
             self.velocity *= config.max_velocity;
         }
         self.pos += self.velocity;
+        self.camera.set_pos(self.pos + self.eye);
         self.velocity *= config.velocity_decay_rate;
-    }
-
-    pub fn view_matrix(&self) -> Matrix4 {
-        self.camera.view_matrix(&self.camera_pos())
-    }
-
-    pub fn projection_matrix(&self, width: u32, height: u32) -> Matrix4 {
-        self.camera.projection_matrix(width, height)
     }
 }
