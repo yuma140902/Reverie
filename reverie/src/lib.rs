@@ -1,3 +1,4 @@
+pub mod camera;
 mod context;
 mod engine;
 pub mod gl;
