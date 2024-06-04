@@ -1,6 +1,6 @@
 use std::{ffi::c_void, mem::size_of};
 
-use reverie_engine::{
+use reverie_engine_opengl::{
     gl,
     shader::{Program, Shader},
     ReverieEngine,
