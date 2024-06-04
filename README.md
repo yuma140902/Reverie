@@ -1,10 +1,8 @@
 # Reverie
 
-[![](https://badgen.net/github/checks/yuma140902/Reverie/master/ubuntu?label=linux)](https://github.com/yuma140902/Reverie/actions/workflows/rust.yml)
-[![](https://badgen.net/github/checks/yuma140902/Reverie/master/windows?icon=windows)](https://github.com/yuma140902/Reverie/actions/workflows/rust.yml)
-[![](https://badgen.net/github/checks/yuma140902/Reverie/master/macos?icon=apple)](https://github.com/yuma140902/Reverie/actions/workflows/rust.yml)
-[![](https://badgen.net/crates/v/reverie-engine?color=blue)](https://crates.io/crates/reverie-engine)
-[![](https://docs.rs/reverie-engine/badge.svg)](https://docs.rs/reverie-engine/)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/yuma140902/reverie/rust.yml?logo=github&label=CI)](https://github.com/yuma140902/reverie/actions/workflows/rust.yml)
+[![Crates.io Version](https://img.shields.io/crates/v/reverie-engine)](https://crates.io/crates/reverie-engine)
+[![docs.rs](https://img.shields.io/docsrs/reverie-engine?logo=docsdotrs)](https://docs.rs/reverie-engine/latest/reverie-engine/)
 
 A toy game engine
 
