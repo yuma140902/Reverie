@@ -1,8 +1,8 @@
 [package]
 name = "example-raw"
 version = "0.1.0"
-edition = "2018"
+edition.workspace = true
 
 [dependencies]
-c_str_macro = "1.0.3"
-reverie-engine = { path = "../../reverie" }
+c_str_macro.workspace = true
+reverie-engine.workspace = true

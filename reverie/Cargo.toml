@@ -1,12 +1,12 @@
 [package]
 name = "reverie-engine"
-version = "0.0.6"
-license = "MPL-2.0"
-edition = "2021"
-authors  = ["yuma140902 <yuma140902@gmail.com>"]
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+authors.workspace = true
+repository.workspace = true
 description = "A toy game engine"
 readme = "../README.md"
-repository = "https://github.com/yuma140902/Reverie"
 categories = ["game-engines"]
 build = "src/build.rs"
 
@@ -25,17 +25,17 @@ glutin = ["dep:glutin", "winit"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-image = { version = "0.24.3", default-features = false, features = ["png"] }
-c_str_macro = "1.0.3"
-reverie-util = { version = "0.0.0", path = "../reverie-util" }
-nalgebra-glm = "0.17.0"
-raw-gl-context = { version = "0.1.2", optional = true }
-winit = { version = "0.27.2", optional = true }
-glutin = { version = "0.29.1", optional = true }
+image.workspace = true
+c_str_macro.workspace = true
+reverie-util.workspace = true
+nalgebra-glm.workspace = true
+raw-gl-context = { workspace = true, optional = true }
+winit = { workspace = true, optional = true }
+glutin = { workspace = true, optional = true }
 
 [target.'cfg(windows)'.dependencies]
-windows = { version = "0.40.0", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
+windows.workspace = true
 
 [build-dependencies]
-gl_generator = "0.14.0"
+gl_generator.workspace = true
 
