@@ -2,11 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.0.7](https://github.com/yuma140902/reverie/compare/v0.0.6..v0.0.7) - 2024-06-04
 
 ### ✨ Features
 
 - *(util)* Add rotation util - ([8df6b8f](https://github.com/yuma140902/reverie/commit/8df6b8f68fd2c037b80fc161e45852e91b2991df))
+- [**breaking**] Reverie-engine を reverie-engine-opengl にリネーム - ([5bb03d6](https://github.com/yuma140902/reverie/commit/5bb03d6f7971bdedbc375356db0dd39329b3b863))
 - Examplesとreverie-utilのバージョンをワークスペースのバージョンに合わせる - ([e659060](https://github.com/yuma140902/reverie/commit/e659060e4673547d0bceead7b9b327bac1ea991a))
 - ExamplesもMIT OR Apache-2.0ライセンスにする - ([2b0c135](https://github.com/yuma140902/reverie/commit/2b0c135c29c1082fc8eab2cd209087c57a0333b5))
 - ライセンスをMPL-2.0からMIT OR Apache-2.0に変更 - ([8a60be2](https://github.com/yuma140902/reverie/commit/8a60be2a2a3970924e265cb839e9dad924467653))
@@ -25,6 +26,8 @@ All notable changes to this project will be documented in this file.
 
 ### 👷 Build System
 
+- Update to v0.0.7 - ([810a596](https://github.com/yuma140902/reverie/commit/810a59615652bc7ec2aafe8d11e38119c766bb7e))
+- Remove rustfmt.toml; use default settings - ([0950e4c](https://github.com/yuma140902/reverie/commit/0950e4c7b62296abcd009159d4d6af18d5afef8f))
 - 最新版に更新できないクレートをワークスペースの依存関係から削除、各クレートに移動 - ([10fc3b2](https://github.com/yuma140902/reverie/commit/10fc3b270569182709a26411429a35e25d906a96))
 - 依存クレートのアップグレード - ([cd18d4c](https://github.com/yuma140902/reverie/commit/cd18d4c44fa21398d652bad001d6bf9e4b7d5702))
 - Move build.rs - ([49d01be](https://github.com/yuma140902/reverie/commit/49d01be332eb32591e1a52b5517af609339b75ca))
@@ -34,6 +37,9 @@ All notable changes to this project will be documented in this file.
 
 ### 🔧 Miscellaneous Tasks
 
+- Remove VSCode settings - ([ab67b5d](https://github.com/yuma140902/reverie/commit/ab67b5d5e6d925d9d51e58f7f494d8cdea83a0da))
+- Fix license file name - ([02d26c6](https://github.com/yuma140902/reverie/commit/02d26c6b48ad2364e69eee9ca64bb66dd4f84555))
+- Remove git-chglog, use git-cliff - ([6830358](https://github.com/yuma140902/reverie/commit/6830358c61d06523fbf60203a1c8a984127666e2))
 - Use rust-cache action - ([ffdb9ed](https://github.com/yuma140902/reverie/commit/ffdb9edd8eed2832f533bbfd7c7059888afb4324))
 - Minimize image crate - ([47af9a7](https://github.com/yuma140902/reverie/commit/47af9a7dda46220f3043dc34b4b77bd96e3349a0))
 - Changelog generation for monorepo - ([465f671](https://github.com/yuma140902/reverie/commit/465f671b9c609a4c3f2863fdd7abb3a45b87162d))
@@ -42,6 +48,11 @@ All notable changes to this project will be documented in this file.
 
 ### 🔀 Pull Requests
 
+- [#115](https://github.com/yuma140902/reverie/pull/115)
+- [#114](https://github.com/yuma140902/reverie/pull/114)
+- [#112](https://github.com/yuma140902/reverie/pull/112)
+- [#110](https://github.com/yuma140902/reverie/pull/110)
+- [#109](https://github.com/yuma140902/reverie/pull/109)
 - [#108](https://github.com/yuma140902/reverie/pull/108)
 - [#107](https://github.com/yuma140902/reverie/pull/107)
 - [#106](https://github.com/yuma140902/reverie/pull/106)
