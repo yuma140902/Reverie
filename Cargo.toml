@@ -1,9 +1,10 @@
 [workspace.package]
 version = "0.0.6"
+authors  = ["yuma140902 <yuma140902@gmail.com>"]
 edition = "2021"
 license = "MPL-2.0"
 repository = "https://github.com/yuma140902/Reverie"
-authors  = ["yuma140902 <yuma140902@gmail.com>"]
+rust-version = "1.78.0"
 
 [workspace]
 members = [
