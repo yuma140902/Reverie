@@ -6,11 +6,11 @@ rust-version.workspace = true
 
 [dependencies]
 reverie-engine.workspace = true
-nalgebra = { workspace = true, features = ["serde-serialize"] }
-nalgebra-glm.workspace = true
+nalgebra = { version = "0.31.4", features = ["serde-serialize"] }
+nalgebra-glm = "0.17.0"
 c_str_macro.workspace = true
 image.workspace = true
-parry3d.workspace = true
+parry3d = "0.9.0"
 serde_json.workspace = true
 serde.workspace = true
 once_cell.workspace = true

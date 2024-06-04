@@ -16,5 +16,5 @@ default-target = "x86_64-pc-windows-msvc"
 
 [dependencies]
 approx.workspace = true
-nalgebra.workspace = true
+nalgebra = "0.31.4"
 newtype-ops.workspace = true
