@@ -2,7 +2,7 @@
 name = "reverie-engine"
 version.workspace = true
 authors.workspace = true
-build = "src/build.rs"
+build = "./build.rs"
 categories = ["game-engines"]
 description = "A toy game engine"
 edition.workspace = true
