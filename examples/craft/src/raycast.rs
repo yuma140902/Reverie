@@ -1,5 +1,5 @@
 use parry3d::query::{Ray, RayCast};
-use reverie_engine::math;
+use reverie_engine_opengl::math;
 
 use crate::{config, player::Player, world::World};
 

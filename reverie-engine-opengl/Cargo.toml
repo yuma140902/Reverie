@@ -1,10 +1,10 @@
 [package]
-name = "reverie-engine"
+name = "reverie-engine-opengl"
 version.workspace = true
 authors.workspace = true
 build = "./build.rs"
 categories = ["game-engines"]
-description = "A toy game engine"
+description = "A toy game engine backed by OpenGL"
 edition.workspace = true
 license.workspace = true
 readme = "../README.md"

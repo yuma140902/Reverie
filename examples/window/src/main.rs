@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use re::gl;
 use re::ReverieEngine;
-use reverie_engine as re;
+use reverie_engine_opengl as re;
 
 pub fn main() {
     let width = 800;

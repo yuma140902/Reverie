@@ -6,4 +6,4 @@ license.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-reverie-engine.workspace = true
+reverie-engine-opengl.workspace = true

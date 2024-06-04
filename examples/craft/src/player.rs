@@ -1,5 +1,5 @@
 use parry3d::shape::Cuboid;
-use reverie_engine::{camera::Camera, gl::Gl, math::Deg};
+use reverie_engine_opengl::{camera::Camera, gl::Gl, math::Deg};
 
 use crate::{collision, config, world::World, Point3, Vector3};
 

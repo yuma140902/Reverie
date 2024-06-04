@@ -6,7 +6,7 @@ use re::vao::Vao;
 use re::vao::VaoBuilder3DGeometry;
 use re::vao::VaoConfig;
 use re::vao::VertexWithNormUv;
-use reverie_engine as re;
+use reverie_engine_opengl as re;
 
 use crate::config;
 use crate::TextureUV;

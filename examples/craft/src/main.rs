@@ -1,6 +1,5 @@
 #![cfg_attr(all(windows, not(debug_assertions)), windows_subsystem = "windows")]
 
-
 use player::Player;
 use re::util::math;
 use world::World;
@@ -18,7 +17,7 @@ use re::vao::Renderer;
 use re::vao::VaoConfigBuilder;
 use re::window::winit;
 use re::ReverieEngine;
-use reverie_engine as re;
+use reverie_engine_opengl as re;
 
 use crate::config::CONFIG;
 use crate::config::CONFIG_FILE;
