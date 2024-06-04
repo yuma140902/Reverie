@@ -24,12 +24,13 @@ A toy game engine
 
 See [CHANGELOG.md](./CHANGELOG.md).
 
-Install [git-chglog](https://github.com/git-chglog/git-chglog). To generate the changelog of `reverie-engine`, run `git-chglog --output CHANGELOG.md`. To generate the changelog of `reverie-util`, run `git-chglog --config .chglog/config-util.yml --output CHANGELOG-util.md`
+To generate changelog, install [git-cliff](https://github.com/orhun/git-cliff) and run
+
+```sh
+git cliff --config git-cliff.toml -o CHANGELOG.md
+```
 
 ### Commit message
 
 See [.gitmessage](./.gitmessage). It is recommended to run `git config commit.template .gitmessage`.
 
-### Branch name
-
-All branches related to `reverie-util` must have the `util-` prefix.
