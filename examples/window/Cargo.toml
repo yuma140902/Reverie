@@ -1,7 +1,8 @@
 [package]
 name = "example-window"
 version = "0.1.0"
-edition = "2018"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
-reverie-engine = { path = "../../reverie" }
+reverie-engine.workspace = true
