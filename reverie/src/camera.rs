@@ -48,8 +48,8 @@ impl Camera {
         let projection_matrix = self.projection_matrix(width, height);
 
         let info = &Phong3DRenderingInfo {
-            phong: &phong_info,
-            model_matrix: &model_matrix,
+            phong: phong_info,
+            model_matrix,
             view_matrix: &view_matrix,
             projection_matrix: &projection_matrix,
             camera_pos: &self.pos,

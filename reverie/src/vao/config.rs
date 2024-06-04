@@ -18,6 +18,12 @@ pub struct VaoConfigBuilder {
     culling: bool,
 }
 
+impl Default for VaoConfigBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl VaoConfigBuilder {
     pub fn new() -> Self {
         Self {

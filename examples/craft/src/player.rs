@@ -24,7 +24,7 @@ impl Player {
                 Deg(config.player_init_pitch_deg).to_rad(),
                 Deg(config.fov),
             ),
-            pos: config.player_init_pos.clone(),
+            pos: config.player_init_pos,
             velocity: Vector3::zeros(),
             bounding_box: Cuboid::new(config.player_bounding_vec),
             eye: config.eye,

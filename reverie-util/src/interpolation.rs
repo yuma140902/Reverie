@@ -49,13 +49,14 @@ impl Interpolation<f32> {
 
     /// 三次関数を使ってease-in/ease-outな補間をする
     pub fn new_cubic_ease_in_out(begin: f32, end: f32, t_0: Time, t_total: TimeSpan) -> Self {
+        #[allow(clippy::suboptimal_flops)]
         Self::new(begin, end, t_0, t_total, |t| -2.0 * t * t * t + 3.0 * t * t)
     }
 
     pub fn value(&self, t: Time) -> f32 {
         let t_normalized: NormalizedTime = ((t - self.t_0) as f32 / self.t_total as f32).clamp(0.0, 1.0);
         let rate = (self.rate)(t_normalized);
-        self.begin * (1.0f32 - rate) + self.end * rate
+        self.begin.mul_add(1.0f32 - rate, self.end * rate)
     }
 }
 

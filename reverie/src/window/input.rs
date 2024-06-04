@@ -4,7 +4,7 @@ use std::collections::HashSet;
 pub mod cursor;
 
 #[cfg(feature = "winit")]
-pub(crate) fn mouse_button_index(mouse_button: &winit::event::MouseButton) -> usize {
+pub fn mouse_button_index(mouse_button: &winit::event::MouseButton) -> usize {
     match mouse_button {
         winit::event::MouseButton::Left => 0,
         winit::event::MouseButton::Right => 1,
@@ -14,7 +14,7 @@ pub(crate) fn mouse_button_index(mouse_button: &winit::event::MouseButton) -> us
 }
 
 #[cfg(feature = "winit")]
-pub(crate) fn mouse_button_index_3(mouse_button: &winit::event::MouseButton) -> Option<usize> {
+pub fn mouse_button_index_3(mouse_button: &winit::event::MouseButton) -> Option<usize> {
     match mouse_button {
         winit::event::MouseButton::Left
         | winit::event::MouseButton::Right
@@ -24,7 +24,7 @@ pub(crate) fn mouse_button_index_3(mouse_button: &winit::event::MouseButton) -> 
 }
 
 #[derive(Debug)]
-pub(crate) struct Input {
+pub struct Input {
     #[cfg(feature = "winit")]
     pressed_keys: HashSet<winit::event::VirtualKeyCode>,
     #[cfg(feature = "winit")]

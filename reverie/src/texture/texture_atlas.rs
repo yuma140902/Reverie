@@ -54,7 +54,7 @@ impl<const W: u32, const H: u32, const ATLAS_W: u32, const ATLAS_H: u32>
 {
     /// `ATLAS_W`×`ATLAS_H`のテクスチャアトラスを`W`×`H`のサイズに分割した時、`pos.row`行目`pos.column`列目のパーツの始点と終点のUV座標
     pub fn of_atlas(pos: &TextureAtlasPos) -> Self {
-        TextureUV {
+        Self {
             begin_u: (pos.column * W) as f32 / ATLAS_W as f32,
             begin_v: 1.0f32 - ((pos.row + 1) * H) as f32 / ATLAS_H as f32,
             end_u: ((pos.column + 1) * W) as f32 / ATLAS_W as f32,

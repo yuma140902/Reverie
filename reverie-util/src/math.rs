@@ -6,10 +6,10 @@ pub use nalgebra;
 #[macro_use]
 mod macros;
 
-#[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Clone, Copy)]
 pub struct Deg<T>(pub T);
 
-#[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Clone, Copy)]
 pub struct Rad<T>(pub T);
 
 newtype_ops! { { [Deg<f64>] [Deg<f32>] [Rad<f64>] [Rad<f32>] } {add sub} {:=} {^&}Self {^&}Self }

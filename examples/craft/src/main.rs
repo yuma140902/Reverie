@@ -1,6 +1,5 @@
 #![cfg_attr(all(windows, not(debug_assertions)), windows_subsystem = "windows")]
 
-use c_str_macro::c_str;
 
 use player::Player;
 use re::util::math;
@@ -8,14 +7,12 @@ use world::World;
 
 use re::gl;
 use re::shader::Program;
-use re::shader::Shader;
 use re::texture::TextureAtlasPos;
 use re::types::Const;
 use re::util::math::Deg;
 use re::util::math::Rad;
 use re::vao::CuboidTextures;
 use re::vao::Phong3DRenderer;
-use re::vao::Phong3DRenderingInfo;
 use re::vao::PhongRenderingInfo;
 use re::vao::Renderer;
 use re::vao::VaoConfigBuilder;

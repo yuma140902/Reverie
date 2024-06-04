@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{Point3, Vector3};
 
-pub const CONFIG_FILE: &'static str = "./craft-config.json";
+pub const CONFIG_FILE: &str = "./craft-config.json";
 pub static CONFIG: OnceCell<GameConfig> = OnceCell::new();
 
 pub fn get() -> &'static GameConfig {

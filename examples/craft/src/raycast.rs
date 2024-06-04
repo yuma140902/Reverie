@@ -16,24 +16,24 @@ pub enum Side {
 impl Side {
     pub fn offset(&self, x: u32, y: u32, z: u32) -> (u32, u32, u32) {
         match self {
-            Side::Top => (x, y + 1, z),
-            Side::Bottom => {
+            Self::Top => (x, y + 1, z),
+            Self::Bottom => {
                 if y == 0 {
                     (x, 0, z)
                 } else {
                     (x, y - 1, z)
                 }
             }
-            Side::XPos => (x + 1, y, z),
-            Side::XNeg => {
+            Self::XPos => (x + 1, y, z),
+            Self::XNeg => {
                 if x == 0 {
                     (0, y, z)
                 } else {
                     (x - 1, y, z)
                 }
             }
-            Side::ZPos => (x, y, z + 1),
-            Side::ZNeg => {
+            Self::ZPos => (x, y, z + 1),
+            Self::ZNeg => {
                 if z == 0 {
                     (x, y, 0)
                 } else {

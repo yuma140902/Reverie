@@ -21,11 +21,11 @@ pub struct Gl {
 }
 
 impl Gl {
-    pub fn load_with<F>(loadfn: F) -> Gl
+    pub fn load_with<F>(loadfn: F) -> Self
     where
         F: FnMut(&'static str) -> *const types::GLvoid,
     {
-        Gl {
+        Self {
             inner: Rc::new(bindings::Gl::load_with(loadfn)),
         }
     }

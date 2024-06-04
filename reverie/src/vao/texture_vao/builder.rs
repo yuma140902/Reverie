@@ -13,7 +13,7 @@ pub trait VaoBuilder3DGeometry<T> {
     /// 各辺が軸に並行な直方体を追加する
     ///
     /// `begin`は`end`よりも(-∞, -∞, -∞)に近い
-    fn add_cuboid<'b>(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'b, T>);
+    fn add_cuboid(&mut self, begin: &Point3, end: &Point3, textures: &CuboidTextures<'_, T>);
 
     /// 各辺が軸に並行な長方形を追加する
     ///
@@ -36,11 +36,11 @@ impl<Width, Height, AtlasWidth, AtlasHeight>
     VaoBuilder3DGeometry<TextureUV<Width, Height, AtlasWidth, AtlasHeight>>
     for VaoBuffer<VertexWithNormUv>
 {
-    fn add_cuboid<'b>(
+    fn add_cuboid(
         &mut self,
         begin: &Point3,
         end: &Point3,
-        textures: &CuboidTextures<'b, TextureUV<Width, Height, AtlasWidth, AtlasHeight>>,
+        textures: &CuboidTextures<'_, TextureUV<Width, Height, AtlasWidth, AtlasHeight>>,
     ) {
         // 上面
         self.add_face(

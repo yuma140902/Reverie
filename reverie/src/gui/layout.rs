@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 /// 長方形の領域
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Rect<T, U>
 where
     T: PartialEq,
@@ -14,7 +14,7 @@ where
 }
 
 /// 長方形の領域のうち、レイアウトの基準とする部分
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Origin {
     TopLeft,
     Top,
@@ -57,9 +57,9 @@ pub enum Position<T> {
 impl Position<i32> {
     pub fn actual_value(&self, max: i32) -> i32 {
         match *self {
-            Position::Positive(distance) => distance,
-            Position::Center(distance) => max / 2_i32 + distance,
-            Position::Negative(distance) => max - distance,
+            Self::Positive(distance) => distance,
+            Self::Center(distance) => max / 2_i32 + distance,
+            Self::Negative(distance) => max - distance,
         }
     }
 }
@@ -106,7 +106,7 @@ impl Rect<i32, u32> {
     }
 
     pub fn new_in_rect(
-        outer: &Rect<i32, u32>,
+        outer: &Self,
         origin: &Origin,
         position_x: &Position<i32>,
         position_y: &Position<i32>,
@@ -125,7 +125,7 @@ impl Rect<i32, u32> {
         }
     }
 
-    pub fn new_biggest_in_rect(outer: &Rect<i32, u32>, inner_width: u32, inner_height: u32) -> Self {
+    pub fn new_biggest_in_rect(outer: &Self, inner_width: u32, inner_height: u32) -> Self {
         let outer_aspect: f32 = *outer.width() as f32 / *outer.height() as f32;
         let inner_aspect: f32 = inner_width as f32 / inner_height as f32;
 

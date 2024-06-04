@@ -3,6 +3,12 @@ use crate::{gl::Gl, texture::ImageManager, window::WindowBuilder};
 #[derive(Debug)]
 pub struct ReverieEngine {}
 
+impl Default for ReverieEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ReverieEngine {
     pub fn new() -> Self {
         Self {}

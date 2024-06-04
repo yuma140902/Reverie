@@ -23,7 +23,7 @@ fn pos_to_index(x: u32, y: u32, z: u32) -> usize {
 }
 
 pub fn is_valid_pos(x: u32, y: u32, z: u32) -> bool {
-    0 <= x && x < 16 && 0 <= y && y < 16 && 0 <= z && z < 16
+    (0..16).contains(&x) && (0..16).contains(&y) && (0..16).contains(&z)
 }
 
 fn get_block_aabb(x: u32, y: u32, z: u32) -> AABB {
@@ -33,8 +33,8 @@ fn get_block_aabb(x: u32, y: u32, z: u32) -> AABB {
 }
 
 impl World {
-    pub fn new() -> World {
-        World {
+    pub fn new() -> Self {
+        Self {
             blocks: [false; 16 * 16 * 16],
         }
     }

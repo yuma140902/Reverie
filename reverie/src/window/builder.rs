@@ -1,6 +1,6 @@
 use crate::window::Window;
 
-pub(crate) struct WindowConfig {
+pub struct WindowConfig {
     pub(crate) title: Option<String>,
     pub(crate) width: u32,
     pub(crate) height: u32,

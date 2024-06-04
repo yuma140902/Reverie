@@ -19,7 +19,7 @@ pub struct Program {
 }
 
 impl Program {
-    pub fn default_uv(gl: Gl) -> Result<Program, String> {
+    pub fn default_uv(gl: Gl) -> Result<Self, String> {
         let vert = Shader::from_vert_code(
             Gl::clone(&gl),
             &CString::new(include_str!("../resources/uv.vert")).unwrap(),
@@ -28,7 +28,7 @@ impl Program {
             Gl::clone(&gl),
             &CString::new(include_str!("../resources/uv.frag")).unwrap(),
         )?;
-        Program::from_shaders(gl, &[vert, frag])
+        Self::from_shaders(gl, &[vert, frag])
     }
 
     /// 頂点シェーダーとフラグメントシェーダーをリンクしてプログラムを作る
@@ -36,7 +36,7 @@ impl Program {
     /// # Returns
     ///
     /// `Ok`のときは`Program`、`Err`のときはエラーメッセージ
-    pub fn from_shaders(gl: Gl, shaders: &[Shader]) -> Result<Program, String> {
+    pub fn from_shaders(gl: Gl, shaders: &[Shader]) -> Result<Self, String> {
         let program_id = unsafe { gl.CreateProgram() };
         for shader in shaders {
             unsafe {
@@ -72,7 +72,7 @@ impl Program {
         for shader in shaders {
             unsafe { gl.DetachShader(program_id, shader.raw_id()) }
         }
-        Ok(Program { gl, id: program_id })
+        Ok(Self { gl, id: program_id })
     }
 
     /// OpenGLの関数に渡すためのプログラムID
@@ -91,14 +91,14 @@ impl Program {
     }
 
     /// ユニフォーム変数を送る
-    pub unsafe fn set_uniforms<'a>(&self, uniforms: &UniformVariables<'a>) {
+    pub unsafe fn set_uniforms(&self, uniforms: &UniformVariables<'_>) {
         for (name, uniform) in uniforms.map.iter() {
-            self.set_uniform(*name, uniform);
+            self.set_uniform(name, uniform);
         }
     }
 
     /// ユニフォーム変数を送る
-    pub unsafe fn set_uniform<'a>(&self, name: &CStr, value: &Uniform<'a>) {
+    pub unsafe fn set_uniform(&self, name: &CStr, value: &Uniform<'_>) {
         match *value {
             Uniform::Bool(b) => self.set_bool(name, b),
             Uniform::Int(i) => self.set_int(name, i),
@@ -171,7 +171,7 @@ pub struct Shader {
 
 impl Shader {
     /// シェーダのソースコードをコンパイルする
-    pub fn from_code(gl: Gl, code: &CStr, kind: GLenum) -> Result<Shader, String> {
+    pub fn from_code(gl: Gl, code: &CStr, kind: GLenum) -> Result<Self, String> {
         let id = unsafe { gl.CreateShader(kind) };
 
         unsafe {
@@ -197,7 +197,7 @@ impl Shader {
 
             return Err(error.to_string_lossy().into_owned());
         }
-        Ok(Shader { gl, id })
+        Ok(Self { gl, id })
     }
 
     /// ファイルからシェーダーのコードを読み込み、コンパイルする
@@ -205,7 +205,7 @@ impl Shader {
     /// # Panics
     ///
     /// ファイルが開けなかった時にパニックする
-    pub fn from_file(gl: Gl, path: &str, kind: GLenum) -> Result<Shader, String> {
+    pub fn from_file(gl: Gl, path: &str, kind: GLenum) -> Result<Self, String> {
         let mut file = File::open(path)
             .unwrap_or_else(|err| panic!("ERROR: {} : Failed to open file '{}'", err, path));
         let mut code = String::new();
@@ -214,27 +214,27 @@ impl Shader {
 
         let code = CString::new(code.as_bytes()).unwrap();
 
-        Shader::from_code(gl, &code, kind)
+        Self::from_code(gl, &code, kind)
     }
 
     /// 頂点シェーダーをファイルから作る
-    pub fn from_vert_file(gl: Gl, path: &str) -> Result<Shader, String> {
-        Shader::from_file(gl, path, gl::VERTEX_SHADER)
+    pub fn from_vert_file(gl: Gl, path: &str) -> Result<Self, String> {
+        Self::from_file(gl, path, gl::VERTEX_SHADER)
     }
 
     /// フラグメントシェーダーをファイルから作る
-    pub fn from_frag_file(gl: Gl, path: &str) -> Result<Shader, String> {
-        Shader::from_file(gl, path, gl::FRAGMENT_SHADER)
+    pub fn from_frag_file(gl: Gl, path: &str) -> Result<Self, String> {
+        Self::from_file(gl, path, gl::FRAGMENT_SHADER)
     }
 
     /// 頂点シェーダーをソースコードから作る
-    pub fn from_vert_code(gl: Gl, code: &CStr) -> Result<Shader, String> {
-        Shader::from_code(gl, code, gl::VERTEX_SHADER)
+    pub fn from_vert_code(gl: Gl, code: &CStr) -> Result<Self, String> {
+        Self::from_code(gl, code, gl::VERTEX_SHADER)
     }
 
     /// フラグメントシェーダーをソースコードから作る
-    pub fn from_frag_code(gl: Gl, code: &CStr) -> Result<Shader, String> {
-        Shader::from_code(gl, code, gl::FRAGMENT_SHADER)
+    pub fn from_frag_code(gl: Gl, code: &CStr) -> Result<Self, String> {
+        Self::from_code(gl, code, gl::FRAGMENT_SHADER)
     }
 
     /// OpenGLの関数に渡すためのシェーダーID
@@ -275,6 +275,12 @@ pub enum Uniform<'a> {
 /// ユニフォーム変数のセット
 pub struct UniformVariables<'a> {
     map: HashMap<&'a CStr, Uniform<'a>>,
+}
+
+impl<'a> Default for UniformVariables<'a> {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl<'a> UniformVariables<'a> {

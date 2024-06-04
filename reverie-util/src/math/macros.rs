@@ -18,7 +18,7 @@ macro_rules! impl_deg {
     ($float:ident) => {
         impl Deg<$float> {
             pub fn to_rad(&self) -> Rad<$float> {
-                Rad(self.0 * std::$float::consts::PI / 180.0)
+                Rad(self.0.to_radians())
             }
 
             pub fn sin(&self) -> $float {
@@ -44,7 +44,7 @@ macro_rules! impl_rad {
     ($float:ident) => {
         impl Rad<$float> {
             pub fn to_deg(&self) -> Deg<$float> {
-                Deg(self.0 * 180.0 / std::$float::consts::PI)
+                Deg(self.0.to_degrees())
             }
 
             pub fn sin(&self) -> $float {

@@ -5,7 +5,7 @@ use parry3d::{
     shape::Cuboid,
 };
 
-use crate::{world::World, Point3, Vector3};
+use crate::{Point3, Vector3};
 
 pub fn modify_velocity(
     entity_velocity: &mut Vector3,
@@ -26,7 +26,7 @@ pub fn modify_velocity(
         .collect();
 
     while modify(
-        &world_aabbs,
+        world_aabbs,
         &extended_aabbs,
         entity_pos,
         entity_velocity,
@@ -51,12 +51,12 @@ fn modify<'a>(
     let mut nearest_normal: Option<Vector3> = None;
     for (aabb, extended_aabb) in world_aabbs.iter().zip(extended_aabbs.iter()) {
         // エンティティが対象のAABBの中にいるときは当たり判定を行わない
-        if extended_aabb.contains_local_point(&entity_pos) {
+        if extended_aabb.contains_local_point(entity_pos) {
             continue;
         }
 
         // エンティティの行き先が対象のAABBと重ならないときは当たり判定を行わない
-        if !extended_entity_aabb.intersects(&aabb) {
+        if !extended_entity_aabb.intersects(aabb) {
             continue;
         }
 
@@ -74,7 +74,7 @@ fn modify<'a>(
 
     // 壁ずりベクトルを求める
     if let Some(nearest_normal) = nearest_normal {
-        *entity_velocity = *entity_velocity - nearest_normal * entity_velocity.dot(&nearest_normal);
+        *entity_velocity -= nearest_normal * entity_velocity.dot(&nearest_normal);
         true
     } else {
         false

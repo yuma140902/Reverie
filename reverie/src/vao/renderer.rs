@@ -49,9 +49,9 @@ impl Renderer<&Phong3DRenderingInfo<'_>> for Phong3DRenderer {
         let uniforms = {
             use crate::shader::Uniform::*;
             let mut uniforms = UniformVariables::new();
-            uniforms.add(c_str!("uModel"), Matrix4(&extra.model_matrix));
-            uniforms.add(c_str!("uView"), Matrix4(&extra.view_matrix));
-            uniforms.add(c_str!("uProjection"), Matrix4(&extra.projection_matrix));
+            uniforms.add(c_str!("uModel"), Matrix4(extra.model_matrix));
+            uniforms.add(c_str!("uView"), Matrix4(extra.view_matrix));
+            uniforms.add(c_str!("uProjection"), Matrix4(extra.projection_matrix));
             uniforms.add(
                 c_str!("uViewPosition"),
                 TripleFloat(extra.camera_pos.x, extra.camera_pos.y, extra.camera_pos.z),
@@ -121,9 +121,9 @@ impl Renderer<&Color3DRenderingInfo<'_>> for Color3DRenderer {
         let uniforms = {
             use crate::shader::Uniform::*;
             let mut uniforms = UniformVariables::new();
-            uniforms.add(c_str!("uModel"), Matrix4(&extra.model_matrix));
-            uniforms.add(c_str!("uView"), Matrix4(&extra.view_matrix));
-            uniforms.add(c_str!("uProjection"), Matrix4(&extra.projection_matrix));
+            uniforms.add(c_str!("uModel"), Matrix4(extra.model_matrix));
+            uniforms.add(c_str!("uView"), Matrix4(extra.view_matrix));
+            uniforms.add(c_str!("uProjection"), Matrix4(extra.projection_matrix));
             uniforms.add(
                 c_str!("uViewPosition"),
                 TripleFloat(extra.camera_pos.x, extra.camera_pos.y, extra.camera_pos.z),
