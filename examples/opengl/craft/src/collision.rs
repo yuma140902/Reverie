@@ -38,7 +38,7 @@ pub fn modify_velocity(
     ) {}
 }
 
-fn modify<'a>(
+fn modify(
     world_aabbs: &[Aabb],
     extended_aabbs: &[Aabb],
     entity_pos: &Point3,
