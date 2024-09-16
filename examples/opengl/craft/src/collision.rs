@@ -11,7 +11,7 @@ pub fn modify_velocity(
     entity_velocity: &mut Vector3,
     entity_bounding_box: &Cuboid,
     entity_pos: &Point3,
-    world_aabbs: &Vec<Aabb>,
+    world_aabbs: &[Aabb],
 ) {
     let entity_aabb =
         entity_bounding_box.aabb(&Isometry3::new(entity_pos.coords, Vector3::zeros()));
@@ -39,8 +39,8 @@ pub fn modify_velocity(
 }
 
 fn modify<'a>(
-    world_aabbs: &Vec<Aabb>,
-    extended_aabbs: &Vec<Aabb>,
+    world_aabbs: &[Aabb],
+    extended_aabbs: &[Aabb],
     entity_pos: &Point3,
     entity_velocity: &mut Vector3,
     entity_aabb: &Aabb,
