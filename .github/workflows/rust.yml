@@ -20,13 +20,16 @@ jobs:
         os: [ windows-latest, ubuntu-latest, macos-14 ]
         cmd:
           - build --all-targets --workspace
+          - build --all-targets --workspace --release
           - build --all-targets --workspace --no-default-features
+          - build --all-targets --workspace --no-default-features --release
           - build --all-targets --workspace --no-default-features --features raw_gl_context
+          - build --all-targets --workspace --no-default-features --features raw_gl_context --release
           - build --all-targets --workspace --no-default-features --features raw_gl_context,glutin
+          - build --all-targets --workspace --no-default-features --features raw_gl_context,glutin --release
           - test --all-targets --workspace --all-features
           - clippy --all-features --workspace -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
           - doc --no-deps --workspace --document-private-items
-        release: [ --release, '' ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -40,4 +43,4 @@ jobs:
             ${{ runner.os }}-cargo-
     - uses: mozilla-actions/sccache-action@v0.0.5
     - uses: dtolnay/rust-toolchain@stable
-    - run: cargo ${{ matrix.cmd }} ${{ matrix.release }}
+    - run: cargo ${{ matrix.cmd }}
