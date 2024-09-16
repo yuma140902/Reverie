@@ -77,6 +77,7 @@ impl World {
         v
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub fn generate_vertex_obj<'a>(
         &self,
         gl: &Gl,
