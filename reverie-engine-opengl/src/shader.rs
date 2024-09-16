@@ -303,7 +303,7 @@ impl<'a> Default for UniformVariables<'a> {
 
 impl<'a> UniformVariables<'a> {
     /// 空のセットを作る
-    pub fn new() -> UniformVariables<'a> {
+    pub fn new() -> Self {
         Self {
             map: HashMap::new(),
         }
