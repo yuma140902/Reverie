@@ -37,6 +37,8 @@ pub struct Vao<'a> {
 }
 
 impl<'a> Vao<'a> {
+    #[allow(clippy::too_many_arguments)]
+    #[deprecated(note = "Use `self::vao_buffer::VaoBuffer` instead", since = "0.0.8")]
     /// 代わりに[`self::vao_buffer::VaoBuffer`]を使うことを推奨
     pub fn new(
         gl: Gl,
@@ -49,7 +51,7 @@ impl<'a> Vao<'a> {
         stride: GLsizei,
         vertex_num: i32,
         config: &'a VaoConfig,
-    ) -> Vao<'a> {
+    ) -> Self {
         debug_assert_eq!(num_attributes, attribute_types.len());
         debug_assert_eq!(num_attributes, attribute_sizes.len());
 
@@ -94,6 +96,7 @@ impl<'a> Vao<'a> {
         }
     }
 
+    #[deprecated(note = "Use `crate::Renderer` instead", since = "0.0.8")]
     /// Use [`crate::Renderer`] instead
     pub fn draw(&self, _uniforms: &UniformVariables, draw_mode: GLenum) {
         unsafe {
@@ -129,6 +132,7 @@ impl<'a> Vao<'a> {
         }
     }
 
+    #[deprecated(note = "Use `crate::Renderer` instead", since = "0.0.8")]
     /// ポリゴンを描画する
     /// Use [`crate::Renderer`] instead
     pub fn draw_triangles(&self, uniforms: &UniformVariables) {
