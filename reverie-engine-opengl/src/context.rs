@@ -49,7 +49,7 @@ impl ContextBackend for glutin::RawContext<glutin::PossiblyCurrent> {
     }
 
     #[cfg(not(target_os = "windows"))]
-    fn new(window: &Window) -> Self {
+    fn new(_window: &Window) -> Self {
         panic!("glutin rawcontext is not implemented for this platform");
     }
 
