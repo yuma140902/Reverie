@@ -90,6 +90,8 @@ impl Program {
         }
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// ユニフォーム変数を送る
     pub unsafe fn set_uniforms(&self, uniforms: &UniformVariables<'_>) {
         for (name, uniform) in uniforms.map.iter() {
@@ -97,6 +99,8 @@ impl Program {
         }
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// ユニフォーム変数を送る
     pub unsafe fn set_uniform(&self, name: &CStr, value: &Uniform<'_>) {
         match *value {
@@ -109,6 +113,8 @@ impl Program {
         }
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// bool型のユニフォーム変数を送る
     pub unsafe fn set_bool(&self, name: &CStr, value: bool) {
         self.gl.Uniform1i(
@@ -117,18 +123,24 @@ impl Program {
         );
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// int型のユニフォーム変数を送る
     pub unsafe fn set_int(&self, name: &CStr, value: i32) {
         self.gl
             .Uniform1i(self.gl.GetUniformLocation(self.id, name.as_ptr()), value);
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// float型のユニフォーム変数を送る
     pub unsafe fn set_float(&self, name: &CStr, value: f32) {
         self.gl
             .Uniform1f(self.gl.GetUniformLocation(self.id, name.as_ptr()), value);
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// 3次元ベクトル型(float)のユニフォーム変数を送る
     pub unsafe fn set_vector3(&self, name: &CStr, value: &nalgebra::Vector3<f32>) {
         self.gl.Uniform3fv(
@@ -138,12 +150,16 @@ impl Program {
         );
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// float型のユニフォーム変数3つを送る
     pub unsafe fn set_vec3(&self, name: &CStr, x: f32, y: f32, z: f32) {
         self.gl
             .Uniform3f(self.gl.GetUniformLocation(self.id, name.as_ptr()), x, y, z);
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// 4次行列型(float)のユニフォーム変数を送る
     pub unsafe fn set_mat4(&self, name: &CStr, mat: &nalgebra::Matrix4<f32>) {
         self.gl.UniformMatrix4fv(
