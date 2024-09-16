@@ -1,14 +1,14 @@
 macro_rules! derive_into {
     ($target:ty, $into:ty) => {
-        impl<'a> Into<$into> for &'a $target {
-            fn into(self) -> $into {
-                self.0
+        impl<'a> From<&'a $target> for $into {
+            fn from(value: &'a $target) -> $into {
+                value.0
             }
         }
 
-        impl Into<$into> for $target {
-            fn into(self) -> $into {
-                self.0
+        impl From<$target> for $into {
+            fn from(value: $target) -> $into {
+                value.0
             }
         }
     };
@@ -92,7 +92,11 @@ macro_rules! derive_approx {
                 epsilon: Self::Epsilon,
                 max_relative: Self::Epsilon,
             ) -> bool {
-                <&Self as Into<$float>>::into(self).relative_eq(&other.into(), epsilon, max_relative)
+                <&Self as Into<$float>>::into(self).relative_eq(
+                    &other.into(),
+                    epsilon,
+                    max_relative,
+                )
             }
         }
 
