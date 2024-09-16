@@ -58,6 +58,15 @@ impl Program {
             let error = create_whitespace_cstring_with_len(len as usize);
 
             unsafe {
+                // as_ptr() の戻り値へ書き込むのは未定義動作である (as_mut_ptr()は用意されていない)
+                //
+                // > The returned pointer is read-only; writing to it (including passing it to C code that writes to it) causes undefined behavior.
+                // https://doc.rust-lang.org/std/ffi/struct.CString.html#method.as_ptr
+                //
+                // でも動いているのでとりあえずそのまま使う。
+                // glow にもそういうコードがある。
+                // https://github.com/grovesNL/glow/blob/eb44a878a756d5ddce8505158690ec9bd272be8f/src/native.rs#L422
+                #[allow(clippy::as_ptr_cast_mut)]
                 gl.GetProgramInfoLog(
                     program_id,
                     len,
@@ -210,6 +219,15 @@ impl Shader {
 
             let error = create_whitespace_cstring_with_len(len as usize);
             unsafe {
+                // as_ptr() の戻り値へ書き込むのは未定義動作である (as_mut_ptr()は用意されていない)
+                //
+                // > The returned pointer is read-only; writing to it (including passing it to C code that writes to it) causes undefined behavior.
+                // https://doc.rust-lang.org/std/ffi/struct.CString.html#method.as_ptr
+                //
+                // でも動いているのでとりあえずそのまま使う。
+                // glow にもそういうコードがある。
+                // https://github.com/grovesNL/glow/blob/eb44a878a756d5ddce8505158690ec9bd272be8f/src/native.rs#L333
+                #[allow(clippy::as_ptr_cast_mut)]
                 gl.GetShaderInfoLog(id, len, std::ptr::null_mut(), error.as_ptr() as *mut GLchar);
             }
 
