@@ -13,7 +13,6 @@ use re::util::math::Rad;
 use re::vao::CuboidTextures;
 use re::vao::Phong3DRenderer;
 use re::vao::PhongRenderingInfo;
-use re::vao::Renderer;
 use re::vao::VaoConfigBuilder;
 use re::window::winit;
 use re::ReverieEngine;
@@ -120,16 +119,9 @@ fn main() {
         alpha: config.shader_alpha,
     };
 
-    let renderer = Phong3DRenderer::new(shader);
-    let mut vertex_obj = world.generate_vertex_obj(
-        &gl,
-        &cuboid_texture,
-        &manual1_texture,
-        &manual2_texture,
-        None,
-        &highlight_cuboid_texture,
-        &vao_config,
-    );
+    // TODO: use Phong3DRenderer
+    let _renderer = Phong3DRenderer::new(shader);
+    let mut vertex_obj;
 
     let mut player = Player::new(gl.clone());
 
