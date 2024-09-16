@@ -94,17 +94,19 @@ impl<V: VertexType> VaoBuffer<V> {
 
     /// 現在のバッファの内容をもとに[`Vao`]を作る
     pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig) -> Vao<'a> {
-        Vao::new(
-            gl.clone(),
-            (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
-            self.buffer.as_ptr() as _,
-            gl::STATIC_DRAW,
-            self.num_attributes,
-            self.attribute_types,
-            self.attribute_sizes,
-            ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
-            self.vertex_num,
-            config,
-        )
+        unsafe {
+            Vao::new(
+                gl.clone(),
+                (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
+                self.buffer.as_ptr() as _,
+                gl::STATIC_DRAW,
+                self.num_attributes,
+                self.attribute_types,
+                self.attribute_sizes,
+                ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
+                self.vertex_num,
+                config,
+            )
+        }
     }
 }

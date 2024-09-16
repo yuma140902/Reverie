@@ -40,7 +40,11 @@ impl<'a> Vao<'a> {
     #[allow(clippy::too_many_arguments)]
     #[deprecated(note = "Use `self::vao_buffer::VaoBuffer` instead", since = "0.0.8")]
     /// 代わりに[`self::vao_buffer::VaoBuffer`]を使うことを推奨
-    pub fn new(
+    ///
+    /// ## Safety
+    ///
+    /// `data` が有効なポインタであること
+    pub unsafe fn new(
         gl: Gl,
         size: GLsizeiptr,
         data: *const c_void,
