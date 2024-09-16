@@ -8,11 +8,12 @@ publish = false
 
 [dependencies]
 reverie-engine-opengl.workspace = true
-nalgebra = { version = "0.31.4", features = ["serde-serialize"] }
-nalgebra-glm = "0.17.0"
-c_str_macro.workspace = true
-image.workspace = true
-parry3d = "0.9.0"
-serde_json.workspace = true
-serde.workspace = true
-once_cell.workspace = true
+
+c_str_macro = "1.0.3"
+image = { version = "0.25.2", default-features = false, features = ["png"] }
+nalgebra = { version = "0.33.0", features = ["serde-serialize"] }
+nalgebra-glm = "0.19.0"
+once_cell = "1.20.0"
+parry3d = "0.17.1"
+serde = { version = "1.0.210", features = ["derive"] }
+serde_json = "1.0.128"

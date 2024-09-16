@@ -7,5 +7,6 @@ rust-version.workspace = true
 publish = false
 
 [dependencies]
-c_str_macro.workspace = true
 reverie-engine-opengl.workspace = true
+
+c_str_macro = "1.0.3"
