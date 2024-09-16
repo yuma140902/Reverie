@@ -14,7 +14,7 @@ pub enum Side {
 }
 
 impl Side {
-    pub fn offset(&self, x: u32, y: u32, z: u32) -> (u32, u32, u32) {
+    pub const fn offset(&self, x: u32, y: u32, z: u32) -> (u32, u32, u32) {
         match self {
             Self::Top => (x, y + 1, z),
             Self::Bottom => {
@@ -50,7 +50,7 @@ pub fn hit_block_and_side(player: &Player, world: &World) -> Option<(u32, u32, u
         math::calc_front_right_up(player.camera.yaw(), player.camera.pitch());
     let ray = Ray::new(eye_pos, front);
 
-    let mut nearest_toi = std::f32::INFINITY;
+    let mut nearest_toi = f32::INFINITY;
     let mut nearest_xyzside = None;
     for (x, y, z, aabb) in world.generate_selection_aabbs().iter() {
         // プレイヤーがブロックに埋まっているとき
@@ -90,7 +90,7 @@ pub fn hit_block(player: &Player, world: &World) -> Option<(u32, u32, u32)> {
         math::calc_front_right_up(player.camera.yaw(), player.camera.pitch());
     let ray = Ray::new(eye_pos, front);
 
-    let mut nearest_toi = std::f32::INFINITY;
+    let mut nearest_toi = f32::INFINITY;
     let mut nearest_xyz = None;
     for (x, y, z, aabb) in world.generate_selection_aabbs().iter() {
         // プレイヤーがブロックに埋まっているとき

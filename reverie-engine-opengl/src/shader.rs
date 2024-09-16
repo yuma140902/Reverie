@@ -58,6 +58,15 @@ impl Program {
             let error = create_whitespace_cstring_with_len(len as usize);
 
             unsafe {
+                // as_ptr() の戻り値へ書き込むのは未定義動作である (as_mut_ptr()は用意されていない)
+                //
+                // > The returned pointer is read-only; writing to it (including passing it to C code that writes to it) causes undefined behavior.
+                // https://doc.rust-lang.org/std/ffi/struct.CString.html#method.as_ptr
+                //
+                // でも動いているのでとりあえずそのまま使う。
+                // glow にもそういうコードがある。
+                // https://github.com/grovesNL/glow/blob/eb44a878a756d5ddce8505158690ec9bd272be8f/src/native.rs#L422
+                #[allow(clippy::as_ptr_cast_mut)]
                 gl.GetProgramInfoLog(
                     program_id,
                     len,
@@ -79,7 +88,7 @@ impl Program {
     ///
     /// # Safety
     /// glDeleteProgramされていない限り安全
-    pub unsafe fn raw_id(&self) -> GLuint {
+    pub const unsafe fn raw_id(&self) -> GLuint {
         self.id
     }
 
@@ -90,6 +99,8 @@ impl Program {
         }
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// ユニフォーム変数を送る
     pub unsafe fn set_uniforms(&self, uniforms: &UniformVariables<'_>) {
         for (name, uniform) in uniforms.map.iter() {
@@ -97,6 +108,8 @@ impl Program {
         }
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// ユニフォーム変数を送る
     pub unsafe fn set_uniform(&self, name: &CStr, value: &Uniform<'_>) {
         match *value {
@@ -109,24 +122,34 @@ impl Program {
         }
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// bool型のユニフォーム変数を送る
     pub unsafe fn set_bool(&self, name: &CStr, value: bool) {
-        self.gl
-            .Uniform1i(self.gl.GetUniformLocation(self.id, name.as_ptr()), value as i32);
+        self.gl.Uniform1i(
+            self.gl.GetUniformLocation(self.id, name.as_ptr()),
+            value as i32,
+        );
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// int型のユニフォーム変数を送る
     pub unsafe fn set_int(&self, name: &CStr, value: i32) {
         self.gl
             .Uniform1i(self.gl.GetUniformLocation(self.id, name.as_ptr()), value);
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// float型のユニフォーム変数を送る
     pub unsafe fn set_float(&self, name: &CStr, value: f32) {
         self.gl
             .Uniform1f(self.gl.GetUniformLocation(self.id, name.as_ptr()), value);
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// 3次元ベクトル型(float)のユニフォーム変数を送る
     pub unsafe fn set_vector3(&self, name: &CStr, value: &nalgebra::Vector3<f32>) {
         self.gl.Uniform3fv(
@@ -136,12 +159,16 @@ impl Program {
         );
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// float型のユニフォーム変数3つを送る
     pub unsafe fn set_vec3(&self, name: &CStr, x: f32, y: f32, z: f32) {
         self.gl
             .Uniform3f(self.gl.GetUniformLocation(self.id, name.as_ptr()), x, y, z);
     }
 
+    #[allow(clippy::missing_safety_doc)]
+    // TODO: Safetyの説明を書く
     /// 4次行列型(float)のユニフォーム変数を送る
     pub unsafe fn set_mat4(&self, name: &CStr, mat: &nalgebra::Matrix4<f32>) {
         self.gl.UniformMatrix4fv(
@@ -192,6 +219,15 @@ impl Shader {
 
             let error = create_whitespace_cstring_with_len(len as usize);
             unsafe {
+                // as_ptr() の戻り値へ書き込むのは未定義動作である (as_mut_ptr()は用意されていない)
+                //
+                // > The returned pointer is read-only; writing to it (including passing it to C code that writes to it) causes undefined behavior.
+                // https://doc.rust-lang.org/std/ffi/struct.CString.html#method.as_ptr
+                //
+                // でも動いているのでとりあえずそのまま使う。
+                // glow にもそういうコードがある。
+                // https://github.com/grovesNL/glow/blob/eb44a878a756d5ddce8505158690ec9bd272be8f/src/native.rs#L333
+                #[allow(clippy::as_ptr_cast_mut)]
                 gl.GetShaderInfoLog(id, len, std::ptr::null_mut(), error.as_ptr() as *mut GLchar);
             }
 
@@ -241,7 +277,7 @@ impl Shader {
     ///
     /// # Safety
     /// glDeleteShaderされていない限り安全
-    pub unsafe fn raw_id(&self) -> GLuint {
+    pub const unsafe fn raw_id(&self) -> GLuint {
         self.id
     }
 }
@@ -257,7 +293,7 @@ impl Drop for Shader {
 
 fn create_whitespace_cstring_with_len(len: usize) -> CString {
     let mut buffer: Vec<u8> = Vec::with_capacity(len + 1);
-    buffer.extend([b' '].iter().cycle().take(len));
+    buffer.extend(std::iter::once(b' ').cycle().take(len));
     unsafe { CString::from_vec_unchecked(buffer) }
 }
 
@@ -285,8 +321,10 @@ impl<'a> Default for UniformVariables<'a> {
 
 impl<'a> UniformVariables<'a> {
     /// 空のセットを作る
-    pub fn new() -> UniformVariables<'a> {
-        Self { map: HashMap::new() }
+    pub fn new() -> Self {
+        Self {
+            map: HashMap::new(),
+        }
     }
 
     /// 名前を指定してユニフォーム変数を追加する

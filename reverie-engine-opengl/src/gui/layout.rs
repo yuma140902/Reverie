@@ -28,7 +28,7 @@ pub enum Origin {
 }
 
 impl Origin {
-    pub fn x_diff(&self, width: u32) -> i32 {
+    pub const fn x_diff(&self, width: u32) -> i32 {
         use Origin::*;
         match *self {
             TopLeft | Left | BottomLeft => 0,
@@ -37,7 +37,7 @@ impl Origin {
         }
     }
 
-    pub fn y_diff(&self, height: u32) -> i32 {
+    pub const fn y_diff(&self, height: u32) -> i32 {
         use Origin::*;
         match *self {
             TopLeft | Top | TopRight => 0,
@@ -55,7 +55,7 @@ pub enum Position<T> {
 }
 
 impl Position<i32> {
-    pub fn actual_value(&self, max: i32) -> i32 {
+    pub const fn actual_value(&self, max: i32) -> i32 {
         match *self {
             Self::Positive(distance) => distance,
             Self::Center(distance) => max / 2_i32 + distance,
@@ -69,7 +69,7 @@ where
     T: PartialEq,
     U: PartialEq,
 {
-    pub fn new(origin_x: T, origin_y: T, width: U, height: U) -> Self {
+    pub const fn new(origin_x: T, origin_y: T, width: U, height: U) -> Self {
         Self {
             origin_x,
             origin_y,
@@ -78,19 +78,19 @@ where
         }
     }
 
-    pub fn origin_x(&self) -> &T {
+    pub const fn origin_x(&self) -> &T {
         &self.origin_x
     }
 
-    pub fn origin_y(&self) -> &T {
+    pub const fn origin_y(&self) -> &T {
         &self.origin_y
     }
 
-    pub fn width(&self) -> &U {
+    pub const fn width(&self) -> &U {
         &self.width
     }
 
-    pub fn height(&self) -> &U {
+    pub const fn height(&self) -> &U {
         &self.height
     }
 }

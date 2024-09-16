@@ -11,7 +11,7 @@ pub fn modify_velocity(
     entity_velocity: &mut Vector3,
     entity_bounding_box: &Cuboid,
     entity_pos: &Point3,
-    world_aabbs: &Vec<Aabb>,
+    world_aabbs: &[Aabb],
 ) {
     let entity_aabb =
         entity_bounding_box.aabb(&Isometry3::new(entity_pos.coords, Vector3::zeros()));
@@ -38,9 +38,9 @@ pub fn modify_velocity(
     ) {}
 }
 
-fn modify<'a>(
-    world_aabbs: &Vec<Aabb>,
-    extended_aabbs: &Vec<Aabb>,
+fn modify(
+    world_aabbs: &[Aabb],
+    extended_aabbs: &[Aabb],
     entity_pos: &Point3,
     entity_velocity: &mut Vector3,
     entity_aabb: &Aabb,
@@ -51,7 +51,7 @@ fn modify<'a>(
         entity_aabb.half_extents(),
     ));
 
-    let mut nearest_toi = std::f32::INFINITY;
+    let mut nearest_toi = f32::INFINITY;
     let mut nearest_normal: Option<Vector3> = None;
     for (aabb, extended_aabb) in world_aabbs.iter().zip(extended_aabbs.iter()) {
         // エンティティが対象のAABBの中にいるときは当たり判定を行わない
@@ -77,10 +77,8 @@ fn modify<'a>(
     }
 
     // 壁ずりベクトルを求める
-    if let Some(nearest_normal) = nearest_normal {
+    nearest_normal.map_or(false, |nearest_normal| {
         *entity_velocity -= nearest_normal * entity_velocity.dot(&nearest_normal);
         true
-    } else {
-        false
-    }
+    })
 }

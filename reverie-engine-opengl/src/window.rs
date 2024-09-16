@@ -71,15 +71,17 @@ impl Window {
 
     #[cfg(feature = "winit")]
     pub fn update(&mut self, gl: &Gl) {
-        self.should_stop = self.event_loop.process_event(&mut self.input, &self.window, gl);
+        self.should_stop = self
+            .event_loop
+            .process_event(&mut self.input, &self.window, gl);
     }
 
-    pub fn should_stop(&self) -> bool {
+    pub const fn should_stop(&self) -> bool {
         self.should_stop
     }
 
     #[cfg(feature = "winit")]
-    pub fn get_winit_window(&self) -> &winit::window::Window {
+    pub const fn get_winit_window(&self) -> &winit::window::Window {
         &self.window
     }
 

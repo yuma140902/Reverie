@@ -60,8 +60,7 @@ impl<V: VertexType> VaoBuffer<V> {
 
     /// 頂点群を追加する
     ///
-    /// * `v` - 頂点の情報がフラットに繰り返される`Vec`。したがって`v.len()`は[`VERTEX_SIZE`]の倍数になる。
-    /// ※頂点情報の仕様については`[VERTEX_SIZE`]を参照
+    /// * `v` - 頂点の情報がフラットに繰り返される`Vec`。したがって`v.len()`は[`VERTEX_SIZE`]の倍数になる。※頂点情報の仕様については`[VERTEX_SIZE`]を参照
     pub fn append(&mut self, v: &mut Vec<f32>) {
         debug_assert_eq!(v.len() % self.vertex_size, 0);
         self.vertex_num += (v.len() / self.vertex_size) as i32;
@@ -83,27 +82,31 @@ impl<V: VertexType> VaoBuffer<V> {
     ///
     /// 少なくとも`additional_num_vertex`個の頂点が格納できるように確保する。
     pub fn reserve(&mut self, additional_num_vertex: usize) {
-        self.buffer.reserve(additional_num_vertex * self.vertex_size);
+        self.buffer
+            .reserve(additional_num_vertex * self.vertex_size);
     }
 
     /// 先頭の`num_vertex_to_preserve`個の頂点以外の頂点を削除する
     pub fn clear_preserving_first(&mut self, num_vertex_to_preserve: usize) {
-        self.buffer.truncate(num_vertex_to_preserve * self.vertex_size);
+        self.buffer
+            .truncate(num_vertex_to_preserve * self.vertex_size);
     }
 
     /// 現在のバッファの内容をもとに[`Vao`]を作る
     pub fn build<'a>(&self, gl: &Gl, config: &'a VaoConfig) -> Vao<'a> {
-        Vao::new(
-            gl.clone(),
-            (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
-            self.buffer.as_ptr() as _,
-            gl::STATIC_DRAW,
-            self.num_attributes,
-            self.attribute_types,
-            self.attribute_sizes,
-            ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
-            self.vertex_num,
-            config,
-        )
+        unsafe {
+            Vao::new(
+                gl.clone(),
+                (self.buffer.len() * mem::size_of::<GLfloat>()) as _,
+                self.buffer.as_ptr() as _,
+                gl::STATIC_DRAW,
+                self.num_attributes,
+                self.attribute_types,
+                self.attribute_sizes,
+                ((3 + 3 + 2) * mem::size_of::<GLfloat>()) as _,
+                self.vertex_num,
+                config,
+            )
+        }
     }
 }

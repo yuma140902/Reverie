@@ -64,7 +64,12 @@ impl Camera {
     }
 
     pub fn projection_matrix(&self, width: u32, height: u32) -> Matrix4<f32> {
-        Matrix4::new_perspective(width as f32 / height as f32, self.fov.to_rad().into(), 0.1, 100.0)
+        Matrix4::new_perspective(
+            width as f32 / height as f32,
+            self.fov.to_rad().into(),
+            0.1,
+            100.0,
+        )
     }
 
     pub fn set_pos(&mut self, pos: Point3<f32>) {
@@ -95,19 +100,19 @@ impl Camera {
         self.fov = fov;
     }
 
-    pub fn pos(&self) -> Point3<f32> {
+    pub const fn pos(&self) -> Point3<f32> {
         self.pos
     }
 
-    pub fn yaw(&self) -> Rad<f32> {
+    pub const fn yaw(&self) -> Rad<f32> {
         self.yaw
     }
 
-    pub fn pitch(&self) -> Rad<f32> {
+    pub const fn pitch(&self) -> Rad<f32> {
         self.pitch
     }
 
-    pub fn fov(&self) -> Deg<f32> {
+    pub const fn fov(&self) -> Deg<f32> {
         self.fov
     }
 }

@@ -40,7 +40,7 @@ fn main() {
     let height = 480;
 
     let config = CONFIG.get_or_init(|| {
-        let string = std::fs::read_to_string(CONFIG_FILE).unwrap_or("{}".to_string());
+        let string = std::fs::read_to_string(CONFIG_FILE).unwrap_or_else(|_| "{}".to_string());
         serde_json::from_str(&string).unwrap_or_default()
     });
     println!("{:?}", config);
