@@ -15,6 +15,6 @@ all-features = true
 default-target = "x86_64-pc-windows-msvc"
 
 [dependencies]
-approx.workspace = true
+approx = "0.5.1"
 nalgebra = "0.31.4"
-newtype-ops.workspace = true
+newtype-ops = "0.1.4"
