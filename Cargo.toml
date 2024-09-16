@@ -8,7 +8,7 @@ rust-version = "1.78.0"
 
 [workspace]
 members = [
-  "examples/*",
+  "examples/opengl/*",
   "reverie-engine",
   "reverie-engine-opengl",
   "reverie-util",
