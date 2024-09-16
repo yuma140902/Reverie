@@ -10,11 +10,11 @@ impl Default for ReverieEngine {
 }
 
 impl ReverieEngine {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {}
     }
 
-    pub fn window_builder(&self) -> WindowBuilder {
+    pub const fn window_builder(&self) -> WindowBuilder {
         WindowBuilder::new()
     }
 
