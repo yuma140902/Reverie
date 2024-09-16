@@ -60,7 +60,11 @@ fn main() {
 
     let mut image_manager = engine.create_image_manager(gl.clone());
     let block_atlas_texture = image_manager
-        .load_from_memory(include_bytes!("../resources/blocks.png"), "atlas/blocks", true)
+        .load_from_memory(
+            include_bytes!("../resources/blocks.png"),
+            "atlas/blocks",
+            true,
+        )
         .unwrap();
 
     let top_texture = TextureUV::of_atlas(&TextureAtlasPos::new(0, 1));
@@ -142,7 +146,8 @@ fn main() {
         }
 
         const UP: Vector3 = Vector3::new(0.0, 1.0, 0.0);
-        let (front, right, _up) = math::calc_front_right_up(player.camera.yaw(), player.camera.pitch());
+        let (front, right, _up) =
+            math::calc_front_right_up(player.camera.yaw(), player.camera.pitch());
         let front = util::take_xz_normalized(&front);
         if window.keypressed(&winit::event::VirtualKeyCode::W) {
             player.velocity += front * config.move_speed;
@@ -165,7 +170,9 @@ fn main() {
 
         let (dx, dy) = window.cursor_delta();
         if dy != 0 {
-            player.camera.add_pitch(Rad(-dy as f32 * config.rotation_speed));
+            player
+                .camera
+                .add_pitch(Rad(-dy as f32 * config.rotation_speed));
             // player.camera.pitch = player.camera.pitch.normalized();
             if player.camera.pitch() < Deg(-90_f32).to_rad() {
                 player.camera.set_pitch(Deg(-90_f32).to_rad());
@@ -175,7 +182,9 @@ fn main() {
             }
         }
         if dx != 0 {
-            player.camera.add_yaw(Rad(-dx as f32 * config.rotation_speed));
+            player
+                .camera
+                .add_yaw(Rad(-dx as f32 * config.rotation_speed));
             // player.camera.yaw = player.camera.yaw.normalized();
         }
 
@@ -218,8 +227,10 @@ fn main() {
 
         player.update_pos(&world);
 
-        let model_matrix =
-            nalgebra_glm::scale(&Matrix4::identity(), &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32));
+        let model_matrix = nalgebra_glm::scale(
+            &Matrix4::identity(),
+            &Vector3::new(0.5_f32, 0.5_f32, 0.5_f32),
+        );
 
         player.camera.render(
             &vertex_obj,

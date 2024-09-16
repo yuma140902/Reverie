@@ -7,7 +7,7 @@ use windows::Win32::{
 use crate::window::input::cursor::{CursorPosition, DesktopOrigin};
 
 pub fn set_cursor_pos(x: i32, y: i32) -> Result<(), Error> {
-    let result = unsafe { SetCursorPos(x, y) }.ok();
+    let result = unsafe { SetCursorPos(x, y) };
     if let Err(ref err) = result {
         if err.code().is_ok() {
             return Ok(());
@@ -18,7 +18,7 @@ pub fn set_cursor_pos(x: i32, y: i32) -> Result<(), Error> {
 
 pub fn get_cursor_pos() -> Result<CursorPosition<DesktopOrigin>, Error> {
     let mut point = POINT::default();
-    let result = unsafe { GetCursorPos(&mut point).ok() };
+    let result = unsafe { GetCursorPos(&mut point) };
 
     if let Err(err) = result {
         if err.code().is_err() {

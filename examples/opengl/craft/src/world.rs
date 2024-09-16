@@ -1,5 +1,5 @@
 use nalgebra::Point3;
-use parry3d::bounding_volume::AABB;
+use parry3d::bounding_volume::Aabb;
 use re::gl::Gl;
 use re::vao::CuboidTextures;
 use re::vao::Vao;
@@ -26,10 +26,10 @@ pub fn is_valid_pos(x: u32, y: u32, z: u32) -> bool {
     (0..16).contains(&x) && (0..16).contains(&y) && (0..16).contains(&z)
 }
 
-fn get_block_aabb(x: u32, y: u32, z: u32) -> AABB {
+fn get_block_aabb(x: u32, y: u32, z: u32) -> Aabb {
     let min = Point3::new(x as f32, y as f32, z as f32) * 0.5;
     let max = min + BLOCK_SIZE * 0.5;
-    AABB::new(min, max)
+    Aabb::new(min, max)
 }
 
 impl World {
@@ -47,7 +47,7 @@ impl World {
         self.blocks[pos_to_index(x, y, z)] = false;
     }
 
-    pub fn generate_collision_aabbs(&self) -> Vec<AABB> {
+    pub fn generate_collision_aabbs(&self) -> Vec<Aabb> {
         let mut v = Vec::new();
         for x in 0..16 {
             for y in 0..16 {
@@ -62,7 +62,7 @@ impl World {
         v
     }
 
-    pub fn generate_selection_aabbs(&self) -> Vec<(u32, u32, u32, AABB)> {
+    pub fn generate_selection_aabbs(&self) -> Vec<(u32, u32, u32, Aabb)> {
         let mut v = Vec::new();
         for x in 0..16 {
             for y in 0..16 {
@@ -137,7 +137,13 @@ impl World {
 
 const BLOCK_SIZE: Vector3 = Vector3::new(1.0, 1.0, 1.0);
 
-fn add_block(builder: &mut VaoBuffer, x: u32, y: u32, z: u32, textures: &CuboidTextures<'_, TextureUV>) {
+fn add_block(
+    builder: &mut VaoBuffer,
+    x: u32,
+    y: u32,
+    z: u32,
+    textures: &CuboidTextures<'_, TextureUV>,
+) {
     let begin = Point3::new(x, y, z).cast::<f32>();
     builder.add_cuboid(&begin, &(begin + BLOCK_SIZE), textures);
 }

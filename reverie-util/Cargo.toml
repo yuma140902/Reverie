@@ -16,5 +16,5 @@ default-target = "x86_64-pc-windows-msvc"
 
 [dependencies]
 approx = "0.5.1"
-nalgebra = "0.31.4"
+nalgebra = "0.33.0"
 newtype-ops = "0.1.4"

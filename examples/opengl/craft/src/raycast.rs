@@ -46,7 +46,8 @@ impl Side {
 
 pub fn hit_block_and_side(player: &Player, world: &World) -> Option<(u32, u32, u32, Option<Side>)> {
     let eye_pos = player.camera.pos();
-    let (front, _right, _up) = math::calc_front_right_up(player.camera.yaw(), player.camera.pitch());
+    let (front, _right, _up) =
+        math::calc_front_right_up(player.camera.yaw(), player.camera.pitch());
     let ray = Ray::new(eye_pos, front);
 
     let mut nearest_toi = std::f32::INFINITY;
@@ -58,8 +59,8 @@ pub fn hit_block_and_side(player: &Player, world: &World) -> Option<(u32, u32, u
         }
 
         if let Some(result) = aabb.cast_local_ray_and_get_normal(&ray, config::get().ray, true) {
-            if result.toi < nearest_toi {
-                nearest_toi = result.toi;
+            if result.time_of_impact < nearest_toi {
+                nearest_toi = result.time_of_impact;
                 let side = if result.normal.y > 0.0 {
                     Some(Side::Top)
                 } else if result.normal.y < 0.0 {
@@ -85,7 +86,8 @@ pub fn hit_block_and_side(player: &Player, world: &World) -> Option<(u32, u32, u
 
 pub fn hit_block(player: &Player, world: &World) -> Option<(u32, u32, u32)> {
     let eye_pos = player.camera.pos();
-    let (front, _right, _up) = math::calc_front_right_up(player.camera.yaw(), player.camera.pitch());
+    let (front, _right, _up) =
+        math::calc_front_right_up(player.camera.yaw(), player.camera.pitch());
     let ray = Ray::new(eye_pos, front);
 
     let mut nearest_toi = std::f32::INFINITY;

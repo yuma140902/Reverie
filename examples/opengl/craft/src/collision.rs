@@ -1,5 +1,5 @@
 use parry3d::{
-    bounding_volume::{BoundingVolume, AABB},
+    bounding_volume::{Aabb, BoundingVolume},
     na::Isometry3,
     query::{Ray, RayCast},
     shape::Cuboid,
@@ -11,9 +11,10 @@ pub fn modify_velocity(
     entity_velocity: &mut Vector3,
     entity_bounding_box: &Cuboid,
     entity_pos: &Point3,
-    world_aabbs: &Vec<AABB>,
+    world_aabbs: &Vec<Aabb>,
 ) {
-    let entity_aabb = entity_bounding_box.aabb(&Isometry3::new(entity_pos.coords, Vector3::zeros()));
+    let entity_aabb =
+        entity_bounding_box.aabb(&Isometry3::new(entity_pos.coords, Vector3::zeros()));
 
     // extended_aabbは対象のAABBと中心が同じで、エンティティの大きさの分大きくなったもの。
     // エンティティと対象のAABBとの当たり判定ではなく、
@@ -21,7 +22,10 @@ pub fn modify_velocity(
     let extended_aabbs: Vec<_> = world_aabbs
         .iter()
         .map(|aabb| {
-            AABB::from_half_extents(aabb.center(), aabb.half_extents() + entity_aabb.half_extents())
+            Aabb::from_half_extents(
+                aabb.center(),
+                aabb.half_extents() + entity_aabb.half_extents(),
+            )
         })
         .collect();
 
@@ -35,14 +39,14 @@ pub fn modify_velocity(
 }
 
 fn modify<'a>(
-    world_aabbs: &Vec<AABB>,
-    extended_aabbs: &Vec<AABB>,
+    world_aabbs: &Vec<Aabb>,
+    extended_aabbs: &Vec<Aabb>,
     entity_pos: &Point3,
     entity_velocity: &mut Vector3,
-    entity_aabb: &AABB,
+    entity_aabb: &Aabb,
 ) -> bool {
     // 現在のエンティティのAABBと、次のフレームでのエンティティのAABBを両方とも含むようなAABB
-    let extended_entity_aabb = entity_aabb.merged(&AABB::from_half_extents(
+    let extended_entity_aabb = entity_aabb.merged(&Aabb::from_half_extents(
         entity_pos + *entity_velocity,
         entity_aabb.half_extents(),
     ));
@@ -65,8 +69,8 @@ fn modify<'a>(
             50f32, /*適当な値*/
             true,  /*意味が分からない*/
         ) {
-            if result.toi < nearest_toi {
-                nearest_toi = result.toi;
+            if result.time_of_impact < nearest_toi {
+                nearest_toi = result.time_of_impact;
                 nearest_normal = Some(result.normal);
             }
         }
