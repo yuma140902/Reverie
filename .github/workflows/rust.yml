@@ -27,7 +27,7 @@ jobs:
           - build --all-targets --workspace --no-default-features --features raw_gl_context,glutin
           - build --all-targets --workspace --no-default-features --features raw_gl_context,glutin --release
           - test --all-targets --workspace --all-features
-          - clippy --all-features --workspace -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
+          - clippy --all-features --workspace --all-features -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
           - doc --no-deps --workspace --document-private-items
     runs-on: ${{ matrix.os }}
     steps:

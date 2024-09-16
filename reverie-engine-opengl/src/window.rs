@@ -101,44 +101,33 @@ impl Window {
     }
 
     #[cfg(feature = "winit")]
-    pub fn keypressed(&mut self, keycode: &winit::event::VirtualKeyCode) -> bool {
+    pub fn keypressed(&self, keycode: &winit::event::VirtualKeyCode) -> bool {
         self.input.get_key_pressed(keycode)
     }
 
     #[cfg(feature = "winit")]
-    pub fn cursor_pos(&mut self) -> CursorPosition<DesktopOrigin> {
+    pub const fn cursor_pos(&self) -> CursorPosition<DesktopOrigin> {
         self.input.get_cursor_pos()
     }
 
     #[cfg(feature = "winit")]
-    pub fn cursor_delta(&mut self) -> (i32, i32) {
+    pub const fn cursor_delta(&self) -> (i32, i32) {
         self.input.get_cursor_delta()
     }
 
     #[cfg(feature = "winit")]
     pub fn mouse_down(&mut self, button: &winit::event::MouseButton) -> bool {
-        if let Some(index) = input::mouse_button_index_3(button) {
-            self.input.get_mouse_down(index)
-        } else {
-            false
-        }
+        input::mouse_button_index_3(button).map_or(false, |index| self.input.get_mouse_down(index))
     }
 
     #[cfg(feature = "winit")]
     pub fn mouse_up(&mut self, button: &winit::event::MouseButton) -> bool {
-        if let Some(index) = input::mouse_button_index_3(button) {
-            self.input.get_mouse_up(index)
-        } else {
-            false
-        }
+        input::mouse_button_index_3(button).map_or(false, |index| self.input.get_mouse_up(index))
     }
 
     #[cfg(feature = "winit")]
-    pub fn mouse_pressed(&mut self, button: &winit::event::MouseButton) -> bool {
-        if let Some(index) = input::mouse_button_index_3(button) {
-            self.input.get_mouse_pressed(index)
-        } else {
-            false
-        }
+    pub fn mouse_pressed(&self, button: &winit::event::MouseButton) -> bool {
+        input::mouse_button_index_3(button)
+            .map_or(false, |index| self.input.get_mouse_pressed(index))
     }
 }

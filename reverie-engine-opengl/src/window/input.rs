@@ -76,6 +76,7 @@ impl Input {
     }
 
     #[cfg(feature = "winit")]
+    #[cfg_attr(not(windows), allow(dead_code))]
     pub(crate) fn update_cursor_position(
         &mut self,
         pos: CursorPosition<DesktopOrigin>,

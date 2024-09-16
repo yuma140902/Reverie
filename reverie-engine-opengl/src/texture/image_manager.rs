@@ -115,7 +115,7 @@ impl ImageManager {
     }
 
     /// OpenGLの関数に渡すためのテクスチャIDを得る
-    pub fn get_texture_id(&mut self, id: &str) -> u32 {
+    pub fn get_texture_id(&self, id: &str) -> u32 {
         *self.image_map.get(id).expect("failed to get texture")
     }
 }
