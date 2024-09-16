@@ -60,7 +60,7 @@ impl<V: VertexType> VaoBuffer<V> {
 
     /// 頂点群を追加する
     ///
-    /// * `v` - 頂点の情報がフラットに繰り返される`Vec`。したがって`v.len()`は[`VERTEX_SIZE`]の倍数になる。※頂点情報の仕様については`[VERTEX_SIZE`]を参照
+    /// * `v` - 頂点の情報がフラットに繰り返される`Vec`。したがって`v.len()`は[`VertexType::vertex_size()`]の倍数になる。※頂点情報の仕様については[`VertexType::vertex_size()`]を参照
     pub fn append(&mut self, v: &mut Vec<f32>) {
         debug_assert_eq!(v.len() % self.vertex_size, 0);
         self.vertex_num += (v.len() / self.vertex_size) as i32;
