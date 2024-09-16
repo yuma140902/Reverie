@@ -7,6 +7,7 @@ use crate::vao::{VaoBuffer, VertexWithNormUv};
 /// * `T` - テクスチャの型
 pub trait VaoBuilder2DGui<T> {
     fn add_rectangle(&mut self, texture: &T, dst: &Rect<i32, u32>);
+    #[allow(clippy::too_many_arguments)]
     fn add_layout_rectangle(
         &mut self,
         texture: &T,

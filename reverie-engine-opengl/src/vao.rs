@@ -95,7 +95,7 @@ impl<'a> Vao<'a> {
     }
 
     /// Use [`crate::Renderer`] instead
-    pub fn draw(&self, uniforms: &UniformVariables, draw_mode: GLenum) {
+    pub fn draw(&self, _uniforms: &UniformVariables, draw_mode: GLenum) {
         unsafe {
             if self.config.depth_test {
                 self.gl.Enable(gl::DEPTH_TEST);

@@ -49,7 +49,12 @@ impl EventLoop {
                     }
                     winit::event::WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
                         unsafe {
-                            gl.Viewport(0, 0, new_inner_size.width as i32, new_inner_size.height as i32);
+                            gl.Viewport(
+                                0,
+                                0,
+                                new_inner_size.width as i32,
+                                new_inner_size.height as i32,
+                            );
                         }
                         (false, true)
                     }
@@ -74,8 +79,12 @@ impl EventLoop {
                     }
                     winit::event::WindowEvent::MouseInput { state, button, .. } => {
                         match state {
-                            winit::event::ElementState::Pressed => input.update_mouse_pressed(button),
-                            winit::event::ElementState::Released => input.update_mouse_released(button),
+                            winit::event::ElementState::Pressed => {
+                                input.update_mouse_pressed(button)
+                            }
+                            winit::event::ElementState::Released => {
+                                input.update_mouse_released(button)
+                            }
                         }
                         (false, true)
                     }
@@ -105,7 +114,7 @@ impl EventLoop {
                             winsize.height as i32,
                         );
                     }
-                    crate::platform::set_cursor_pos(
+                    let _ = crate::platform::set_cursor_pos(
                         winpos.x + winsize.width as i32 / 2,
                         winpos.y + winsize.height as i32 / 2,
                     );
