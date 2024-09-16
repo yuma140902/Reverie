@@ -138,7 +138,7 @@ impl<'a> ImageLoadInfo<'a> {
     ///
     /// # Safety
     /// OpenGLにテクスチャ読み込まれている限り安全
-    pub unsafe fn raw_gl_id(&self) -> u32 {
+    pub const unsafe fn raw_gl_id(&self) -> u32 {
         self.gl_id
     }
 }

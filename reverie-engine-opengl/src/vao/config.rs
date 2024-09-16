@@ -25,7 +25,7 @@ impl Default for VaoConfigBuilder {
 }
 
 impl VaoConfigBuilder {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {
             depth_test: true,
             blend: true,
@@ -34,7 +34,7 @@ impl VaoConfigBuilder {
         }
     }
 
-    pub fn build(self) -> VaoConfig {
+    pub const fn build(self) -> VaoConfig {
         VaoConfig {
             depth_test: self.depth_test,
             blend: self.blend,
@@ -43,22 +43,22 @@ impl VaoConfigBuilder {
         }
     }
 
-    pub fn depth_test(mut self, value: bool) -> Self {
+    pub const fn depth_test(mut self, value: bool) -> Self {
         self.depth_test = value;
         self
     }
 
-    pub fn blend(mut self, value: bool) -> Self {
+    pub const fn blend(mut self, value: bool) -> Self {
         self.blend = value;
         self
     }
 
-    pub fn wireframe(mut self, value: bool) -> Self {
+    pub const fn wireframe(mut self, value: bool) -> Self {
         self.wireframe = value;
         self
     }
 
-    pub fn culling(mut self, value: bool) -> Self {
+    pub const fn culling(mut self, value: bool) -> Self {
         self.culling = value;
         self
     }

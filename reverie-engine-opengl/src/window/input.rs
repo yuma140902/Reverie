@@ -4,7 +4,7 @@ use std::collections::HashSet;
 pub mod cursor;
 
 #[cfg(feature = "winit")]
-pub fn mouse_button_index(mouse_button: &winit::event::MouseButton) -> usize {
+pub const fn mouse_button_index(mouse_button: &winit::event::MouseButton) -> usize {
     match mouse_button {
         winit::event::MouseButton::Left => 0,
         winit::event::MouseButton::Right => 1,
@@ -14,7 +14,7 @@ pub fn mouse_button_index(mouse_button: &winit::event::MouseButton) -> usize {
 }
 
 #[cfg(feature = "winit")]
-pub fn mouse_button_index_3(mouse_button: &winit::event::MouseButton) -> Option<usize> {
+pub const fn mouse_button_index_3(mouse_button: &winit::event::MouseButton) -> Option<usize> {
     match mouse_button {
         winit::event::MouseButton::Left
         | winit::event::MouseButton::Right
@@ -139,17 +139,17 @@ impl Input {
     }
 
     #[cfg(feature = "winit")]
-    pub(crate) fn get_cursor_pos(&self) -> CursorPosition<DesktopOrigin> {
+    pub(crate) const fn get_cursor_pos(&self) -> CursorPosition<DesktopOrigin> {
         CursorPosition::new(self.cursor_x, self.cursor_y)
     }
 
     #[cfg(feature = "winit")]
-    pub(crate) fn get_cursor_delta(&self) -> (i32, i32) {
+    pub(crate) const fn get_cursor_delta(&self) -> (i32, i32) {
         (self.cursor_dx, self.cursor_dy)
     }
 
     #[cfg(feature = "winit")]
-    pub(crate) fn get_mouse_pressed(&self, index: usize) -> bool {
+    pub(crate) const fn get_mouse_pressed(&self, index: usize) -> bool {
         self.mouse_pressed[index]
     }
 

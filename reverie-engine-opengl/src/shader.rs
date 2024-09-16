@@ -79,7 +79,7 @@ impl Program {
     ///
     /// # Safety
     /// glDeleteProgramされていない限り安全
-    pub unsafe fn raw_id(&self) -> GLuint {
+    pub const unsafe fn raw_id(&self) -> GLuint {
         self.id
     }
 
@@ -111,8 +111,10 @@ impl Program {
 
     /// bool型のユニフォーム変数を送る
     pub unsafe fn set_bool(&self, name: &CStr, value: bool) {
-        self.gl
-            .Uniform1i(self.gl.GetUniformLocation(self.id, name.as_ptr()), value as i32);
+        self.gl.Uniform1i(
+            self.gl.GetUniformLocation(self.id, name.as_ptr()),
+            value as i32,
+        );
     }
 
     /// int型のユニフォーム変数を送る
@@ -241,7 +243,7 @@ impl Shader {
     ///
     /// # Safety
     /// glDeleteShaderされていない限り安全
-    pub unsafe fn raw_id(&self) -> GLuint {
+    pub const unsafe fn raw_id(&self) -> GLuint {
         self.id
     }
 }
@@ -286,7 +288,9 @@ impl<'a> Default for UniformVariables<'a> {
 impl<'a> UniformVariables<'a> {
     /// 空のセットを作る
     pub fn new() -> UniformVariables<'a> {
-        Self { map: HashMap::new() }
+        Self {
+            map: HashMap::new(),
+        }
     }
 
     /// 名前を指定してユニフォーム変数を追加する

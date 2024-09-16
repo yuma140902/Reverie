@@ -8,7 +8,7 @@ pub struct WindowConfig {
 }
 
 impl WindowConfig {
-    pub(crate) fn new() -> Self {
+    pub(crate) const fn new() -> Self {
         Self {
             title: None,
             width: 800,
@@ -23,7 +23,7 @@ pub struct WindowBuilder {
 }
 
 impl WindowBuilder {
-    pub(crate) fn new() -> Self {
+    pub(crate) const fn new() -> Self {
         Self {
             config: WindowConfig::new(),
         }
@@ -34,13 +34,13 @@ impl WindowBuilder {
         self
     }
 
-    pub fn size(mut self, width: u32, height: u32) -> Self {
+    pub const fn size(mut self, width: u32, height: u32) -> Self {
         self.config.width = width;
         self.config.height = height;
         self
     }
 
-    pub fn maximize(mut self) -> Self {
+    pub const fn maximize(mut self) -> Self {
         self.config.maximize = true;
         self
     }

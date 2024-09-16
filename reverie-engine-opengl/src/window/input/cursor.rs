@@ -8,7 +8,7 @@ pub struct CursorPosition<O> {
 }
 
 impl<O> CursorPosition<O> {
-    pub fn new(x: i32, y: i32) -> Self {
+    pub const fn new(x: i32, y: i32) -> Self {
         Self {
             x,
             y,
@@ -18,11 +18,15 @@ impl<O> CursorPosition<O> {
 }
 
 impl CursorPosition<DesktopOrigin> {
-    pub fn to_window_origin(&self, window_x: i32, window_y: i32) -> CursorPosition<WindowOrigin> {
+    pub const fn to_window_origin(
+        &self,
+        window_x: i32,
+        window_y: i32,
+    ) -> CursorPosition<WindowOrigin> {
         CursorPosition::<WindowOrigin>::new(self.x - window_x, self.y - window_y)
     }
 
-    pub fn to_window_center(
+    pub const fn to_window_center(
         &self,
         window_x: i32,
         window_y: i32,

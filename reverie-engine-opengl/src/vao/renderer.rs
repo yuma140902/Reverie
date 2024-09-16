@@ -18,7 +18,7 @@ pub struct Phong3DRenderer {
 }
 
 impl Phong3DRenderer {
-    pub fn new(program: Program) -> Self {
+    pub const fn new(program: Program) -> Self {
         Self { program }
     }
 }
@@ -70,8 +70,10 @@ impl Renderer<&Phong3DRenderingInfo<'_>> for Phong3DRenderer {
                 c_str!("uMaterial.shininess"),
                 &Float(extra.phong.material_shininess),
             );
-            self.program
-                .set_uniform(c_str!("uLight.direction"), &Vector3(extra.phong.light_direction));
+            self.program.set_uniform(
+                c_str!("uLight.direction"),
+                &Vector3(extra.phong.light_direction),
+            );
             self.program
                 .set_uniform(c_str!("uLight.ambient"), &Vector3(extra.phong.ambient));
             self.program
@@ -98,12 +100,16 @@ pub struct Color3DRenderer {
 
 impl Color3DRenderer {
     pub fn new(gl: &Gl) -> Self {
-        let vert_shader =
-            Shader::from_vert_code(gl.clone(), c_str!(include_str!("../../resources/color3d.vert")))
-                .unwrap();
-        let frag_shader =
-            Shader::from_frag_code(gl.clone(), c_str!(include_str!("../../resources/color3d.frag")))
-                .unwrap();
+        let vert_shader = Shader::from_vert_code(
+            gl.clone(),
+            c_str!(include_str!("../../resources/color3d.vert")),
+        )
+        .unwrap();
+        let frag_shader = Shader::from_frag_code(
+            gl.clone(),
+            c_str!(include_str!("../../resources/color3d.frag")),
+        )
+        .unwrap();
         let program = Program::from_shaders(gl.clone(), &[vert_shader, frag_shader]).unwrap();
         Self { program }
     }
