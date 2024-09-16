@@ -12,7 +12,7 @@ pub struct TextureUV<Width, Height, AtlasWidth, AtlasHeight> {
     pub begin_v: f32,
     pub end_u: f32,
     pub end_v: f32,
-    _pd: PhantomData<fn() -> (Width, Height, AtlasWidth, AtlasHeight)>,
+    _pd: PhantomData<(Width, Height, AtlasWidth, AtlasHeight)>,
 }
 
 impl<Width, Height, AtlasWidth, AtlasHeight> TextureUV<Width, Height, AtlasWidth, AtlasHeight> {
