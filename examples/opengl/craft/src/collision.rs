@@ -51,7 +51,7 @@ fn modify<'a>(
         entity_aabb.half_extents(),
     ));
 
-    let mut nearest_toi = std::f32::INFINITY;
+    let mut nearest_toi = f32::INFINITY;
     let mut nearest_normal: Option<Vector3> = None;
     for (aabb, extended_aabb) in world_aabbs.iter().zip(extended_aabbs.iter()) {
         // エンティティが対象のAABBの中にいるときは当たり判定を行わない
