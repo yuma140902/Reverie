@@ -18,7 +18,7 @@ pub struct World {
     blocks: [bool; 16 * 16 * 16],
 }
 
-fn pos_to_index(x: u32, y: u32, z: u32) -> usize {
+const fn pos_to_index(x: u32, y: u32, z: u32) -> usize {
     (16 * 16 * y + 16 * z + x) as usize
 }
 
@@ -33,7 +33,7 @@ fn get_block_aabb(x: u32, y: u32, z: u32) -> Aabb {
 }
 
 impl World {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {
             blocks: [false; 16 * 16 * 16],
         }

@@ -14,7 +14,7 @@ pub enum Side {
 }
 
 impl Side {
-    pub fn offset(&self, x: u32, y: u32, z: u32) -> (u32, u32, u32) {
+    pub const fn offset(&self, x: u32, y: u32, z: u32) -> (u32, u32, u32) {
         match self {
             Self::Top => (x, y + 1, z),
             Self::Bottom => {
