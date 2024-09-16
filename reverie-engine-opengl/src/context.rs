@@ -14,10 +14,7 @@ pub trait ContextBackend {
 #[cfg(feature = "raw_gl_context")]
 impl ContextBackend for raw_gl_context::GlContext {
     fn new(window: &Window) -> Self {
-        let context =
-            raw_gl_context::GlContext::create(&window.window, raw_gl_context::GlConfig::default())
-                .unwrap();
-        context
+        Self::create(&window.window, raw_gl_context::GlConfig::default()).unwrap()
     }
     fn get_proc_address(&self, symbol: &str) -> *const c_void {
         self.get_proc_address(symbol)
@@ -49,7 +46,7 @@ impl ContextBackend for glutin::RawContext<glutin::PossiblyCurrent> {
     }
 
     #[cfg(not(target_os = "windows"))]
-    fn new(window: &Window) -> Self {
+    fn new(_window: &Window) -> Self {
         panic!("glutin rawcontext is not implemented for this platform");
     }
 

@@ -31,6 +31,8 @@ impl EventLoop {
         winit_window: &winit::window::Window,
         gl: &Gl,
     ) -> bool {
+        #[cfg(not(windows))]
+        let _ = winit_window;
         use winit::platform::run_return::EventLoopExtRunReturn;
         let queue = Arc::clone(&self.queue);
         let mut exit = false;
