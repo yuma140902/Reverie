@@ -11,4 +11,3 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-reverie-engine-opengl.workspace = true
