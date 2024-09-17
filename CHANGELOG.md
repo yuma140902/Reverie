@@ -2,6 +2,75 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.8](https://github.com/yuma140902/reverie/compare/v0.0.7..v0.0.8) - 2024-09-17
+
+### ✨ Features
+
+- Ignore warnings by `cargo build` - ([322cbf1](https://github.com/yuma140902/reverie/commit/322cbf17b91e739614257c298d80ab64b20ec337))
+- [**breaking**] Remove `Vao::new()`, `Vao::draw()`, and `Vao::draw_triangles()`. - ([a20ddd4](https://github.com/yuma140902/reverie/commit/a20ddd49d4e1275cffd8bb6114d097f10b539b21))
+- [**breaking**] Make `Vao::new` unsafe because it may dereference unsafe pointer - ([0446db3](https://github.com/yuma140902/reverie/commit/0446db3dd33a9e07014d845012bd90f087275ef1))
+
+### 🐛 Bug Fixes
+
+- Once_cell version - ([4c74c13](https://github.com/yuma140902/reverie/commit/4c74c1306983cdedec0acb158a3b79691e7e225d))
+- [**breaking**] Use simple type - ([4a751c6](https://github.com/yuma140902/reverie/commit/4a751c6783f5b1beebd831a791cf22bea043cd29))
+- Lint errors - ([2abe9e1](https://github.com/yuma140902/reverie/commit/2abe9e17029e60548486f0aa6a24050630a85833))
+- Crates.ioに公開できるようにreverie-engine-openglのバージョンを指定する - ([1936c91](https://github.com/yuma140902/reverie/commit/1936c916ae959333035de9a1f9c138f8f189aff0))
+
+### ♻️ Refactor
+
+- Fix lint warnings - ([dc478d0](https://github.com/yuma140902/reverie/commit/dc478d0f84ca12cea46c59563cf1faa0ee3d8a11))
+- Fix unused variables - ([598892f](https://github.com/yuma140902/reverie/commit/598892fbcee1a632b3dc13daaa07ccb6d78d1e17))
+- Remove unused lifetime - ([483549d](https://github.com/yuma140902/reverie/commit/483549dcd7d70b2a91e79f15e0d27ab112a6941b))
+- Use slice - ([ec9620b](https://github.com/yuma140902/reverie/commit/ec9620b2808dc529f409113a42b3eb8464a69350))
+- Use map_or - ([480671b](https://github.com/yuma140902/reverie/commit/480671b0b928f846d308de18eaab49980c28e851))
+- Fix INFINITY - ([13063c1](https://github.com/yuma140902/reverie/commit/13063c113962afe461f6eea05d28f8dc197c4f04))
+- Const fn - ([0dd7cc7](https://github.com/yuma140902/reverie/commit/0dd7cc7bcb10f0d6a4577ce698abb2500bef41fd))
+- Allow too many args - ([c5ee529](https://github.com/yuma140902/reverie/commit/c5ee529c308f6ce4df4322f0f643fb19b5726515))
+- Use unwrap_or_else - ([d286804](https://github.com/yuma140902/reverie/commit/d286804188a5dfc3097a4b1a3a21c89b246233f6))
+- Const fn - ([b53b179](https://github.com/yuma140902/reverie/commit/b53b1793dfc71da5faadb2cde592ed071d024ed2))
+- Justify unsafe pointer conversion - ([c43fe44](https://github.com/yuma140902/reverie/commit/c43fe44d698ffc8e94512928f33a9b2e9bbfed17))
+- Use std::iter::once - ([68d2277](https://github.com/yuma140902/reverie/commit/68d2277d549081f76269790880366c21583835d6))
+- Self - ([0bfbc64](https://github.com/yuma140902/reverie/commit/0bfbc64b5b12a9001bdfef2d17b147588aeb24d6))
+- Suppress warnings for missing safety doc - ([f91948c](https://github.com/yuma140902/reverie/commit/f91948c281d656ac1298e86bf32b1d5bdbf8bc52))
+- Disable clippy lint for generated code - ([66c1bac](https://github.com/yuma140902/reverie/commit/66c1bacfb46460a21ff8eba6879086ce04ecfdd8))
+- Add deprecated attributes - ([3b2f90b](https://github.com/yuma140902/reverie/commit/3b2f90b6c276b2f7e601b46c3f60845d640edbfb))
+- Add const - ([de9421f](https://github.com/yuma140902/reverie/commit/de9421ff71d0ed3d2edf1540cf9cd7cfcb074c92))
+- Use From impls - ([2b7e4ac](https://github.com/yuma140902/reverie/commit/2b7e4ac6a41d9c54e5a3e108b10c7a32b184b2c4))
+- Sort dependencies - ([203a0ef](https://github.com/yuma140902/reverie/commit/203a0ef6142edd396b3c83578ef76c38dab3b52b))
+- Move examples - ([73c5f9e](https://github.com/yuma140902/reverie/commit/73c5f9eca6bcbdd15c1376637599cfc664a78134))
+
+### 📝 Documentation
+
+- Fix link - ([ade6810](https://github.com/yuma140902/reverie/commit/ade6810e4fb75fd55c747cf128bc860e00a5be86))
+- Update - ([821a74b](https://github.com/yuma140902/reverie/commit/821a74b978a06a5e3d7ec43f4dd9f5c8256f2c3b))
+
+### 👷 Build System
+
+- Update to v0.0.8 - ([1de3ed7](https://github.com/yuma140902/reverie/commit/1de3ed7230041468e8819b10ac20c01525039443))
+- Add `exclude` to matrix - ([57b50b1](https://github.com/yuma140902/reverie/commit/57b50b174134f13d3a6343a38ecd222371a5c8be))
+- Fix arguments - ([f81cec0](https://github.com/yuma140902/reverie/commit/f81cec0a9281f123011a035b35ae4e2fe588de49))
+- Install packages - ([6ec80c9](https://github.com/yuma140902/reverie/commit/6ec80c93c4da3c3c941450606ecb646032d687cb))
+- Install gl package on Ubuntu - ([6c35d3b](https://github.com/yuma140902/reverie/commit/6c35d3b983df4f3e92d7c172760f9f7f48968d3a))
+- Fix - ([012007e](https://github.com/yuma140902/reverie/commit/012007e761836997e0b01d8b3abcbb0c77537733))
+- Update ci - ([21def5e](https://github.com/yuma140902/reverie/commit/21def5ea2dc4a5ab5bbdf9a6e297f2e6dd663ecc))
+- Update dependencies - ([6c2b5ea](https://github.com/yuma140902/reverie/commit/6c2b5eaf9a06628419da02c84c11bd8ac81eb766))
+
+### 🔧 Miscellaneous Tasks
+
+- Add `publish = false` to examples - ([0a484e6](https://github.com/yuma140902/reverie/commit/0a484e6d7c01f41003ca26c5ea1739d48a48ce17))
+
+### 🔀 Pull Requests
+
+- [#125](https://github.com/yuma140902/reverie/pull/125)
+- [#124](https://github.com/yuma140902/reverie/pull/124)
+- [#123](https://github.com/yuma140902/reverie/pull/123)
+- [#122](https://github.com/yuma140902/reverie/pull/122)
+- [#121](https://github.com/yuma140902/reverie/pull/121)
+- [#120](https://github.com/yuma140902/reverie/pull/120)
+- [#119](https://github.com/yuma140902/reverie/pull/119)
+- [#118](https://github.com/yuma140902/reverie/pull/118)
+
 ## [0.0.7](https://github.com/yuma140902/reverie/compare/v0.0.6..v0.0.7) - 2024-06-04
 
 ### ✨ Features
@@ -21,6 +90,7 @@ All notable changes to this project will be documented in this file.
 
 ### 📝 Documentation
 
+- Update changelog (v0.0.7) - ([ebbe939](https://github.com/yuma140902/reverie/commit/ebbe939e4af6c606073cac23dd299577e32eb5ff))
 - Fix badges - ([d2401c7](https://github.com/yuma140902/reverie/commit/d2401c7f1252fd84eb1c7f35dbc104193b0390be))
 - Generate CHANGELOG-util.md - ([5513678](https://github.com/yuma140902/reverie/commit/55136785c1093d519ab8058fc16849d6963ab820))
 
@@ -48,6 +118,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🔀 Pull Requests
 
+- [#117](https://github.com/yuma140902/reverie/pull/117)
 - [#115](https://github.com/yuma140902/reverie/pull/115)
 - [#114](https://github.com/yuma140902/reverie/pull/114)
 - [#112](https://github.com/yuma140902/reverie/pull/112)
