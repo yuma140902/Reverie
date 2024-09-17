@@ -11,3 +11,15 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+anyhow.workspace = true
+bytemuck.workspace = true
+etagere.workspace = true
+generational-arena.workspace = true
+image.workspace = true
+nalgebra.workspace = true
+pollster.workspace = true
+hecs.workspace = true
+tracing-unwrap.workspace = true
+tracing.workspace = true
+wgpu.workspace = true
+winit.workspace = true
