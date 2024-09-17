@@ -29,6 +29,11 @@ jobs:
           - test --all-targets --workspace --all-features
           - clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
           - doc --no-deps --workspace --all-features --document-private-items
+        exclude:
+          - os: windows-latest
+            cmd: clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
+          - os: macos-14
+            cmd: clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
