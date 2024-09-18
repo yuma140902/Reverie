@@ -1,5 +1,5 @@
 [package]
-name = "example-craft"
+name = "old-example-craft"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

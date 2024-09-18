@@ -1,5 +1,5 @@
 [package]
-name = "example-raw"
+name = "old-example-raw"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
