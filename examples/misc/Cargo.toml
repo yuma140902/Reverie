@@ -1,0 +1,23 @@
+[package]
+name = "example-misc"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish = false
+
+[dependencies]
+reverie-engine.workspace = true
+
+anyhow.workspace = true
+bytemuck.workspace = true
+dotenvy.workspace = true
+etagere.workspace = true
+hecs.workspace = true
+image.workspace = true
+nalgebra.workspace = true
+tracing-subscriber.workspace = true
+tracing-unwrap.workspace = true
+tracing.workspace = true
+wgpu.workspace = true
+winit.workspace = true
