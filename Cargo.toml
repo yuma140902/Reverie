@@ -1,5 +1,5 @@
 [workspace.package]
-version = "0.0.8"
+version = "0.1.0"
 authors  = ["yuma140902 <yuma140902@gmail.com>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
@@ -19,7 +19,7 @@ resolver = "2"
 [workspace.dependencies]
 reverie-engine-opengl = { version = "0.0.8", path = "./reverie-engine-opengl" }
 reverie-util = { version = "0.0.8", path = "./reverie-util" }
-reverie-engine = { version = "0.0.8", path = "./reverie-engine" }
+reverie-engine = { version = "0.1.0", path = "./reverie-engine" }
 
 anyhow = "1.0.86"
 bytemuck = { version = "1.16.1", features = ["derive"] }

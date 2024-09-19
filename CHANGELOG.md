@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0](https://github.com/yuma140902/reverie/compare/v0.0.8..v0.1.0) - 2024-09-19
+
+### ✨ Features
+
+- *(example-misc)* Add example - ([990add5](https://github.com/yuma140902/reverie/commit/990add552eee179569d75c492faf9d332a61257e))
+- Use wgpu - ([232842b](https://github.com/yuma140902/reverie/commit/232842b5f727a9ee1fb38403654f5eed8b004ae1))
+- [**breaking**] Remove reverie-engine-opengl from reverie-engine - ([6b5e271](https://github.com/yuma140902/reverie/commit/6b5e271106f51693c6be4d16f778a11d04941850))
+
+### ♻️ Refactor
+
+- Use mul_add - ([f97aef5](https://github.com/yuma140902/reverie/commit/f97aef5ea6d0f841e7d720d4771e0c49bb4344d6))
+- Rename old examples - ([28b9c46](https://github.com/yuma140902/reverie/commit/28b9c46d7a6edb8a6819a1d809dd515643e1f614))
+
+### 📝 Documentation
+
+- Generate changelog (v0.0.8) - ([40c9c68](https://github.com/yuma140902/reverie/commit/40c9c68f795befd959da27d11550e58a9bdbb37c))
+
+### 👷 Build System
+
+- 依存関係を整理 - ([33c39d8](https://github.com/yuma140902/reverie/commit/33c39d8bbfcebcdfec6278d26141f059d24e28d0))
+- MSRV を 1.81.0 に引き上げる - ([3afc661](https://github.com/yuma140902/reverie/commit/3afc6615917fe56594f3b8f926765431bfcd635d))
+- Reverie-engine-opengl と reverie-util のバージョンをワークスペースと連動しないようにする - ([a6fcc20](https://github.com/yuma140902/reverie/commit/a6fcc206c4832ae9bb6bedac0154019b04a62180))
+
+### 🔀 Pull Requests
+
+- [#127](https://github.com/yuma140902/reverie/pull/127)
+- [#126](https://github.com/yuma140902/reverie/pull/126)
+
 ## [0.0.8](https://github.com/yuma140902/reverie/compare/v0.0.7..v0.0.8) - 2024-09-17
 
 ### ✨ Features
