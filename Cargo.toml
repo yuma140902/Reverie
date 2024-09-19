@@ -19,7 +19,7 @@ resolver = "2"
 [workspace.dependencies]
 reverie-engine-opengl = { version = "0.0.8", path = "./reverie-engine-opengl" }
 reverie-util = { version = "0.0.8", path = "./reverie-util" }
-reverie-engine= { version = "0.0.8", path = "./reverie-engine" }
+reverie-engine = { version = "0.0.8", path = "./reverie-engine" }
 
 anyhow = "1.0.86"
 bytemuck = { version = "1.16.1", features = ["derive"] }
@@ -27,7 +27,7 @@ dotenvy = "0.15.7"
 etagere = "0.2.13"
 generational-arena = "0.2.9"
 hecs = "0.10.5"
-image = { version = "0.25.2", default-features = false, features = ["png"] }
+image = { version = "0.25.2", default-features = false }
 nalgebra = { version = "0.33.0", features = ["bytemuck"] }
 pollster = "0.3.0"
 tracing = "0.1.40"

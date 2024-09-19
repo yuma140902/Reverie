@@ -14,7 +14,7 @@ bytemuck.workspace = true
 dotenvy.workspace = true
 etagere.workspace = true
 hecs.workspace = true
-image.workspace = true
+image = { workspace = true, default-features = false, features = ["png"] }
 nalgebra.workspace = true
 tracing-subscriber.workspace = true
 tracing-unwrap.workspace = true
