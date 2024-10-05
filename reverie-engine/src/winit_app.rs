@@ -112,13 +112,13 @@ impl<'window, G: Game> ApplicationHandler for App<'window, G> {
 
     fn window_event(
         &mut self,
-        event_loop: &winit::event_loop::ActiveEventLoop,
+        _event_loop: &winit::event_loop::ActiveEventLoop,
         _window_id: winit::window::WindowId,
         event: winit::event::WindowEvent,
     ) {
         match event {
             WindowEvent::CloseRequested => {
-                event_loop.exit();
+                self.resource = None;
             }
             WindowEvent::Resized(size) => {
                 if let Some(r) = self.resource.as_mut() {
@@ -146,6 +146,12 @@ impl<'window, G: Game> ApplicationHandler for App<'window, G> {
                 self.mouse_wheels.push((delta, phase, self.last_mouse_pos));
             }
             _ => {}
+        }
+    }
+
+    fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
+        if self.resource.is_none() {
+            event_loop.exit();
         }
     }
 }
