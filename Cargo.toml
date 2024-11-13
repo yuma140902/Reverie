@@ -29,7 +29,7 @@ generational-arena = "0.2.9"
 hecs = "0.10.5"
 image = { version = "0.25.2", default-features = false }
 nalgebra = { version = "0.33.0", features = ["bytemuck"] }
-pollster = "0.3.0"
+pollster = "0.4.0"
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 tracing-unwrap = "1.0.1"
