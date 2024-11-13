@@ -33,5 +33,5 @@ pollster = "0.3.0"
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 tracing-unwrap = "1.0.1"
-wgpu = "22.1.0"
+wgpu = "23.0.0"
 winit = "0.30.5"
