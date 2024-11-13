@@ -29,7 +29,7 @@ glutin = ["dep:glutin", "winit"]
 reverie-util.workspace = true
 
 c_str_macro = "1.0.3"
-glutin = { version = "0.29.1", optional = true }
+glutin = { version = "0.32.1", optional = true }
 image = { version = "0.25.2", default-features = false, features = ["png"] }
 nalgebra-glm = "0.19.0"
 raw-gl-context = { version = "0.1.2", optional = true }
