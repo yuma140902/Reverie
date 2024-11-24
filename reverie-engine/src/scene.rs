@@ -47,7 +47,7 @@ impl Scene {
         self.systems.push(Box::new(system));
     }
 
-    pub fn setup(&mut self, resource: &WgpuResource) {
+    pub fn setup(&mut self, resource: &WgpuResource<'_>) {
         for (_, sprite) in self.world.query_mut::<&mut SpriteComponent>() {
             sprite.setup(resource)
         }
@@ -57,13 +57,13 @@ impl Scene {
         }
     }
 
-    pub fn update(&mut self, frame: &Frame, resource: &WgpuResource) {
+    pub fn update(&mut self, frame: &Frame<'_>, resource: &WgpuResource<'_>) {
         for system in &mut self.systems {
             system.update(frame, &mut self.world, resource);
         }
     }
 
-    pub fn render(&mut self, rp: &mut wgpu::RenderPass, resource: &WgpuResource) {
+    pub fn render(&mut self, rp: &mut wgpu::RenderPass<'_>, resource: &WgpuResource<'_>) {
         for (_, (transform, sprite)) in self
             .world
             .query_mut::<(&TransformComponent, &mut SpriteComponent)>()
@@ -74,7 +74,7 @@ impl Scene {
 }
 
 impl std::fmt::Debug for Scene {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Scene")
             .field("#world", &self.world.len())
             .finish()
@@ -142,15 +142,15 @@ impl SpriteComponent {
         }
     }
 
-    fn setup(&mut self, resource: &WgpuResource) {
+    fn setup(&mut self, resource: &WgpuResource<'_>) {
         let buffer = VertexIndexBuffer::new(&resource.device, 4, 6, None).unwrap_or_log();
         self.buffer = Some(buffer);
     }
 
     fn render(
         &mut self,
-        rp: &mut wgpu::RenderPass,
-        resource: &WgpuResource,
+        rp: &mut wgpu::RenderPass<'_>,
+        resource: &WgpuResource<'_>,
         transform: &TransformComponent,
     ) {
         if let Some(buffer) = &mut self.buffer {
@@ -233,7 +233,7 @@ pub struct Frame<'a> {
 }
 
 pub trait System {
-    fn setup(&mut self, resource: &WgpuResource);
+    fn setup(&mut self, resource: &WgpuResource<'_>);
 
-    fn update(&mut self, frame: &Frame, world: &mut hecs::World, resource: &WgpuResource);
+    fn update(&mut self, frame: &Frame<'_>, world: &mut hecs::World, resource: &WgpuResource<'_>);
 }

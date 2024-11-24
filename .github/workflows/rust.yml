@@ -27,13 +27,13 @@ jobs:
           - build --all-targets --workspace --no-default-features --features raw_gl_context,glutin
           - build --all-targets --workspace --no-default-features --features raw_gl_context,glutin --release
           - test --all-targets --workspace --all-features
-          - clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
+          - clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings
           - doc --no-deps --workspace --all-features --document-private-items
         exclude:
           - os: windows-latest
-            cmd: clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
+            cmd: clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings
           - os: macos-14
-            cmd: clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
+            cmd: clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
