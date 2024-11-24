@@ -373,13 +373,13 @@ fn setup_render_pipeline(
         layout: Some(&render_pipeline_layout),
         vertex: w::VertexState {
             module: shader,
-            entry_point: "vs_main",
+            entry_point: Some("vs_main"),
             compilation_options: Default::default(),
             buffers: &[UvVertex::desc()],
         },
         fragment: Some(w::FragmentState {
             module: shader,
-            entry_point: "fs_main",
+            entry_point: Some("fs_main"),
             compilation_options: Default::default(),
             targets: &[Some(w::ColorTargetState {
                 format: surface_format,
