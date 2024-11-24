@@ -5,7 +5,7 @@ use winit::{
     event::{ElementState, KeyEvent, MouseButton, MouseScrollDelta, TouchPhase},
 };
 
-use crate::wgpu_layer::WgpuResource;
+use crate::wgpu_wrapper::WgpuResource;
 
 #[derive(Debug)]
 /// フレームごとに更新される情報

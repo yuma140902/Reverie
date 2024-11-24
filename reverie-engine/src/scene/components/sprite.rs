@@ -5,7 +5,7 @@ use tracing_unwrap::ResultExt;
 use crate::{
     scene::TransformComponent,
     texture::TextureId,
-    wgpu_layer::{buffer::VertexIndexBuffer, vertex::UvVertex, WgpuResource},
+    wgpu_wrapper::{buffer::VertexIndexBuffer, vertex::UvVertex, WgpuResource},
 };
 
 #[derive(Debug)]

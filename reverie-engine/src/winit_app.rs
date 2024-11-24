@@ -15,7 +15,7 @@ use winit::{
 use crate::{
     game::Game,
     scene::{Frame, Scene},
-    wgpu_layer::WgpuResource,
+    wgpu_wrapper::WgpuResource,
 };
 
 pub struct App<'window, G: Game> {

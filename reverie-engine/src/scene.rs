@@ -2,7 +2,7 @@
 
 use tracing_unwrap::ResultExt;
 
-use crate::wgpu_layer::WgpuResource;
+use crate::wgpu_wrapper::WgpuResource;
 
 mod components;
 mod entity;
