@@ -1,8 +1,8 @@
 //! テクスチャに関するモジュール
 use anyhow::Context;
 use etagere::{size2, AtlasAllocator};
-use generational_arena::{Arena, Index};
 use image::{GenericImage, RgbaImage};
+use slotmap::SlotMap;
 
 use crate::wgpu_layer::WgpuTexture;
 
@@ -106,7 +106,7 @@ impl From<Allocation> for TextureId {
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// [`TextureRegistry`]に登録された単一のテクスチャを指すインデックス
-pub struct TextureIndex(Index);
+pub struct TextureIndex(slotmap::DefaultKey);
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 /// [`TextureRegistry`]に登録されたアトラステクスチャ内のアロケーションを指す識別子
@@ -115,7 +115,7 @@ pub struct Allocation(TextureIndex, etagere::AllocId);
 #[derive(Debug, Default)]
 /// テクスチャを管理するレジストリ
 pub struct TextureRegistry {
-    arena: Arena<Texture>,
+    arena: SlotMap<slotmap::DefaultKey, Texture>,
 }
 
 impl TextureRegistry {
