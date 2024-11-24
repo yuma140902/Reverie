@@ -1,8 +1,8 @@
 use nalgebra::{Scale3, Translation3, Unit, UnitQuaternion, Vector3};
 use reverie_engine::{
-    game::Game,
     scene::{EntityIndex, Frame, Scene, SpriteComponent, System, TransformComponent},
     wgpu_layer::WgpuResource,
+    Game,
 };
 use winit::event::{ElementState, MouseButton};
 
