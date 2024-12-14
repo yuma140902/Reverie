@@ -133,7 +133,7 @@ pub struct ImageLoadInfo<'a> {
     pub height: u32,
 }
 
-impl<'a> ImageLoadInfo<'a> {
+impl ImageLoadInfo<'_> {
     /// OpenGLの関数に渡すためのテクスチャID
     ///
     /// # Safety

@@ -87,7 +87,7 @@ pub struct VertexIndexBufferUpdater<'a> {
     index_update: Range<usize>,
 }
 
-impl<'a> VertexIndexBufferUpdater<'a> {
+impl VertexIndexBufferUpdater<'_> {
     pub fn vertex_mut(&mut self) -> &mut Vec<UvVertex> {
         &mut self.buffer.vertex_array
     }
@@ -112,7 +112,7 @@ impl<'a> VertexIndexBufferUpdater<'a> {
     }
 }
 
-impl<'a> std::ops::Drop for VertexIndexBufferUpdater<'a> {
+impl std::ops::Drop for VertexIndexBufferUpdater<'_> {
     fn drop(&mut self) {
         self.buffer.send_to_gpu(
             self.queue,

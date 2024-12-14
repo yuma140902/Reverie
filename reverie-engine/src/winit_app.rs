@@ -29,7 +29,7 @@ pub struct App<'window, G: Game> {
     last_mouse_pos: PhysicalPosition<f64>,
 }
 
-impl<'window, G: Game> App<'window, G> {
+impl<G: Game> App<'_, G> {
     pub fn new(game: G) -> Self {
         Self {
             game,
@@ -93,7 +93,7 @@ impl<'window, G: Game> App<'window, G> {
     }
 }
 
-impl<'window, G: Game> ApplicationHandler for App<'window, G> {
+impl<G: Game> ApplicationHandler for App<'_, G> {
     fn new_events(
         &mut self,
         _event_loop: &winit::event_loop::ActiveEventLoop,
@@ -161,7 +161,7 @@ pub struct AppResource<'window> {
     pub wgpu: WgpuResource<'window>,
 }
 
-impl<'window> AppResource<'window> {
+impl AppResource<'_> {
     pub fn new(event_loop: &ActiveEventLoop) -> anyhow::Result<Self> {
         let window = event_loop
             .create_window(Window::default_attributes())

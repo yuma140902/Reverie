@@ -137,7 +137,7 @@ impl<'a> Vao<'a> {
     }
 }
 
-impl<'a> Drop for Vao<'a> {
+impl Drop for Vao<'_> {
     fn drop(&mut self) {
         unsafe {
             if self.vbo > 0 {
