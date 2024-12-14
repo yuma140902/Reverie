@@ -313,7 +313,7 @@ pub struct UniformVariables<'a> {
     map: HashMap<&'a CStr, Uniform<'a>>,
 }
 
-impl<'a> Default for UniformVariables<'a> {
+impl Default for UniformVariables<'_> {
     fn default() -> Self {
         Self::new()
     }
