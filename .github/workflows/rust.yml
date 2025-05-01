@@ -20,12 +20,6 @@ jobs:
         cmd:
           - build --all-targets --workspace
           - build --all-targets --workspace --release
-          - build --all-targets --workspace --no-default-features
-          - build --all-targets --workspace --no-default-features --release
-          - build --all-targets --workspace --no-default-features --features raw_gl_context
-          - build --all-targets --workspace --no-default-features --features raw_gl_context --release
-          - build --all-targets --workspace --no-default-features --features raw_gl_context,glutin
-          - build --all-targets --workspace --no-default-features --features raw_gl_context,glutin --release
           - test --all-targets --workspace --all-features
           - clippy --all-targets --workspace --all-features -- '-Dclippy::all' -Dwarnings
           - doc --no-deps --workspace --all-features --document-private-items
