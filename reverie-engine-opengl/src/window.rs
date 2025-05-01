@@ -127,7 +127,6 @@ impl Window {
 
     #[cfg(feature = "winit")]
     pub fn mouse_pressed(&self, button: &winit::event::MouseButton) -> bool {
-        input::mouse_button_index_3(button)
-            .is_some_and(|index| self.input.get_mouse_pressed(index))
+        input::mouse_button_index_3(button).is_some_and(|index| self.input.get_mouse_pressed(index))
     }
 }

@@ -35,7 +35,12 @@ pub fn calc_front_right_up(
     yaw: Rad<f32>,
     pitch: Rad<f32>,
 ) -> (Vector3<f32>, Vector3<f32>, Vector3<f32>) {
-    let front = Vector3::new(pitch.cos() * yaw.sin(), pitch.sin(), pitch.cos() * yaw.cos()).normalize();
+    let front = Vector3::new(
+        pitch.cos() * yaw.sin(),
+        pitch.sin(),
+        pitch.cos() * yaw.cos(),
+    )
+    .normalize();
 
     let right_rad = yaw - Deg(90.0f32).to_rad();
     // 右方向のベクトル

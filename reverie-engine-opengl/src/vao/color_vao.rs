@@ -3,11 +3,25 @@ use reverie_util::math::nalgebra::Point3;
 use crate::vao::{VaoBuffer, VertexWithColor};
 
 pub trait VaoBuilder3DGeometryOutline {
-    fn add_cuboid_outline(&mut self, begin: &Point3<f32>, end: &Point3<f32>, r: f32, g: f32, b: f32);
+    fn add_cuboid_outline(
+        &mut self,
+        begin: &Point3<f32>,
+        end: &Point3<f32>,
+        r: f32,
+        g: f32,
+        b: f32,
+    );
 }
 
 impl VaoBuilder3DGeometryOutline for VaoBuffer<VertexWithColor> {
-    fn add_cuboid_outline(&mut self, begin: &Point3<f32>, end: &Point3<f32>, r: f32, g: f32, b: f32) {
+    fn add_cuboid_outline(
+        &mut self,
+        begin: &Point3<f32>,
+        end: &Point3<f32>,
+        r: f32,
+        g: f32,
+        b: f32,
+    ) {
         // 上面
         let p0 = begin;
         let p1 = &Point3::new(begin.x, begin.y, end.z);
