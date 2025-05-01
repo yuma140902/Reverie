@@ -217,15 +217,13 @@ where
     tracing::trace!(?adapter, "requested adapter");
 
     let (device, queue) = adapter
-        .request_device(
-            &w::DeviceDescriptor {
-                label: Some("Main Device"),
-                required_features: w::Features::empty(),
-                required_limits: w::Limits::default(),
-                memory_hints: w::MemoryHints::default(),
-            },
-            None,
-        )
+        .request_device(&w::DeviceDescriptor {
+            label: Some("Main Device"),
+            required_features: w::Features::empty(),
+            required_limits: w::Limits::default(),
+            memory_hints: w::MemoryHints::default(),
+            trace: w::Trace::Off,
+        })
         .await
         .context("fail: request device")?;
     tracing::trace!(?device, ?queue, "requested device and queue");
