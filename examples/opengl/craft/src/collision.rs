@@ -77,7 +77,7 @@ fn modify(
     }
 
     // 壁ずりベクトルを求める
-    nearest_normal.map_or(false, |nearest_normal| {
+    nearest_normal.is_some_and(|nearest_normal| {
         *entity_velocity -= nearest_normal * entity_velocity.dot(&nearest_normal);
         true
     })

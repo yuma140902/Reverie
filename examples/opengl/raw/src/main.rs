@@ -31,18 +31,22 @@ pub fn main() {
         //let source = c_str_macro::c_str!(include_str!("./shader.vert"));
         //gl.ShaderSource(vert_shader, 1, &source.as_ptr(), 0 as *const i32);
         //gl.CompileShader(vert_shader);
-        let vert_shader =
-            Shader::from_vert_code(context.gl(), c_str_macro::c_str!(include_str!("./shader.vert")))
-                .unwrap();
+        let vert_shader = Shader::from_vert_code(
+            context.gl(),
+            c_str_macro::c_str!(include_str!("./shader.vert")),
+        )
+        .unwrap();
         println!("vert shader setup {}", vert_shader.raw_id());
 
         //let frag_shader = gl.CreateShader(gl::FRAGMENT_SHADER);
         //let source = c_str_macro::c_str!(include_str!("./shader.frag"));
         //gl.ShaderSource(frag_shader, 1, &source.as_ptr(), 0 as *const i32);
         //gl.CompileShader(frag_shader);
-        let frag_shader =
-            Shader::from_frag_code(context.gl(), c_str_macro::c_str!(include_str!("./shader.frag")))
-                .unwrap();
+        let frag_shader = Shader::from_frag_code(
+            context.gl(),
+            c_str_macro::c_str!(include_str!("./shader.frag")),
+        )
+        .unwrap();
         println!("frag shader setup {}", frag_shader.raw_id());
 
         //let program = gl.CreateProgram();

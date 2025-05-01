@@ -54,7 +54,8 @@ impl Interpolation<f32> {
     }
 
     pub fn value(&self, t: Time) -> f32 {
-        let t_normalized: NormalizedTime = ((t - self.t_0) as f32 / self.t_total as f32).clamp(0.0, 1.0);
+        let t_normalized: NormalizedTime =
+            ((t - self.t_0) as f32 / self.t_total as f32).clamp(0.0, 1.0);
         let rate = (self.rate)(t_normalized);
         self.begin.mul_add(1.0f32 - rate, self.end * rate)
     }

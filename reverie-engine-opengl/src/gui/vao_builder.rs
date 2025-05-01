@@ -30,7 +30,8 @@ pub trait VaoBuilder2DGui<T> {
 }
 
 impl<Width, Height, AtlasWidth, AtlasHeight>
-    VaoBuilder2DGui<TextureUV<Width, Height, AtlasWidth, AtlasHeight>> for VaoBuffer<VertexWithNormUv>
+    VaoBuilder2DGui<TextureUV<Width, Height, AtlasWidth, AtlasHeight>>
+    for VaoBuffer<VertexWithNormUv>
 {
     fn add_rectangle(
         &mut self,
