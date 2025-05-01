@@ -2,6 +2,65 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0](https://github.com/yuma140902/reverie/compare/v0.1.0..v0.2.0) - 2025-05-01
+
+### ✨ Features
+
+- [**breaking**] Remove reverie-engine-opengl - ([7181b96](https://github.com/yuma140902/reverie/commit/7181b96c66afde309d5307672f6e9358265889d2))
+- [**breaking**] Fix typo `create_altas_texture` -> `create_atlas_texture` - ([aae1e70](https://github.com/yuma140902/reverie/commit/aae1e70597295840d37266ec60769eee79cbf96d))
+- Update TransformComponent methods - ([aa85321](https://github.com/yuma140902/reverie/commit/aa85321cc945075dad236743f5df3f5a3b8abde1))
+- Remove generational-arena and use slotmap instead - ([3ad2502](https://github.com/yuma140902/reverie/commit/3ad250298a57b64cf2a9bbdb63555a80455c7f9e))
+- Update wgpu to v23.0.0 - ([29f6d22](https://github.com/yuma140902/reverie/commit/29f6d22972335da3488e42c2ad93321afccc2135))
+
+### 🐛 Bug Fixes
+
+- Lag on closing windows - ([df10819](https://github.com/yuma140902/reverie/commit/df10819a0e3af5deeb44fefcd1880cb36ad0ad0f))
+
+### ♻️ Refactor
+
+- Clippy fix - ([3a3a8dc](https://github.com/yuma140902/reverie/commit/3a3a8dc10969a612839303e1c9d71fd4a8158374))
+- Elide lifetimes - ([47d7f84](https://github.com/yuma140902/reverie/commit/47d7f843c692cf6c9b6b05343f5d5cc1a4c06c85))
+- Rename wgpu_layer to wgpu_wrapper - ([2f02d05](https://github.com/yuma140902/reverie/commit/2f02d053cb5dff119def3d97c546201afdca105f))
+- Wgpu_layer module - ([764d262](https://github.com/yuma140902/reverie/commit/764d262b68fe67d7b9db098706d65e3cd0c1ed69))
+- Scene module - ([1e5c099](https://github.com/yuma140902/reverie/commit/1e5c099265b8f6b6c3d85f087c09c34424f872db))
+- Game module - ([6cb4d3e](https://github.com/yuma140902/reverie/commit/6cb4d3e973fdcc36d4f03d3c2f9f56fa8fc36cc8))
+- Enable extra lints - ([10e4775](https://github.com/yuma140902/reverie/commit/10e47751bfed350dc7a1279b589e608045981de8))
+
+### 👷 Build System
+
+- *(deps)* Update pollster requirement from 0.3.0 to 0.4.0 - ([c5d6f55](https://github.com/yuma140902/reverie/commit/c5d6f5511b60e2f98e441f53b6b03695122e6866))
+- *(reverie-util)* Use workspace dependencies - ([dfa194c](https://github.com/yuma140902/reverie/commit/dfa194cc9f03a4bc1acc8a1032876d5687ab7f09))
+- Update - ([877567b](https://github.com/yuma140902/reverie/commit/877567bac6c88ca7663bbeef1c3ba3b544609ef4))
+- Update - ([3a2a320](https://github.com/yuma140902/reverie/commit/3a2a320d65adedac1504d62610b39dc9592eec1a))
+- Update wgpu from v23 to v25 - ([20f8ef4](https://github.com/yuma140902/reverie/commit/20f8ef44c3065e5e4fa53fb194ced86bf9c60c56))
+- Update dependencies - ([bc9fd36](https://github.com/yuma140902/reverie/commit/bc9fd369eaf00adbe109b1ab3d597dcbb3937f78))
+- Update dependencies - ([0008134](https://github.com/yuma140902/reverie/commit/00081341d60e2c5777dc1c28d43ad42a8a782177))
+- Update sccache action from v0.0.5 to v0.0.6 - ([dec2849](https://github.com/yuma140902/reverie/commit/dec2849833d86ef6c46db98a07137391472c1f99))
+- Update reverie-engine-opengl dependencies - ([32d89e2](https://github.com/yuma140902/reverie/commit/32d89e24833c2de10635b1ba6526f324885f0cf8))
+- Update reverie-util dependencies - ([45180c4](https://github.com/yuma140902/reverie/commit/45180c4983d62c756daeca3d02580ee7d63bd1b5))
+- Update reverie-engine dependencies - ([8de62e5](https://github.com/yuma140902/reverie/commit/8de62e55f256e4ebc6e76897a0ae2f86edb41e0e))
+
+### 🔧 Miscellaneous Tasks
+
+- Format - ([8639a0f](https://github.com/yuma140902/reverie/commit/8639a0fbbba153b30f2eee5f53eac38360aa9949))
+
+### 🔀 Pull Requests
+
+- [#158](https://github.com/yuma140902/reverie/pull/158)
+- [#157](https://github.com/yuma140902/reverie/pull/157)
+- [#156](https://github.com/yuma140902/reverie/pull/156)
+- [#147](https://github.com/yuma140902/reverie/pull/147)
+- [#146](https://github.com/yuma140902/reverie/pull/146)
+- [#142](https://github.com/yuma140902/reverie/pull/142)
+- [#141](https://github.com/yuma140902/reverie/pull/141)
+- [#140](https://github.com/yuma140902/reverie/pull/140)
+- [#139](https://github.com/yuma140902/reverie/pull/139)
+- [#138](https://github.com/yuma140902/reverie/pull/138)
+- [#137](https://github.com/yuma140902/reverie/pull/137)
+- [#132](https://github.com/yuma140902/reverie/pull/132)
+- [#136](https://github.com/yuma140902/reverie/pull/136)
+- [#133](https://github.com/yuma140902/reverie/pull/133)
+
 ## [0.1.0](https://github.com/yuma140902/reverie/compare/v0.0.8..v0.1.0) - 2024-09-19
 
 ### ✨ Features
@@ -21,6 +80,7 @@ All notable changes to this project will be documented in this file.
 
 ### 👷 Build System
 
+- Update to v0.1.0 - ([bfcf671](https://github.com/yuma140902/reverie/commit/bfcf67110d8bb1a6a7ea732629b8bfe32d21aac2))
 - 依存関係を整理 - ([33c39d8](https://github.com/yuma140902/reverie/commit/33c39d8bbfcebcdfec6278d26141f059d24e28d0))
 - MSRV を 1.81.0 に引き上げる - ([3afc661](https://github.com/yuma140902/reverie/commit/3afc6615917fe56594f3b8f926765431bfcd635d))
 - Reverie-engine-opengl と reverie-util のバージョンをワークスペースと連動しないようにする - ([a6fcc20](https://github.com/yuma140902/reverie/commit/a6fcc206c4832ae9bb6bedac0154019b04a62180))
@@ -178,8 +238,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-- Fix readme path
- - ([d9641c4](https://github.com/yuma140902/reverie/commit/d9641c4edef45a50e68965bc10142c4ce247a3ad))
+- Fix readme path - ([d9641c4](https://github.com/yuma140902/reverie/commit/d9641c4edef45a50e68965bc10142c4ce247a3ad))
 
 ### 📝 Documentation
 
@@ -202,20 +261,13 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-- Fix process_event arguments in examples
- - ([19e2fd1](https://github.com/yuma140902/reverie/commit/19e2fd1fae7a3d9d4a48f1d7f608bd6eb4887b9b))
-- Fix process_event arguments in examples
- - ([251eaa9](https://github.com/yuma140902/reverie/commit/251eaa940a23df5ae2dc9c079c11f5419fbbf453))
-- Fix num_attributes
- - ([a114738](https://github.com/yuma140902/reverie/commit/a114738832512777455a913186d3d979aa7c28aa))
-- Fix yaw and pitch
- - ([8a3b0d6](https://github.com/yuma140902/reverie/commit/8a3b0d69641dc8d92e4d5e603f160f0dc77c43e8))
-- Fix feature cfg
- - ([7d19c53](https://github.com/yuma140902/reverie/commit/7d19c5339230fd5602077f8e83f9a080a2cc2ec1))
-- Fix clippy: needless borrow
- - ([49a4929](https://github.com/yuma140902/reverie/commit/49a4929075423a35748e84574caa948999b998f7))
-- Fix clippy: needless borrow, return
- - ([87aec90](https://github.com/yuma140902/reverie/commit/87aec908fa9d71c328ec4684b392cee3403c6856))
+- Fix process_event arguments in examples - ([19e2fd1](https://github.com/yuma140902/reverie/commit/19e2fd1fae7a3d9d4a48f1d7f608bd6eb4887b9b))
+- Fix process_event arguments in examples - ([251eaa9](https://github.com/yuma140902/reverie/commit/251eaa940a23df5ae2dc9c079c11f5419fbbf453))
+- Fix num_attributes - ([a114738](https://github.com/yuma140902/reverie/commit/a114738832512777455a913186d3d979aa7c28aa))
+- Fix yaw and pitch - ([8a3b0d6](https://github.com/yuma140902/reverie/commit/8a3b0d69641dc8d92e4d5e603f160f0dc77c43e8))
+- Fix feature cfg - ([7d19c53](https://github.com/yuma140902/reverie/commit/7d19c5339230fd5602077f8e83f9a080a2cc2ec1))
+- Fix clippy: needless borrow - ([49a4929](https://github.com/yuma140902/reverie/commit/49a4929075423a35748e84574caa948999b998f7))
+- Fix clippy: needless borrow, return - ([87aec90](https://github.com/yuma140902/reverie/commit/87aec908fa9d71c328ec4684b392cee3403c6856))
 
 ### 🔀 Pull Requests
 
@@ -249,8 +301,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-- Fix Cargo.toml and #[cfg]
- - ([314d9f3](https://github.com/yuma140902/reverie/commit/314d9f3a11b738e7f6df58a42d97c415d5d17a41))
+- Fix Cargo.toml and #[cfg] - ([314d9f3](https://github.com/yuma140902/reverie/commit/314d9f3a11b738e7f6df58a42d97c415d5d17a41))
 
 ### 🔧 Miscellaneous Tasks
 
