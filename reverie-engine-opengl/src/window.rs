@@ -117,17 +117,17 @@ impl Window {
 
     #[cfg(feature = "winit")]
     pub fn mouse_down(&mut self, button: &winit::event::MouseButton) -> bool {
-        input::mouse_button_index_3(button).map_or(false, |index| self.input.get_mouse_down(index))
+        input::mouse_button_index_3(button).is_some_and(|index| self.input.get_mouse_down(index))
     }
 
     #[cfg(feature = "winit")]
     pub fn mouse_up(&mut self, button: &winit::event::MouseButton) -> bool {
-        input::mouse_button_index_3(button).map_or(false, |index| self.input.get_mouse_up(index))
+        input::mouse_button_index_3(button).is_some_and(|index| self.input.get_mouse_up(index))
     }
 
     #[cfg(feature = "winit")]
     pub fn mouse_pressed(&self, button: &winit::event::MouseButton) -> bool {
         input::mouse_button_index_3(button)
-            .map_or(false, |index| self.input.get_mouse_pressed(index))
+            .is_some_and(|index| self.input.get_mouse_pressed(index))
     }
 }
