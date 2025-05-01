@@ -36,7 +36,7 @@ raw-gl-context = { version = "0.1.2", optional = true }
 winit = { version = "0.27.5", optional = true }
 
 [target.'cfg(windows)'.dependencies]
-windows = { version = "0.58.0", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
+windows = { version = "0.61.1", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
 
 [build-dependencies]
 gl_generator = "0.14.0"
