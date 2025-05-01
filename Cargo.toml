@@ -8,16 +8,13 @@ rust-version = "1.81.0"
 
 [workspace]
 members = [
-  "examples/opengl/*",
-  "examples/misc",
+  "examples/*",
   "reverie-engine",
-  "reverie-engine-opengl",
   "reverie-util",
 ]
 resolver = "2"
 
 [workspace.dependencies]
-reverie-engine-opengl = { version = "0.0.8", path = "./reverie-engine-opengl" }
 reverie-util = { version = "0.0.8", path = "./reverie-util" }
 reverie-engine = { version = "0.1.0", path = "./reverie-engine" }
 

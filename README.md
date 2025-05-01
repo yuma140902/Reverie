@@ -9,9 +9,6 @@ A toy game engine
 ## Examples
 
 - `cargo run -p example-misc`
-- `cargo run -p old-example-craft`
-- `cargo run -p old-example-window`
-- `cargo run -p old-example-raw`
 
 ## Links
 
