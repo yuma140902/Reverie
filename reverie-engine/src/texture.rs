@@ -128,7 +128,7 @@ impl TextureRegistry {
         TextureIndex(self.arena.insert(texture))
     }
 
-    pub fn create_altas_texture(
+    pub fn create_atlas_texture(
         &mut self,
         width: u32,
         height: u32,

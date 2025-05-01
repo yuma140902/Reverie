@@ -41,7 +41,7 @@ impl Game for LineDefense {
             )
             .into();
 
-        let cat_and_snake = registry.create_altas_texture(256, 512, None);
+        let cat_and_snake = registry.create_atlas_texture(256, 512, None);
 
         let tex_cat = registry
             .allocate_sub_image(
