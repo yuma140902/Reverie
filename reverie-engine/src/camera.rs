@@ -87,8 +87,13 @@ impl PerspectiveCamera {
     ) -> Self {
         let dir = target - eye;
         let rotation = UnitQuaternion::look_at_lh(&dir, up);
+        println!("rotation: {}", rotation);
+
         let translation = &rotation * (-eye);
+        println!("translation: {}", translation);
         let translation = Translation3::from(translation);
+        // これで得られる Transform はあくまでも view 行列を表しており、カメラの位置を表していない。
+        // TODO: カメラの位置を表す Transform を取得する。
         let transform = TransformComponent::with_translation_and_rotation(translation, rotation);
         Self {
             transform,
@@ -97,6 +102,21 @@ impl PerspectiveCamera {
             z_far,
         }
     }
+
+    pub fn with_transform(
+        transform: TransformComponent,
+        fov_y_rad: f32,
+        z_near: f32,
+        z_far: f32,
+    ) -> Self {
+        Self {
+            transform,
+            fov_y_rad,
+            z_near,
+            z_far,
+        }
+    }
+
     pub fn get_matrix_world_to_render_coordinate(&self, viewport: &Viewport) -> Matrix4<f32> {
         let view = self.transform.to_isometry3().to_homogeneous();
         let proj = nalgebra_glm::perspective_fov_lh_zo(
