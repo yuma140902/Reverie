@@ -32,6 +32,7 @@ pub struct WgpuResource<'window> {
     pub texture_registry: TextureRegistry,
     pub camera: Camera,
     pub viewport: Viewport,
+    pub depth_texture: WgpuTexture,
 }
 
 impl<'window> WgpuResource<'window> {
@@ -130,6 +131,9 @@ impl<'window> WgpuResource<'window> {
         let texture_registry = TextureRegistry::default();
         tracing::trace!(?texture_registry, "setup_texture_registry");
 
+        let depth_texture =
+            WgpuTexture::create_depth_texture(&device, width, height, Some("depth_texture"));
+
         Ok(Self {
             transform_uniform_buffer,
             texture_bind_group_layout,
@@ -143,6 +147,7 @@ impl<'window> WgpuResource<'window> {
             texture_registry,
             camera,
             viewport,
+            depth_texture,
         })
     }
 
@@ -161,6 +166,9 @@ impl<'window> WgpuResource<'window> {
             0,
             bytemuck::cast_slice(matrix.as_slice()),
         );
+
+        self.depth_texture =
+            WgpuTexture::create_depth_texture(&self.device, width, height, Some("depth_texture"));
     }
 
     pub fn get_texture_bind_group(&self, texture: TextureId) -> anyhow::Result<&w::BindGroup> {
@@ -194,7 +202,14 @@ impl<'window> WgpuResource<'window> {
                             store: wgpu::StoreOp::Store,
                         },
                     })],
-                    depth_stencil_attachment: None,
+                    depth_stencil_attachment: Some(w::RenderPassDepthStencilAttachment {
+                        view: &self.depth_texture.view,
+                        depth_ops: Some(w::Operations {
+                            load: w::LoadOp::Clear(1.0),
+                            store: w::StoreOp::Store,
+                        }),
+                        stencil_ops: None,
+                    }),
                     timestamp_writes: None,
                     occlusion_query_set: None,
                 });
@@ -400,7 +415,13 @@ fn setup_render_pipeline(
             polygon_mode: w::PolygonMode::Fill,
             conservative: false,
         },
-        depth_stencil: None,
+        depth_stencil: Some(w::DepthStencilState {
+            format: w::TextureFormat::Depth32Float,
+            depth_write_enabled: true,
+            depth_compare: w::CompareFunction::Less,
+            stencil: w::StencilState::default(),
+            bias: w::DepthBiasState::default(),
+        }),
         multisample: w::MultisampleState::default(),
         multiview: None,
         cache: None,

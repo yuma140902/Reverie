@@ -1,3 +1,5 @@
+use std::num::NonZeroU32;
+
 use wgpu as w;
 
 #[derive(Debug)]
@@ -42,6 +44,33 @@ impl WgpuTexture {
             },
             size,
         );
+
+        let view = texture.create_view(&Default::default());
+
+        Self { texture, view }
+    }
+
+    pub fn create_depth_texture(
+        device: &w::Device,
+        width: NonZeroU32,
+        height: NonZeroU32,
+        label: Option<&str>,
+    ) -> Self {
+        let size = w::Extent3d {
+            width: width.get(),
+            height: height.get(),
+            depth_or_array_layers: 1,
+        };
+        let texture = device.create_texture(&w::TextureDescriptor {
+            label,
+            size,
+            mip_level_count: 1,
+            sample_count: 1,
+            dimension: w::TextureDimension::D2,
+            format: w::TextureFormat::Depth32Float,
+            usage: w::TextureUsages::RENDER_ATTACHMENT | w::TextureUsages::TEXTURE_BINDING,
+            view_formats: &[],
+        });
 
         let view = texture.create_view(&Default::default());
 
