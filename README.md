@@ -14,7 +14,8 @@ A toy game engine
 
 - [GitHub](https://github.com/yuma140902/Reverie)
 - [crates.io](https://crates.io/crates/reverie-engine)
-- [Docs.rs](https://docs.rs/reverie-engine/)
+- [Documentation](https://yuma14.net/reverie)
+- [API Documentation](https://docs.rs/reverie-engine/)
 
 ## Development
 
