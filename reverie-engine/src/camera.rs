@@ -89,7 +89,7 @@ impl PerspectiveCamera {
         let rotation = UnitQuaternion::look_at_lh(&dir, up);
         println!("rotation: {}", rotation);
 
-        let translation = &rotation * (-eye);
+        let translation = rotation * (-eye);
         println!("translation: {}", translation);
         let translation = Translation3::from(translation);
         // これで得られる Transform はあくまでも view 行列を表しており、カメラの位置を表していない。
@@ -103,7 +103,7 @@ impl PerspectiveCamera {
         }
     }
 
-    pub fn with_transform(
+    pub const fn with_transform(
         transform: TransformComponent,
         fov_y_rad: f32,
         z_near: f32,
