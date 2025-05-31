@@ -422,7 +422,11 @@ fn setup_render_pipeline(
             stencil: w::StencilState::default(),
             bias: w::DepthBiasState::default(),
         }),
-        multisample: w::MultisampleState::default(),
+        multisample: w::MultisampleState {
+            count: 1,
+            mask: !0,
+            alpha_to_coverage_enabled: true,
+        },
         multiview: None,
         cache: None,
     });
