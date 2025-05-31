@@ -78,14 +78,14 @@ impl Game for LineDefense {
                         Scale3::new(0.07, 0.07, 1.0),
                         UnitQuaternion::from_axis_angle(
                             &UnitVector3::new_normalize(Vector3::new(
-                                rng.gen_range(-1.0..1.0),
-                                rng.gen_range(-1.0..1.0),
-                                rng.gen_range(-1.0..1.0),
+                                rng.random_range(-1.0..1.0),
+                                rng.random_range(-1.0..1.0),
+                                rng.random_range(-1.0..1.0),
                             )),
-                            rng.gen_range(0.0..80.0_f32).to_radians(),
+                            rng.random_range(0.0..80.0_f32).to_radians(),
                         ),
                     ),
-                    SpriteComponent::new(if rng.gen_bool(0.5) {
+                    SpriteComponent::new(if rng.random_bool(0.5) {
                         tex_apple
                     } else {
                         tex_cat
