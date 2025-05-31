@@ -46,7 +46,10 @@ impl VertexIndexBuffer {
         })
     }
 
-    pub fn start_update<'a>(&'a mut self, queue: &'a w::Queue) -> VertexIndexBufferUpdater<'a> {
+    pub const fn start_update<'a>(
+        &'a mut self,
+        queue: &'a w::Queue,
+    ) -> VertexIndexBufferUpdater<'a> {
         VertexIndexBufferUpdater {
             buffer: self,
             queue,
@@ -88,26 +91,26 @@ pub struct VertexIndexBufferUpdater<'a> {
 }
 
 impl VertexIndexBufferUpdater<'_> {
-    pub fn vertex_mut(&mut self) -> &mut Vec<UvVertex> {
+    pub const fn vertex_mut(&mut self) -> &mut Vec<UvVertex> {
         &mut self.buffer.vertex_array
     }
 
-    pub fn index_mut(&mut self) -> &mut Vec<u16> {
+    pub const fn index_mut(&mut self) -> &mut Vec<u16> {
         &mut self.buffer.index_array
     }
 
     /// 更新した頂点バッファの範囲を設定する
-    pub fn set_vertex_update(&mut self, range: Range<usize>) {
+    pub const fn set_vertex_update(&mut self, range: Range<usize>) {
         self.vertex_update = range;
     }
 
     /// 更新したインデックスバッファの範囲を設定する
-    pub fn set_index_update(&mut self, range: Range<usize>) {
+    pub const fn set_index_update(&mut self, range: Range<usize>) {
         self.index_update = range;
     }
 
     /// インデックスバッファの描画範囲を設定する
-    pub fn set_render_range(&mut self, range: Range<u32>) {
+    pub const fn set_render_range(&mut self, range: Range<u32>) {
         self.buffer.index_buffer_range = range;
     }
 }
