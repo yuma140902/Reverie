@@ -3,3 +3,6 @@ authors = ["yuma14"]
 language = "en"
 src = "src"
 title = "Reverie Engine Documentation"
+
+[output.html]
+additional-js = ["assets/fzf.umd.js", "assets/elasticlunr.js"]
