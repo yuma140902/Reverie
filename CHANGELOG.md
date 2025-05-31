@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0](https://github.com/yuma140902/reverie/compare/v0.2.0..v0.3.0) - 2025-05-31
+
+### ✨ Features
+
+- More const fn - ([1a6e348](https://github.com/yuma140902/reverie/commit/1a6e3488a68dca993c20f0cfc8c6d1a220e22be2))
+- Update MSRV, use edition 2024 - ([93b7164](https://github.com/yuma140902/reverie/commit/93b7164a2c9f0902314eb2e5944b8bf5d2978708))
+- Add parameters to OrthographicCamera - ([f93a49c](https://github.com/yuma140902/reverie/commit/f93a49cd818576790f6b855649481da6df41784c))
+- Add PerspectiveCamera - ([8d07aec](https://github.com/yuma140902/reverie/commit/8d07aecaa074801238ace6a215bdf74ca2cff7ef))
+- Add OrthographicCamera - ([7091968](https://github.com/yuma140902/reverie/commit/7091968c9847f4f224d1a06a22e0ae9e0d861300))
+- Add Viewport - ([e44f4b7](https://github.com/yuma140902/reverie/commit/e44f4b7e238973953a6cc615c328a30b6c6014f9))
+
+### ♻️ Refactor
+
+- Use TransformComponent in PerspectiveCamera - ([a0cd85e](https://github.com/yuma140902/reverie/commit/a0cd85e22aefeb32b282f4d68be175ac82a0bb86))
+- Remove unused import - ([8677074](https://github.com/yuma140902/reverie/commit/86770743c2077b06084ec2718ba63d69e5767912))
+- Remove unused imports - ([3a0009f](https://github.com/yuma140902/reverie/commit/3a0009fac91abd67627879f0fedefecfaf222a0e))
+- Remove OPENGL_TO_WGPU_MATRIX - ([c4dc46c](https://github.com/yuma140902/reverie/commit/c4dc46c2547318c63fe6d3d0758f8c4db371c2cd))
+
+### 📝 Documentation
+
+- Add github actions to publish docs - ([5de08df](https://github.com/yuma140902/reverie/commit/5de08dfacb9932a8fd8dbe8f49fc8a3e98b4fa9b))
+- 概要を追加 - ([e91451a](https://github.com/yuma140902/reverie/commit/e91451a99fd61e6f0cca46218fe95fdf93c48449))
+- Language=ja - ([276983c](https://github.com/yuma140902/reverie/commit/276983c79522dfc69729b582acb6e6aeb559a3f3))
+- 日本語検索 - ([9d12359](https://github.com/yuma140902/reverie/commit/9d123598b0818ca1e2d620f668e7f00816f7dd94))
+- Setup mdbook - ([65b50bc](https://github.com/yuma140902/reverie/commit/65b50bc9523880327b11df65360cefa6b8aa11a4))
+- 座標系に関するドキュメント - ([a676d58](https://github.com/yuma140902/reverie/commit/a676d58043a38002760f9c6bc1acb366e71b9b07))
+
+### 👷 Build System
+
+- Add support github actions cache service v2 - ([72a9502](https://github.com/yuma140902/reverie/commit/72a950273dc7bdda93fb2de94145df212075d378))
+- Add rust-toolchain.toml - ([8da8949](https://github.com/yuma140902/reverie/commit/8da8949880b317b7dab3ddc188cd9a7409b4b5bf))
+- Update dependencies - ([67676a4](https://github.com/yuma140902/reverie/commit/67676a465f5d4694443db9b23e99ebf9dc2ce332))
+- Add Cargo.lock - ([d10e118](https://github.com/yuma140902/reverie/commit/d10e1187fd3bbc10df2be9bec2a599441c47adb1))
+
+### 🔧 Miscellaneous Tasks
+
+- Use new method - ([86f51ca](https://github.com/yuma140902/reverie/commit/86f51cac0922f62df6bbcc868a110c3b965196bf))
+- Clippy fix - ([6d9bbde](https://github.com/yuma140902/reverie/commit/6d9bbdedd87ff5cba2aa458773e1c59a1cef62df))
+
+### 🔀 Pull Requests
+
+- [#162](https://github.com/yuma140902/reverie/pull/162)
+- [#161](https://github.com/yuma140902/reverie/pull/161)
+- [#160](https://github.com/yuma140902/reverie/pull/160)
+- [#143](https://github.com/yuma140902/reverie/pull/143)
+
+### Tmp
+
+- With_transform - ([4473466](https://github.com/yuma140902/reverie/commit/4473466c75c859ab01b8c705eb741f0e9328a592))
+
 ## [0.2.0](https://github.com/yuma140902/reverie/compare/v0.1.0..v0.2.0) - 2025-05-01
 
 ### ✨ Features
@@ -46,6 +96,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🔀 Pull Requests
 
+- [#159](https://github.com/yuma140902/reverie/pull/159)
 - [#158](https://github.com/yuma140902/reverie/pull/158)
 - [#157](https://github.com/yuma140902/reverie/pull/157)
 - [#156](https://github.com/yuma140902/reverie/pull/156)
