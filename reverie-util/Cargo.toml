@@ -1,6 +1,6 @@
 [package]
 name = "reverie-util"
-version = "0.0.8"
+version.workspace = true
 authors.workspace = true
 categories = ["game-development"]
 description = "Utilities for reverie-engine"
