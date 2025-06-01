@@ -75,7 +75,7 @@ impl Game for LineDefense {
                 let x = 0.1_f32.mul_add(i as f32, -0.4);
                 let y = 0.1_f32.mul_add(j as f32, -0.4);
                 let character = if rng.random_bool(0.5) {
-                    scene.new_entity(
+                    scene.new_sprite_entity(
                         TransformComponent::new(
                             Translation3::new(x, y, 0.0),
                             Scale3::new(0.07, 0.07, 1.0),
@@ -115,7 +115,7 @@ impl Game for LineDefense {
             }
         }
 
-        scene.new_entity(
+        scene.new_sprite_entity(
             TransformComponent::with_translation_and_scale(
                 Translation3::new(0.0, 0.0, 0.0),
                 Scale3::new(1.0, 1.0, 1.0),

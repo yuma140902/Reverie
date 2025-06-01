@@ -22,7 +22,7 @@ pub struct Scene {
 }
 
 impl Scene {
-    pub fn new_entity(
+    pub fn new_sprite_entity(
         &mut self,
         transform: TransformComponent,
         sprite: SpriteComponent,
