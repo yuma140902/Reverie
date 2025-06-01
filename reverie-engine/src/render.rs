@@ -21,6 +21,7 @@ pub(crate) mod sprite;
 pub(crate) mod texture;
 pub(crate) mod uniform;
 pub(crate) mod vertex;
+pub(crate) mod wavefront;
 
 /// レンダリングを行うためのリソースをまとめた構造体
 pub struct RenderingResource<'window> {
