@@ -37,17 +37,11 @@ pub struct RenderingResource<'window> {
 }
 
 impl<'window> RenderingResource<'window> {
-    pub const TEXTURE_BINDING: u32 = 0;
-    pub const SAMPLER_BINDING: u32 = 1;
-
     /// 初期化する
     ///
     /// * `surface_target`: 描画対象の surface
     /// * `width`: surface の幅
     /// * `height`: surface の高さ
-    /// * `packed_image1`: テクスチャ
-    /// * `vertex_buffer_max_elements`: 頂点バッファの最大要素数
-    /// * `index_buffer_max_elements`: インデックスバッファの最大要素数
     pub async fn setup<S>(
         surface_target: S,
         width: NonZeroU32,
@@ -100,19 +94,14 @@ impl<'window> RenderingResource<'window> {
         tracing::trace!(?sampler, "setup_sampler");
 
         let (uniform_bind_group_layout, uniform_bind_group) =
-            setup_uniform_bind_group(&transform_uniform_buffer, &device)?;
+            sprite::create_uniform_bind_group(&device, &transform_uniform_buffer);
         tracing::trace!(
             ?uniform_bind_group_layout,
             ?uniform_bind_group,
             "setup_uniform_bind_group"
         );
 
-        let texture_bind_group_layout = WgpuTexture::bind_group_layout(
-            &device,
-            Some("texture bind group layout"),
-            Self::TEXTURE_BINDING,
-            Self::SAMPLER_BINDING,
-        );
+        let texture_bind_group_layout = sprite::create_texture_binding_layout(&device);
         tracing::trace!(
             ?texture_bind_group_layout,
             "setup_texture_bind_group_layout"
@@ -212,7 +201,7 @@ impl<'window> RenderingResource<'window> {
                 });
 
                 rp.set_pipeline(self.render_pipeline.get());
-                rp.set_bind_group(1, &self.uniform_bind_group, &[]);
+                rp.set_bind_group(sprite::GROUP_TRANSFORM, &self.uniform_bind_group, &[]);
 
                 scene.render(&mut rp, self);
             }
@@ -328,36 +317,6 @@ fn setup_sampler(device: &w::Device) -> anyhow::Result<w::Sampler> {
     }))
 }
 
-fn setup_uniform_bind_group(
-    transform_uniform_buffer: &w::Buffer,
-    device: &w::Device,
-) -> anyhow::Result<(w::BindGroupLayout, w::BindGroup)> {
-    let bind_group_layout = device.create_bind_group_layout(&w::BindGroupLayoutDescriptor {
-        label: Some("Main Bind Group Layout"),
-        entries: &[w::BindGroupLayoutEntry {
-            binding: 0,
-            visibility: w::ShaderStages::VERTEX,
-            ty: w::BindingType::Buffer {
-                ty: w::BufferBindingType::Uniform,
-                has_dynamic_offset: false,
-                min_binding_size: w::BufferSize::new(size_of::<[f32; 4 * 4]>() as u64),
-            },
-            count: None,
-        }],
-    });
-
-    let bind_group = device.create_bind_group(&w::BindGroupDescriptor {
-        label: Some("Main Bind Group"),
-        layout: &bind_group_layout,
-        entries: &[w::BindGroupEntry {
-            binding: 0,
-            resource: transform_uniform_buffer.as_entire_binding(),
-        }],
-    });
-
-    Ok((bind_group_layout, bind_group))
-}
-
 fn setup_render_pipeline(
     device: &w::Device,
     bind_group_layouts: &[&w::BindGroupLayout],
@@ -368,4 +327,16 @@ fn setup_render_pipeline(
         bind_group_layouts,
         surface_format,
     ))
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct BindingId {
+    pub group: u32,
+    pub binding: u32,
+}
+
+impl BindingId {
+    pub const fn new(group: u32, binding: u32) -> Self {
+        Self { group, binding }
+    }
 }

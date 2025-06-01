@@ -14,7 +14,7 @@ use winit::{
 
 use crate::{
     game::Game,
-    render::RenderingResource,
+    render::{RenderingResource, sprite},
     scene::{Frame, Scene},
 };
 
@@ -57,8 +57,8 @@ impl<G: Game> App<'_, G> {
                 &r.render.queue,
                 &r.render.texture_bind_group_layout,
                 &r.render.texture_sampler,
-                RenderingResource::TEXTURE_BINDING,
-                RenderingResource::SAMPLER_BINDING,
+                sprite::BINDING_TEXTURE.binding,
+                sprite::BINDING_SAMPLER.binding,
             );
             println!("{:?}", scene);
             scene.setup(&r.render);

@@ -4,9 +4,9 @@ use tracing_unwrap::ResultExt;
 
 use crate::{
     model::sprite::SpriteVertex,
+    render::{RenderingResource, buffer::VertexIndexBuffer, sprite},
     scene::TransformComponent,
     texture::TextureId,
-    render::{RenderingResource, buffer::VertexIndexBuffer},
 };
 
 #[derive(Debug)]
@@ -93,7 +93,7 @@ impl SpriteComponent {
                 .get_texture_bind_group(self.texture)
                 .context("texture not found for index")
                 .unwrap_or_log();
-            rp.set_bind_group(0, bind_group, &[]);
+            rp.set_bind_group(sprite::GROUP_TEXTURE, bind_group, &[]);
             rp.set_index_buffer(buffer.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
             rp.set_vertex_buffer(0, buffer.vertex_buffer.slice(..));
             rp.draw_indexed(buffer.index_buffer_range.clone(), 0, 0..1);

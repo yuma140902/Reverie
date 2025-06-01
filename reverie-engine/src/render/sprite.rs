@@ -4,6 +4,16 @@ use wgpu as w;
 
 use crate::{model::sprite::SpriteVertex, render::vertex::Vertex};
 
+use super::{BindingId, texture::WgpuTexture};
+
+pub static LOC_VERTEX: u32 = 0;
+pub static LOC_UV: u32 = 1;
+pub static GROUP_TEXTURE: u32 = 0;
+pub static BINDING_TEXTURE: BindingId = BindingId::new(GROUP_TEXTURE, 0);
+pub static BINDING_SAMPLER: BindingId = BindingId::new(GROUP_TEXTURE, 1);
+pub static GROUP_TRANSFORM: u32 = 1;
+pub static BINDING_TRANSFORM: BindingId = BindingId::new(GROUP_TRANSFORM, 0);
+
 impl Vertex for SpriteVertex {
     const DESC: wgpu::VertexBufferLayout<'static> = w::VertexBufferLayout {
         array_stride: size_of::<Self>() as w::BufferAddress,
@@ -11,12 +21,12 @@ impl Vertex for SpriteVertex {
         attributes: &[
             w::VertexAttribute {
                 offset: 0,
-                shader_location: 0,
+                shader_location: LOC_VERTEX,
                 format: w::VertexFormat::Float32x3,
             },
             w::VertexAttribute {
                 offset: size_of::<[f32; 3]>() as w::BufferAddress,
-                shader_location: 1,
+                shader_location: LOC_UV,
                 format: w::VertexFormat::Float32x2,
             },
         ],
@@ -41,8 +51,8 @@ impl SpriteRenderPipeline {
         surface_format: w::TextureFormat,
     ) -> Self {
         let shader = device.create_shader_module(w::ShaderModuleDescriptor {
-            label: Some("shader.wgsl for sprite model"),
-            source: w::ShaderSource::Wgsl(Cow::Borrowed(include_str!("../shader.wgsl"))),
+            label: Some("sprite.wgsl"),
+            source: w::ShaderSource::Wgsl(Cow::Borrowed(include_str!("./sprite.wgsl"))),
         });
 
         let layout = device.create_pipeline_layout(&w::PipelineLayoutDescriptor {
@@ -103,4 +113,43 @@ impl SpriteRenderPipeline {
         });
         Self(pipeline)
     }
+}
+
+pub fn create_texture_binding_layout(device: &w::Device) -> w::BindGroupLayout {
+    WgpuTexture::bind_group_layout(
+        device,
+        Some("sprite texture bind group layout"),
+        BINDING_TEXTURE.binding,
+        BINDING_SAMPLER.binding,
+    )
+}
+
+pub fn create_uniform_bind_group(
+    device: &w::Device,
+    transform_uniform_buffer: &w::Buffer,
+) -> (w::BindGroupLayout, w::BindGroup) {
+    let layout = device.create_bind_group_layout(&w::BindGroupLayoutDescriptor {
+        label: Some("Main Bind Group Layout"),
+        entries: &[w::BindGroupLayoutEntry {
+            binding: BINDING_TRANSFORM.binding,
+            visibility: w::ShaderStages::VERTEX,
+            ty: w::BindingType::Buffer {
+                ty: w::BufferBindingType::Uniform,
+                has_dynamic_offset: false,
+                min_binding_size: w::BufferSize::new(size_of::<[f32; 4 * 4]>() as u64),
+            },
+            count: None,
+        }],
+    });
+
+    let bind_group = device.create_bind_group(&w::BindGroupDescriptor {
+        label: Some("Main Bind Group"),
+        layout: &layout,
+        entries: &[w::BindGroupEntry {
+            binding: BINDING_TRANSFORM.binding,
+            resource: transform_uniform_buffer.as_entire_binding(),
+        }],
+    });
+
+    (layout, bind_group)
 }

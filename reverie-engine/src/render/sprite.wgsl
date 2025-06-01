@@ -1,23 +1,31 @@
+const LOC_VERTEX: u32 = 0;
+const LOC_UV: u32 = 1;
+const GROUP_TEXTURE: u32 = 0;
+const BINDING_TEXTURE: u32 = 0;
+const BINDING_SAMPLER: u32 = 1;
+const GROUP_TRANSFORM: u32 = 1;
+const BINDING_TRANSFORM: u32 = 0;
+
 struct VertexInput {
-  @location(0) position: vec3<f32>,
-  @location(1) uv: vec2<f32>
+  @location(LOC_VERTEX) position: vec3<f32>,
+  @location(LOC_UV) uv: vec2<f32>
 }
 
 struct VertexOutput {
-  @location(0) uv: vec2<f32>,
+  @location(LOC_VERTEX) uv: vec2<f32>,
   @builtin(position) position: vec4<f32>
 }
 
-@group(0)
-@binding(0)
+@group(GROUP_TEXTURE)
+@binding(BINDING_TEXTURE)
 var tex: texture_2d<f32>;
 
-@group(0)
-@binding(1)
+@group(GROUP_TEXTURE)
+@binding(BINDING_SAMPLER)
 var samp: sampler;
 
-@group(1)
-@binding(0)
+@group(GROUP_TRANSFORM)
+@binding(BINDING_TRANSFORM)
 var<uniform> transform: mat4x4<f32>;
 
 @vertex
