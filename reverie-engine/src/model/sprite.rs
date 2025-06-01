@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use wgpu as w;
 
-use crate::model::Vertex;
+use crate::wgpu_wrapper::vertex::Vertex;
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
@@ -11,7 +11,7 @@ pub struct SpriteVertex {
     pub uv: [f32; 2],
 }
 
-impl super::Vertex for SpriteVertex {
+impl Vertex for SpriteVertex {
     const DESC: wgpu::VertexBufferLayout<'static> = w::VertexBufferLayout {
         array_stride: size_of::<Self>() as w::BufferAddress,
         step_mode: w::VertexStepMode::Vertex,

@@ -16,6 +16,7 @@ use texture::WgpuTexture;
 
 pub(crate) mod buffer;
 pub(crate) mod texture;
+pub mod vertex;
 
 /// wgpu を使うためのリソースをまとめた構造体
 pub struct WgpuResource<'window> {

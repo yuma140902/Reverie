@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use wgpu as w;
 
-use crate::model::Vertex;
+use super::vertex::Vertex;
 
 #[derive(Debug)]
 /// 頂点バッファとインデックスバッファをまとめた構造体
