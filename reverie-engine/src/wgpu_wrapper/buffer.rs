@@ -2,13 +2,13 @@ use std::ops::Range;
 
 use wgpu as w;
 
-use super::vertex::UvVertex;
+use crate::model::sprite::SpriteVertex;
 
 #[derive(Debug)]
 /// 頂点バッファとインデックスバッファをまとめた構造体
 pub struct VertexIndexBuffer {
     pub(crate) vertex_buffer: w::Buffer,
-    vertex_array: Vec<UvVertex>,
+    vertex_array: Vec<SpriteVertex>,
     pub(crate) index_buffer: w::Buffer,
     index_array: Vec<u16>,
     pub(crate) index_buffer_range: Range<u32>,
@@ -27,7 +27,7 @@ impl VertexIndexBuffer {
         let vertex_buffer = device.create_buffer(&w::BufferDescriptor {
             label: name_v.as_deref(),
             usage: w::BufferUsages::VERTEX | w::BufferUsages::COPY_DST,
-            size: (max_vertices * size_of::<UvVertex>()) as u64,
+            size: (max_vertices * size_of::<SpriteVertex>()) as u64,
             mapped_at_creation: false,
         });
         let index_buffer = device.create_buffer(&w::BufferDescriptor {
@@ -91,7 +91,7 @@ pub struct VertexIndexBufferUpdater<'a> {
 }
 
 impl VertexIndexBufferUpdater<'_> {
-    pub const fn vertex_mut(&mut self) -> &mut Vec<UvVertex> {
+    pub const fn vertex_mut(&mut self) -> &mut Vec<SpriteVertex> {
         &mut self.buffer.vertex_array
     }
 

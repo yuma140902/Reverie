@@ -3,9 +3,10 @@ use nalgebra::{Matrix4, Point3};
 use tracing_unwrap::ResultExt;
 
 use crate::{
+    model::sprite::SpriteVertex,
     scene::TransformComponent,
     texture::TextureId,
-    wgpu_wrapper::{buffer::VertexIndexBuffer, vertex::UvVertex, WgpuResource},
+    wgpu_wrapper::{WgpuResource, buffer::VertexIndexBuffer},
 };
 
 #[derive(Debug)]
@@ -58,19 +59,19 @@ impl SpriteComponent {
                 let range = {
                     let v = update.vertex_mut();
                     v.clear();
-                    v.push(UvVertex {
+                    v.push(SpriteVertex {
                         position: top_left.into(),
                         uv: [min_u, min_v],
                     });
-                    v.push(UvVertex {
+                    v.push(SpriteVertex {
                         position: top_right.into(),
                         uv: [max_u, min_v],
                     });
-                    v.push(UvVertex {
+                    v.push(SpriteVertex {
                         position: bottom_left.into(),
                         uv: [min_u, max_v],
                     });
-                    v.push(UvVertex {
+                    v.push(SpriteVertex {
                         position: bottom_right.into(),
                         uv: [max_u, max_v],
                     });

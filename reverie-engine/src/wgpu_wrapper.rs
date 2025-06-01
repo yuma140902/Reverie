@@ -7,16 +7,15 @@ use wgpu::{self as w, util::DeviceExt};
 
 use crate::{
     camera::{Camera, OrthographicCamera, PerspectiveCamera, Viewport},
+    model::sprite::SpriteVertex,
     scene::Scene,
     texture::{TextureId, TextureRegistry},
 };
 
 use texture::WgpuTexture;
-use vertex::UvVertex;
 
 pub(crate) mod buffer;
 pub(crate) mod texture;
-pub(crate) mod vertex;
 
 /// wgpu を使うためのリソースをまとめた構造体
 pub struct WgpuResource<'window> {
@@ -387,7 +386,7 @@ fn setup_render_pipeline(
             module: shader,
             entry_point: Some("vs_main"),
             compilation_options: Default::default(),
-            buffers: &[UvVertex::desc()],
+            buffers: &[SpriteVertex::desc()],
         },
         fragment: Some(w::FragmentState {
             module: shader,
