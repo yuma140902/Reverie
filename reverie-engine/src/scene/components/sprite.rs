@@ -13,7 +13,7 @@ use crate::{
 /// エンティティの見た目を表すコンポーネント
 pub struct SpriteComponent {
     texture: TextureId,
-    buffer: Option<VertexIndexBuffer>,
+    buffer: Option<VertexIndexBuffer<SpriteVertex>>,
 }
 
 impl SpriteComponent {
