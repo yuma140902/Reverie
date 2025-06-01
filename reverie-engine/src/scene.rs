@@ -8,7 +8,9 @@ mod components;
 mod entity;
 mod system;
 
-pub use components::{sprite::SpriteComponent, transform::TransformComponent};
+pub use components::{
+    colored::ColoredComponent, sprite::SpriteComponent, transform::TransformComponent,
+};
 pub use entity::EntityIndex;
 pub use system::{Frame, System};
 
@@ -20,12 +22,21 @@ pub struct Scene {
 }
 
 impl Scene {
-    pub fn new_entity(
+    pub fn new_sprite_entity(
         &mut self,
         transform: TransformComponent,
         sprite: SpriteComponent,
     ) -> EntityIndex {
         let entity = self.world.spawn((transform, sprite));
+        EntityIndex(entity)
+    }
+
+    pub fn new_colored_entity(
+        &mut self,
+        transform: TransformComponent,
+        colored: ColoredComponent,
+    ) -> EntityIndex {
+        let entity = self.world.spawn((transform, colored));
         EntityIndex(entity)
     }
 
@@ -46,6 +57,10 @@ impl Scene {
             sprite.setup(resource)
         }
 
+        for (_, colored) in self.world.query_mut::<&mut ColoredComponent>() {
+            colored.setup(resource)
+        }
+
         for system in &mut self.systems {
             system.setup(resource);
         }
@@ -58,6 +73,25 @@ impl Scene {
     }
 
     pub fn render(&mut self, rp: &mut wgpu::RenderPass<'_>, resource: &RenderingResource<'_>) {
+        rp.set_pipeline(&resource.colored_pipeline.pipeline);
+        rp.set_bind_group(
+            crate::render::colored::GROUP_TRANSFORM,
+            &resource.colored_pipeline.uniform_bind_group,
+            &[],
+        );
+        for (_, (transform, colored)) in self
+            .world
+            .query_mut::<(&TransformComponent, &mut ColoredComponent)>()
+        {
+            colored.render(rp, resource, transform);
+        }
+
+        rp.set_pipeline(&resource.sprite_pipeline.pipeline);
+        rp.set_bind_group(
+            crate::render::sprite::GROUP_TRANSFORM,
+            &resource.sprite_pipeline.uniform_bind_group,
+            &[],
+        );
         for (_, (transform, sprite)) in self
             .world
             .query_mut::<(&TransformComponent, &mut SpriteComponent)>()

@@ -2,8 +2,10 @@ use nalgebra::{Scale3, Translation3, UnitQuaternion, UnitVector3, Vector3};
 use rand::{Rng, SeedableRng, rngs::SmallRng};
 use reverie_engine::{
     Game,
-    scene::{EntityIndex, Frame, Scene, SpriteComponent, System, TransformComponent},
     render::RenderingResource,
+    scene::{
+        ColoredComponent, EntityIndex, Frame, Scene, SpriteComponent, System, TransformComponent,
+    },
 };
 use winit::event::{ElementState, MouseButton};
 
@@ -72,30 +74,53 @@ impl Game for LineDefense {
             for j in 0..9 {
                 let x = 0.1_f32.mul_add(i as f32, -0.4);
                 let y = 0.1_f32.mul_add(j as f32, -0.4);
-                let character = scene.new_entity(
-                    TransformComponent::new(
-                        Translation3::new(x, y, 0.0),
-                        Scale3::new(0.07, 0.07, 1.0),
-                        UnitQuaternion::from_axis_angle(
-                            &UnitVector3::new_normalize(Vector3::new(
-                                rng.random_range(-1.0..1.0),
-                                rng.random_range(-1.0..1.0),
-                                rng.random_range(-1.0..1.0),
-                            )),
-                            rng.random_range(0.0..80.0_f32).to_radians(),
+                let character = if rng.random_bool(0.5) {
+                    scene.new_sprite_entity(
+                        TransformComponent::new(
+                            Translation3::new(x, y, 0.0),
+                            Scale3::new(0.07, 0.07, 1.0),
+                            UnitQuaternion::from_axis_angle(
+                                &UnitVector3::new_normalize(Vector3::new(
+                                    rng.random_range(-1.0..1.0),
+                                    rng.random_range(-1.0..1.0),
+                                    rng.random_range(-1.0..1.0),
+                                )),
+                                rng.random_range(0.0..80.0_f32).to_radians(),
+                            ),
                         ),
-                    ),
-                    SpriteComponent::new(if rng.random_bool(0.5) {
-                        tex_apple
-                    } else {
-                        tex_cat
-                    }),
-                );
+                        SpriteComponent::new(if rng.random_bool(0.5) {
+                            tex_apple
+                        } else {
+                            tex_cat
+                        }),
+                    )
+                } else {
+                    scene.new_colored_entity(
+                        TransformComponent::new(
+                            Translation3::new(x, y, 0.0),
+                            Scale3::new(0.07, 0.07, 1.0),
+                            UnitQuaternion::from_axis_angle(
+                                &UnitVector3::new_normalize(Vector3::new(
+                                    rng.random_range(-1.0..1.0),
+                                    rng.random_range(-1.0..1.0),
+                                    rng.random_range(-1.0..1.0),
+                                )),
+                                rng.random_range(0.0..80.0_f32).to_radians(),
+                            ),
+                        ),
+                        ColoredComponent::new(
+                            [1.0, 0.0, 0.0, 1.0],
+                            [0.0, 1.0, 0.0, 1.0],
+                            [0.0, 0.0, 1.0, 1.0],
+                            [0.0, 1.0, 1.0, 1.0],
+                        ),
+                    )
+                };
                 characters.push(character);
             }
         }
 
-        scene.new_entity(
+        scene.new_sprite_entity(
             TransformComponent::with_translation_and_scale(
                 Translation3::new(0.0, 0.0, 0.0),
                 Scale3::new(1.0, 1.0, 1.0),

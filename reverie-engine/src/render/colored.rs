@@ -2,19 +2,16 @@ use std::borrow::Cow;
 
 use wgpu as w;
 
-use crate::{model::sprite::SpriteVertex, render::vertex::Vertex};
+use crate::model::colored::ColoredVertex;
 
-use super::{BindingId, texture::WgpuTexture, uniform};
+use super::{BindingId, uniform, vertex::Vertex};
 
 pub static LOC_VERTEX: u32 = 0;
-pub static LOC_UV: u32 = 1;
-pub static GROUP_TEXTURE: u32 = 0;
-pub static BINDING_TEXTURE: BindingId = BindingId::new(GROUP_TEXTURE, 0);
-pub static BINDING_SAMPLER: BindingId = BindingId::new(GROUP_TEXTURE, 1);
-pub static GROUP_TRANSFORM: u32 = 1;
+pub static LOC_COLOR: u32 = 1;
+pub static GROUP_TRANSFORM: u32 = 0;
 pub static BINDING_TRANSFORM: BindingId = BindingId::new(GROUP_TRANSFORM, 0);
 
-impl Vertex for SpriteVertex {
+impl Vertex for ColoredVertex {
     const DESC: wgpu::VertexBufferLayout<'static> = w::VertexBufferLayout {
         array_stride: size_of::<Self>() as w::BufferAddress,
         step_mode: w::VertexStepMode::Vertex,
@@ -26,32 +23,30 @@ impl Vertex for SpriteVertex {
             },
             w::VertexAttribute {
                 offset: size_of::<[f32; 3]>() as w::BufferAddress,
-                shader_location: LOC_UV,
-                format: w::VertexFormat::Float32x2,
+                shader_location: LOC_COLOR,
+                format: w::VertexFormat::Float32x4,
             },
         ],
     };
 }
 
 #[derive(Debug)]
-pub struct SpriteRenderPipeline {
+pub struct ColoredRenderPipeline {
     pub pipeline: w::RenderPipeline,
-    pub texture_bind_group_layout: w::BindGroupLayout,
     pub uniform_bind_group: w::BindGroup,
 }
 
-impl SpriteRenderPipeline {
+impl ColoredRenderPipeline {
     pub fn new(
         device: &w::Device,
         surface_format: w::TextureFormat,
         transform_uniform_buffer: &w::Buffer,
     ) -> Self {
         let shader = device.create_shader_module(w::ShaderModuleDescriptor {
-            label: Some("sprite.wgsl"),
-            source: w::ShaderSource::Wgsl(Cow::Borrowed(include_str!("./sprite.wgsl"))),
+            label: Some("colored.wgsl"),
+            source: w::ShaderSource::Wgsl(Cow::Borrowed(include_str!("./colored.wgsl"))),
         });
 
-        let texture_bind_group_layout = create_texture_binding_layout(device);
         let (uniform_bind_group_layout, uniform_bind_group) = uniform::create_mat4_bind_group(
             device,
             transform_uniform_buffer,
@@ -60,7 +55,7 @@ impl SpriteRenderPipeline {
 
         let pipeline_layout = device.create_pipeline_layout(&w::PipelineLayoutDescriptor {
             label: Some("sprite model render pipeline layout"),
-            bind_group_layouts: &[&texture_bind_group_layout, &uniform_bind_group_layout],
+            bind_group_layouts: &[&uniform_bind_group_layout],
             push_constant_ranges: &[],
         });
 
@@ -71,7 +66,7 @@ impl SpriteRenderPipeline {
                 module: &shader,
                 entry_point: Some("vs_main"),
                 compilation_options: Default::default(),
-                buffers: &[SpriteVertex::DESC],
+                buffers: &[ColoredVertex::DESC],
             },
             fragment: Some(w::FragmentState {
                 module: &shader,
@@ -117,17 +112,7 @@ impl SpriteRenderPipeline {
 
         Self {
             pipeline,
-            texture_bind_group_layout,
             uniform_bind_group,
         }
     }
-}
-
-fn create_texture_binding_layout(device: &w::Device) -> w::BindGroupLayout {
-    WgpuTexture::bind_group_layout(
-        device,
-        Some("sprite texture bind group layout"),
-        BINDING_TEXTURE.binding,
-        BINDING_SAMPLER.binding,
-    )
 }

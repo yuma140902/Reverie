@@ -2,6 +2,7 @@
 use std::num::NonZeroU32;
 
 use anyhow::Context;
+use colored::ColoredRenderPipeline;
 use nalgebra::{Point3, Vector3};
 use sprite::SpriteRenderPipeline;
 use wgpu::{self as w, util::DeviceExt};
@@ -15,15 +16,18 @@ use crate::{
 use texture::WgpuTexture;
 
 pub(crate) mod buffer;
+pub(crate) mod colored;
 pub(crate) mod sprite;
 pub(crate) mod texture;
+pub(crate) mod uniform;
 pub(crate) mod vertex;
 
 /// レンダリングを行うためのリソースをまとめた構造体
 pub struct RenderingResource<'window> {
     pub transform_uniform_buffer: w::Buffer,
     pub texture_sampler: w::Sampler,
-    pub render_pipeline: SpriteRenderPipeline,
+    pub sprite_pipeline: SpriteRenderPipeline,
+    pub colored_pipeline: ColoredRenderPipeline,
     pub surface: w::Surface<'window>,
     pub surface_config: w::SurfaceConfiguration,
     pub device: w::Device,
@@ -91,9 +95,12 @@ impl<'window> RenderingResource<'window> {
         let sampler = setup_sampler(&device)?;
         tracing::trace!(?sampler, "setup_sampler");
 
-        let render_pipeline =
+        let sprite_pipeline =
             SpriteRenderPipeline::new(&device, surface_format, &transform_uniform_buffer);
-        tracing::trace!(?render_pipeline, "setup_render_pipeline");
+        tracing::trace!(?sprite_pipeline, "setup_render_pipeline");
+
+        let colored_pipeline =
+            ColoredRenderPipeline::new(&device, surface_format, &transform_uniform_buffer);
 
         let texture_registry = TextureRegistry::default();
         tracing::trace!(?texture_registry, "setup_texture_registry");
@@ -104,7 +111,8 @@ impl<'window> RenderingResource<'window> {
         Ok(Self {
             transform_uniform_buffer,
             texture_sampler: sampler,
-            render_pipeline,
+            sprite_pipeline,
+            colored_pipeline,
             surface,
             surface_config,
             device,
@@ -178,13 +186,6 @@ impl<'window> RenderingResource<'window> {
                     timestamp_writes: None,
                     occlusion_query_set: None,
                 });
-
-                rp.set_pipeline(&self.render_pipeline.pipeline);
-                rp.set_bind_group(
-                    sprite::GROUP_TRANSFORM,
-                    &self.render_pipeline.uniform_bind_group,
-                    &[],
-                );
 
                 scene.render(&mut rp, self);
             }
