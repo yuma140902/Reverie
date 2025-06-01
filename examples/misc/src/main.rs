@@ -1,15 +1,15 @@
 use nalgebra::{Scale3, Translation3, UnitQuaternion, UnitVector3, Vector3};
-use rand::{rngs::SmallRng, Rng, SeedableRng};
+use rand::{Rng, SeedableRng, rngs::SmallRng};
 use reverie_engine::{
-    scene::{EntityIndex, Frame, Scene, SpriteComponent, System, TransformComponent},
-    wgpu_wrapper::WgpuResource,
     Game,
+    scene::{EntityIndex, Frame, Scene, SpriteComponent, System, TransformComponent},
+    render::RenderingResource,
 };
 use winit::event::{ElementState, MouseButton};
 
 fn setup_cli() {
-    use tracing_subscriber::fmt::format::FmtSpan;
     use tracing_subscriber::EnvFilter;
+    use tracing_subscriber::fmt::format::FmtSpan;
 
     tracing_subscriber::fmt()
         .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE)
@@ -124,9 +124,9 @@ impl RotateCharacters {
 }
 
 impl System for RotateCharacters {
-    fn setup(&mut self, _resource: &WgpuResource) {}
+    fn setup(&mut self, _resource: &RenderingResource) {}
 
-    fn update(&mut self, frame: &Frame, world: &mut hecs::World, _resource: &WgpuResource) {
+    fn update(&mut self, frame: &Frame, world: &mut hecs::World, _resource: &RenderingResource) {
         for e in world.iter() {
             if self.ids.iter().any(|i| i.0 == e.entity()) {
                 if let Some(ref mut transform) = e.get::<&mut TransformComponent>() {

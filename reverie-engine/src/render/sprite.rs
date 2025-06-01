@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use wgpu as w;
 
-use crate::{model::sprite::SpriteVertex, wgpu_wrapper::vertex::Vertex};
+use crate::{model::sprite::SpriteVertex, render::vertex::Vertex};
 
 impl Vertex for SpriteVertex {
     const DESC: wgpu::VertexBufferLayout<'static> = w::VertexBufferLayout {

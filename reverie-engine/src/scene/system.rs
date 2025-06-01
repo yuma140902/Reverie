@@ -5,7 +5,7 @@ use winit::{
     event::{ElementState, KeyEvent, MouseButton, MouseScrollDelta, TouchPhase},
 };
 
-use crate::wgpu_wrapper::WgpuResource;
+use crate::render::RenderingResource;
 
 #[derive(Debug)]
 /// フレームごとに更新される情報
@@ -19,7 +19,12 @@ pub struct Frame<'a> {
 }
 
 pub trait System {
-    fn setup(&mut self, resource: &WgpuResource<'_>);
+    fn setup(&mut self, resource: &RenderingResource<'_>);
 
-    fn update(&mut self, frame: &Frame<'_>, world: &mut hecs::World, resource: &WgpuResource<'_>);
+    fn update(
+        &mut self,
+        frame: &Frame<'_>,
+        world: &mut hecs::World,
+        resource: &RenderingResource<'_>,
+    );
 }

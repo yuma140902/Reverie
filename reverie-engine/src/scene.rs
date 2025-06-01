@@ -2,7 +2,7 @@
 
 use tracing_unwrap::ResultExt;
 
-use crate::wgpu_wrapper::WgpuResource;
+use crate::render::RenderingResource;
 
 mod components;
 mod entity;
@@ -41,7 +41,7 @@ impl Scene {
         self.systems.push(Box::new(system));
     }
 
-    pub fn setup(&mut self, resource: &WgpuResource<'_>) {
+    pub fn setup(&mut self, resource: &RenderingResource<'_>) {
         for (_, sprite) in self.world.query_mut::<&mut SpriteComponent>() {
             sprite.setup(resource)
         }
@@ -51,13 +51,13 @@ impl Scene {
         }
     }
 
-    pub fn update(&mut self, frame: &Frame<'_>, resource: &WgpuResource<'_>) {
+    pub fn update(&mut self, frame: &Frame<'_>, resource: &RenderingResource<'_>) {
         for system in &mut self.systems {
             system.update(frame, &mut self.world, resource);
         }
     }
 
-    pub fn render(&mut self, rp: &mut wgpu::RenderPass<'_>, resource: &WgpuResource<'_>) {
+    pub fn render(&mut self, rp: &mut wgpu::RenderPass<'_>, resource: &RenderingResource<'_>) {
         for (_, (transform, sprite)) in self
             .world
             .query_mut::<(&TransformComponent, &mut SpriteComponent)>()

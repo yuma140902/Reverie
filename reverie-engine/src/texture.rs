@@ -4,7 +4,7 @@ use etagere::{size2, AtlasAllocator};
 use image::{GenericImage, RgbaImage};
 use slotmap::SlotMap;
 
-use crate::wgpu_wrapper::texture::WgpuTexture;
+use crate::render::texture::WgpuTexture;
 
 #[derive(Debug)]
 /// テクスチャ

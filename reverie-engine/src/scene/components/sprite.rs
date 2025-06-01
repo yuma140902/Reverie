@@ -6,7 +6,7 @@ use crate::{
     model::sprite::SpriteVertex,
     scene::TransformComponent,
     texture::TextureId,
-    wgpu_wrapper::{WgpuResource, buffer::VertexIndexBuffer},
+    render::{RenderingResource, buffer::VertexIndexBuffer},
 };
 
 #[derive(Debug)]
@@ -24,7 +24,7 @@ impl SpriteComponent {
         }
     }
 
-    pub(crate) fn setup(&mut self, resource: &WgpuResource<'_>) {
+    pub(crate) fn setup(&mut self, resource: &RenderingResource<'_>) {
         let buffer = VertexIndexBuffer::new(&resource.device, 4, 6, None).unwrap_or_log();
         self.buffer = Some(buffer);
     }
@@ -32,7 +32,7 @@ impl SpriteComponent {
     pub(crate) fn render(
         &mut self,
         rp: &mut wgpu::RenderPass<'_>,
-        resource: &WgpuResource<'_>,
+        resource: &RenderingResource<'_>,
         transform: &TransformComponent,
     ) {
         if let Some(buffer) = &mut self.buffer {

@@ -14,8 +14,8 @@ use winit::{
 
 use crate::{
     game::Game,
+    render::RenderingResource,
     scene::{Frame, Scene},
-    wgpu_wrapper::WgpuResource,
 };
 
 pub struct App<'window, G: Game> {
@@ -49,19 +49,19 @@ impl<G: Game> App<'_, G> {
             let mut r = AppResource::new(event_loop).unwrap_or_log();
             let mut scene = self
                 .game
-                .generate_scene(&mut r.wgpu.texture_registry)
+                .generate_scene(&mut r.render.texture_registry)
                 .context("failed: generate scene")
                 .unwrap_or_log();
-            r.wgpu.texture_registry.send_all_to_gpu(
-                &r.wgpu.device,
-                &r.wgpu.queue,
-                &r.wgpu.texture_bind_group_layout,
-                &r.wgpu.texture_sampler,
-                WgpuResource::TEXTURE_BINDING,
-                WgpuResource::SAMPLER_BINDING,
+            r.render.texture_registry.send_all_to_gpu(
+                &r.render.device,
+                &r.render.queue,
+                &r.render.texture_bind_group_layout,
+                &r.render.texture_sampler,
+                RenderingResource::TEXTURE_BINDING,
+                RenderingResource::SAMPLER_BINDING,
             );
             println!("{:?}", scene);
-            scene.setup(&r.wgpu);
+            scene.setup(&r.render);
 
             self.resource = Some(r);
             self.scene = Some(scene);
@@ -80,14 +80,14 @@ impl<G: Game> App<'_, G> {
                 mouse_position: self.last_mouse_pos,
             };
 
-            scene.update(&frame, &r.wgpu);
+            scene.update(&frame, &r.render);
 
             self.last_update = now;
             self.key_events.clear();
             self.mouse_clicks.clear();
             self.mouse_wheels.clear();
 
-            r.wgpu.render(scene);
+            r.render.render(scene);
             r.window.0.request_redraw();
         }
     }
@@ -125,7 +125,7 @@ impl<G: Game> ApplicationHandler for App<'_, G> {
                     if let (Some(width), Some(height)) =
                         (NonZeroU32::new(size.width), NonZeroU32::new(size.height))
                     {
-                        r.wgpu.resize(width, height);
+                        r.render.resize(width, height);
                         r.window.0.request_redraw();
                     }
                 }
@@ -158,7 +158,7 @@ impl<G: Game> ApplicationHandler for App<'_, G> {
 
 pub struct AppResource<'window> {
     pub window: ArcWindow,
-    pub wgpu: WgpuResource<'window>,
+    pub render: RenderingResource<'window>,
 }
 
 impl AppResource<'_> {
@@ -177,10 +177,10 @@ impl AppResource<'_> {
             .try_into()
             .context("error: window inner height is zero")?;
 
-        let wgpu = pollster::block_on(WgpuResource::setup(window.clone(), width, height))
+        let render = pollster::block_on(RenderingResource::setup(window.clone(), width, height))
             .context("failed: setup wgpu")?;
 
-        Ok(Self { window, wgpu })
+        Ok(Self { window, render })
     }
 }
 

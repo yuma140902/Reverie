@@ -1,4 +1,4 @@
-//! wgpu をラップするモジュール
+//! レンダリングに関するモジュール
 use std::num::NonZeroU32;
 
 use anyhow::Context;
@@ -15,12 +15,12 @@ use crate::{
 use texture::WgpuTexture;
 
 pub(crate) mod buffer;
-pub mod sprite;
+pub(crate) mod sprite;
 pub(crate) mod texture;
-pub mod vertex;
+pub(crate) mod vertex;
 
-/// wgpu を使うためのリソースをまとめた構造体
-pub struct WgpuResource<'window> {
+/// レンダリングを行うためのリソースをまとめた構造体
+pub struct RenderingResource<'window> {
     pub transform_uniform_buffer: w::Buffer,
     pub texture_bind_group_layout: w::BindGroupLayout,
     pub texture_sampler: w::Sampler,
@@ -36,7 +36,7 @@ pub struct WgpuResource<'window> {
     pub depth_texture: WgpuTexture,
 }
 
-impl<'window> WgpuResource<'window> {
+impl<'window> RenderingResource<'window> {
     pub const TEXTURE_BINDING: u32 = 0;
     pub const SAMPLER_BINDING: u32 = 1;
 
