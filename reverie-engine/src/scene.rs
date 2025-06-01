@@ -86,10 +86,10 @@ impl Scene {
             colored.render(rp, resource, transform);
         }
 
-        rp.set_pipeline(&resource.render_pipeline.pipeline);
+        rp.set_pipeline(&resource.sprite_pipeline.pipeline);
         rp.set_bind_group(
             crate::render::sprite::GROUP_TRANSFORM,
-            &resource.render_pipeline.uniform_bind_group,
+            &resource.sprite_pipeline.uniform_bind_group,
             &[],
         );
         for (_, (transform, sprite)) in self

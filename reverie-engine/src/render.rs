@@ -25,7 +25,7 @@ pub(crate) mod vertex;
 pub struct RenderingResource<'window> {
     pub transform_uniform_buffer: w::Buffer,
     pub texture_sampler: w::Sampler,
-    pub render_pipeline: SpriteRenderPipeline,
+    pub sprite_pipeline: SpriteRenderPipeline,
     pub colored_pipeline: ColoredRenderPipeline,
     pub surface: w::Surface<'window>,
     pub surface_config: w::SurfaceConfiguration,
@@ -94,9 +94,9 @@ impl<'window> RenderingResource<'window> {
         let sampler = setup_sampler(&device)?;
         tracing::trace!(?sampler, "setup_sampler");
 
-        let render_pipeline =
+        let sprite_pipeline =
             SpriteRenderPipeline::new(&device, surface_format, &transform_uniform_buffer);
-        tracing::trace!(?render_pipeline, "setup_render_pipeline");
+        tracing::trace!(?sprite_pipeline, "setup_render_pipeline");
 
         let colored_pipeline =
             ColoredRenderPipeline::new(&device, surface_format, &transform_uniform_buffer);
@@ -110,7 +110,7 @@ impl<'window> RenderingResource<'window> {
         Ok(Self {
             transform_uniform_buffer,
             texture_sampler: sampler,
-            render_pipeline,
+            sprite_pipeline,
             colored_pipeline,
             surface,
             surface_config,
