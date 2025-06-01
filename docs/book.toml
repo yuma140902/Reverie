@@ -6,3 +6,7 @@ title = "Reverie Engine Documentation"
 
 [output.html]
 additional-js = ["assets/fzf.umd.js", "assets/elasticlunr.js"]
+git-repository-url = "https://github.com/yuma140902/Reverie"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/yuma140902/Reverie/edit/master/docs/{path}"
+site-url = "/Reverie/"
