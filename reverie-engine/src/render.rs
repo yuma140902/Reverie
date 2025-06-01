@@ -19,6 +19,7 @@ pub(crate) mod buffer;
 pub(crate) mod colored;
 pub(crate) mod sprite;
 pub(crate) mod texture;
+pub(crate) mod uniform;
 pub(crate) mod vertex;
 
 /// レンダリングを行うためのリソースをまとめた構造体

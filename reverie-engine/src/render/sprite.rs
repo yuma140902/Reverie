@@ -4,7 +4,7 @@ use wgpu as w;
 
 use crate::{model::sprite::SpriteVertex, render::vertex::Vertex};
 
-use super::{BindingId, texture::WgpuTexture};
+use super::{BindingId, texture::WgpuTexture, uniform};
 
 pub static LOC_VERTEX: u32 = 0;
 pub static LOC_UV: u32 = 1;
@@ -52,8 +52,11 @@ impl SpriteRenderPipeline {
         });
 
         let texture_bind_group_layout = create_texture_binding_layout(device);
-        let (uniform_bind_group_layout, uniform_bind_group) =
-            create_uniform_bind_group(device, transform_uniform_buffer);
+        let (uniform_bind_group_layout, uniform_bind_group) = uniform::create_mat4_bind_group(
+            device,
+            transform_uniform_buffer,
+            BINDING_TRANSFORM.binding,
+        );
 
         let pipeline_layout = device.create_pipeline_layout(&w::PipelineLayoutDescriptor {
             label: Some("sprite model render pipeline layout"),
@@ -127,34 +130,4 @@ fn create_texture_binding_layout(device: &w::Device) -> w::BindGroupLayout {
         BINDING_TEXTURE.binding,
         BINDING_SAMPLER.binding,
     )
-}
-
-fn create_uniform_bind_group(
-    device: &w::Device,
-    transform_uniform_buffer: &w::Buffer,
-) -> (w::BindGroupLayout, w::BindGroup) {
-    let layout = device.create_bind_group_layout(&w::BindGroupLayoutDescriptor {
-        label: Some("Main Bind Group Layout"),
-        entries: &[w::BindGroupLayoutEntry {
-            binding: BINDING_TRANSFORM.binding,
-            visibility: w::ShaderStages::VERTEX,
-            ty: w::BindingType::Buffer {
-                ty: w::BufferBindingType::Uniform,
-                has_dynamic_offset: false,
-                min_binding_size: w::BufferSize::new(size_of::<[f32; 4 * 4]>() as u64),
-            },
-            count: None,
-        }],
-    });
-
-    let bind_group = device.create_bind_group(&w::BindGroupDescriptor {
-        label: Some("Main Bind Group"),
-        layout: &layout,
-        entries: &[w::BindGroupEntry {
-            binding: BINDING_TRANSFORM.binding,
-            resource: transform_uniform_buffer.as_entire_binding(),
-        }],
-    });
-
-    (layout, bind_group)
 }
