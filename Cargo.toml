@@ -1,5 +1,5 @@
 [workspace.package]
-version = "0.3.0"
+version = "0.4.0"
 authors  = ["yuma140902 <yuma140902@gmail.com>"]
 edition = "2024"
 license = "MIT OR Apache-2.0"
@@ -15,8 +15,8 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-reverie-util = { version = "0.3.0", path = "./reverie-util" }
-reverie-engine = { version = "0.3.0", path = "./reverie-engine" }
+reverie-util = { version = "0.4.0", path = "./reverie-util" }
+reverie-engine = { version = "0.4.0", path = "./reverie-engine" }
 
 anyhow = "1.0.98"
 approx = "0.5.1"

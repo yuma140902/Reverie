@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0](https://github.com/yuma140902/reverie/compare/v0.3.0..v0.4.0) - 2025-06-01
+
+### ✨ Features
+
+- Multiple color on ColoredComponent - ([13f5f96](https://github.com/yuma140902/reverie/commit/13f5f966b3242469b75956fb7fc0cab1941c0921))
+- [**breaking**] Rename Scene.new_entity to new_sprite_entity - ([0ca9de8](https://github.com/yuma140902/reverie/commit/0ca9de888fa6a056e34be0bfb403a98f207c5c78))
+- Add ColoredComponent - ([3904fd0](https://github.com/yuma140902/reverie/commit/3904fd091f1d84123594bcb4affe7666428458a5))
+- [**breaking**] Rename wgpu_wrapper module to render, WgpuResource struct to RenderingResource - ([ced9888](https://github.com/yuma140902/reverie/commit/ced9888df7934883eea2560e9bc6865f363bcfbb))
+- Enable alpha_to_coverage_enabled - ([72d8c84](https://github.com/yuma140902/reverie/commit/72d8c84c9703fc5cbefc7e8e69d9a9742baf6a6a))
+- Add depth texture - ([3b2eed1](https://github.com/yuma140902/reverie/commit/3b2eed1f702ef34dab29c4e6e8b3a0fc8b20d0fe))
+
+### 🐛 Bug Fixes
+
+- Constant - ([951591e](https://github.com/yuma140902/reverie/commit/951591e25ac54c0624891eb128e138c70c506d81))
+
+### ♻️ Refactor
+
+- Add render::uniform module - ([f118965](https://github.com/yuma140902/reverie/commit/f118965340a63a4b0c760792bc19a2e3e753da37))
+- Rename render_pipeline to sprite_pipeline - ([15d85cc](https://github.com/yuma140902/reverie/commit/15d85cce6d234dab10d563437b784a4d63630d7e))
+- Texture_bind_group_layout と uniform_bind_group はシェーダ固有の値なので sprite module へ移動 - ([5d4162b](https://github.com/yuma140902/reverie/commit/5d4162b32b26fa85c5cb144951c69cb3a25f6806))
+- Shader constants and binding layouts - ([0bf6a42](https://github.com/yuma140902/reverie/commit/0bf6a42383ff39471e75eff93325cbcefbd6394f))
+- Move SpriteRenderPipeline to wgpu_wrapper - ([5dc8342](https://github.com/yuma140902/reverie/commit/5dc83429e7c83b261fc358e6fc2cd094a5efc5c0))
+- Move Vertex trait to wgpu_wrapper - ([858372d](https://github.com/yuma140902/reverie/commit/858372d8c6c99e570b532d8dc8fc0e524285ce1c))
+- Add SpriteRenderPipeline - ([481a74b](https://github.com/yuma140902/reverie/commit/481a74bfd4f9c87d6457f21f4b8c5c8eefa6bec3))
+- Add Vertex trait - ([a62ba6d](https://github.com/yuma140902/reverie/commit/a62ba6db9cd0f320ead224ce521d11dd2d13d77c))
+- Make VertexIndexBuffer generic to vertex struct - ([b35c711](https://github.com/yuma140902/reverie/commit/b35c711c181311ec6f4c86c039f0c892a5e57509))
+- Rename UvVertex to SpriteVertex - ([9b15057](https://github.com/yuma140902/reverie/commit/9b150571f010f4119f4199eb86316690f2af6e33))
+
+### 📝 Documentation
+
+- Update - ([1797703](https://github.com/yuma140902/reverie/commit/17977034023939217ba3070479bdf50d085146c1))
+
+### 🔀 Pull Requests
+
+- [#171](https://github.com/yuma140902/reverie/pull/171)
+- [#168](https://github.com/yuma140902/reverie/pull/168)
+
 ## [0.3.0](https://github.com/yuma140902/reverie/compare/v0.2.0..v0.3.0) - 2025-05-31
 
 ### ✨ Features
@@ -43,6 +80,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🔀 Pull Requests
 
+- [#163](https://github.com/yuma140902/reverie/pull/163)
 - [#162](https://github.com/yuma140902/reverie/pull/162)
 - [#161](https://github.com/yuma140902/reverie/pull/161)
 - [#160](https://github.com/yuma140902/reverie/pull/160)
