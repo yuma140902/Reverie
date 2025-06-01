@@ -6,9 +6,11 @@
 
 A toy game engine
 
-## Examples
+## Example
 
-- `cargo run -p example-misc`
+```sh
+cargo run -p example-misc
+```
 
 ## Links
 
