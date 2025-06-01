@@ -55,7 +55,7 @@ impl<G: Game> App<'_, G> {
             r.render.texture_registry.send_all_to_gpu(
                 &r.render.device,
                 &r.render.queue,
-                &r.render.texture_bind_group_layout,
+                &r.render.render_pipeline.texture_bind_group_layout,
                 &r.render.texture_sampler,
                 sprite::BINDING_TEXTURE.binding,
                 sprite::BINDING_SAMPLER.binding,

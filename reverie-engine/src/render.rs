@@ -22,9 +22,7 @@ pub(crate) mod vertex;
 /// レンダリングを行うためのリソースをまとめた構造体
 pub struct RenderingResource<'window> {
     pub transform_uniform_buffer: w::Buffer,
-    pub texture_bind_group_layout: w::BindGroupLayout,
     pub texture_sampler: w::Sampler,
-    pub uniform_bind_group: w::BindGroup,
     pub render_pipeline: SpriteRenderPipeline,
     pub surface: w::Surface<'window>,
     pub surface_config: w::SurfaceConfiguration,
@@ -93,25 +91,8 @@ impl<'window> RenderingResource<'window> {
         let sampler = setup_sampler(&device)?;
         tracing::trace!(?sampler, "setup_sampler");
 
-        let (uniform_bind_group_layout, uniform_bind_group) =
-            sprite::create_uniform_bind_group(&device, &transform_uniform_buffer);
-        tracing::trace!(
-            ?uniform_bind_group_layout,
-            ?uniform_bind_group,
-            "setup_uniform_bind_group"
-        );
-
-        let texture_bind_group_layout = sprite::create_texture_binding_layout(&device);
-        tracing::trace!(
-            ?texture_bind_group_layout,
-            "setup_texture_bind_group_layout"
-        );
-
-        let render_pipeline = setup_render_pipeline(
-            &device,
-            &[&texture_bind_group_layout, &uniform_bind_group_layout],
-            surface_format,
-        )?;
+        let render_pipeline =
+            SpriteRenderPipeline::new(&device, surface_format, &transform_uniform_buffer);
         tracing::trace!(?render_pipeline, "setup_render_pipeline");
 
         let texture_registry = TextureRegistry::default();
@@ -122,9 +103,7 @@ impl<'window> RenderingResource<'window> {
 
         Ok(Self {
             transform_uniform_buffer,
-            texture_bind_group_layout,
             texture_sampler: sampler,
-            uniform_bind_group,
             render_pipeline,
             surface,
             surface_config,
@@ -200,8 +179,12 @@ impl<'window> RenderingResource<'window> {
                     occlusion_query_set: None,
                 });
 
-                rp.set_pipeline(self.render_pipeline.get());
-                rp.set_bind_group(sprite::GROUP_TRANSFORM, &self.uniform_bind_group, &[]);
+                rp.set_pipeline(&self.render_pipeline.pipeline);
+                rp.set_bind_group(
+                    sprite::GROUP_TRANSFORM,
+                    &self.render_pipeline.uniform_bind_group,
+                    &[],
+                );
 
                 scene.render(&mut rp, self);
             }
@@ -315,18 +298,6 @@ fn setup_sampler(device: &w::Device) -> anyhow::Result<w::Sampler> {
         mipmap_filter: w::FilterMode::Nearest,
         ..Default::default()
     }))
-}
-
-fn setup_render_pipeline(
-    device: &w::Device,
-    bind_group_layouts: &[&w::BindGroupLayout],
-    surface_format: w::TextureFormat,
-) -> anyhow::Result<SpriteRenderPipeline> {
-    Ok(SpriteRenderPipeline::new(
-        device,
-        bind_group_layouts,
-        surface_format,
-    ))
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

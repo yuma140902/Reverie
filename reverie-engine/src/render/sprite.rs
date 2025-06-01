@@ -34,36 +34,36 @@ impl Vertex for SpriteVertex {
 }
 
 #[derive(Debug)]
-pub struct SpriteRenderPipeline(w::RenderPipeline);
+pub struct SpriteRenderPipeline {
+    pub pipeline: w::RenderPipeline,
+    pub texture_bind_group_layout: w::BindGroupLayout,
+    pub uniform_bind_group: w::BindGroup,
+}
 
 impl SpriteRenderPipeline {
-    pub const fn get(&self) -> &w::RenderPipeline {
-        &self.0
-    }
-
-    pub const fn get_mut(&mut self) -> &mut w::RenderPipeline {
-        &mut self.0
-    }
-
     pub fn new(
         device: &w::Device,
-        bind_group_layouts: &[&w::BindGroupLayout],
         surface_format: w::TextureFormat,
+        transform_uniform_buffer: &w::Buffer,
     ) -> Self {
         let shader = device.create_shader_module(w::ShaderModuleDescriptor {
             label: Some("sprite.wgsl"),
             source: w::ShaderSource::Wgsl(Cow::Borrowed(include_str!("./sprite.wgsl"))),
         });
 
-        let layout = device.create_pipeline_layout(&w::PipelineLayoutDescriptor {
+        let texture_bind_group_layout = create_texture_binding_layout(device);
+        let (uniform_bind_group_layout, uniform_bind_group) =
+            create_uniform_bind_group(device, transform_uniform_buffer);
+
+        let pipeline_layout = device.create_pipeline_layout(&w::PipelineLayoutDescriptor {
             label: Some("sprite model render pipeline layout"),
-            bind_group_layouts,
+            bind_group_layouts: &[&texture_bind_group_layout, &uniform_bind_group_layout],
             push_constant_ranges: &[],
         });
 
         let pipeline = device.create_render_pipeline(&w::RenderPipelineDescriptor {
             label: Some("sprite model render pipeline"),
-            layout: Some(&layout),
+            layout: Some(&pipeline_layout),
             vertex: w::VertexState {
                 module: &shader,
                 entry_point: Some("vs_main"),
@@ -111,11 +111,16 @@ impl SpriteRenderPipeline {
             multiview: None,
             cache: None,
         });
-        Self(pipeline)
+
+        Self {
+            pipeline,
+            texture_bind_group_layout,
+            uniform_bind_group,
+        }
     }
 }
 
-pub fn create_texture_binding_layout(device: &w::Device) -> w::BindGroupLayout {
+fn create_texture_binding_layout(device: &w::Device) -> w::BindGroupLayout {
     WgpuTexture::bind_group_layout(
         device,
         Some("sprite texture bind group layout"),
@@ -124,7 +129,7 @@ pub fn create_texture_binding_layout(device: &w::Device) -> w::BindGroupLayout {
     )
 }
 
-pub fn create_uniform_bind_group(
+fn create_uniform_bind_group(
     device: &w::Device,
     transform_uniform_buffer: &w::Buffer,
 ) -> (w::BindGroupLayout, w::BindGroup) {
