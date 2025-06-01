@@ -7,7 +7,7 @@ use wgpu::{self as w, util::DeviceExt};
 
 use crate::{
     camera::{Camera, OrthographicCamera, PerspectiveCamera, Viewport},
-    model::sprite::SpriteVertex,
+    model::{Vertex, sprite::SpriteVertex},
     scene::Scene,
     texture::{TextureId, TextureRegistry},
 };
@@ -386,7 +386,7 @@ fn setup_render_pipeline(
             module: shader,
             entry_point: Some("vs_main"),
             compilation_options: Default::default(),
-            buffers: &[SpriteVertex::desc()],
+            buffers: &[SpriteVertex::DESC],
         },
         fragment: Some(w::FragmentState {
             module: shader,
