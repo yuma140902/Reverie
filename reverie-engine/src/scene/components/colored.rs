@@ -9,14 +9,25 @@ use crate::{
 
 pub struct ColoredComponent {
     /// RGBA
-    color: [f32; 4],
+    color0: [f32; 4],
+    color1: [f32; 4],
+    color2: [f32; 4],
+    color3: [f32; 4],
     buffer: Option<VertexIndexBuffer<ColoredVertex>>,
 }
 
 impl ColoredComponent {
-    pub const fn new(color: [f32; 4]) -> Self {
+    pub const fn new(
+        color0: [f32; 4],
+        color1: [f32; 4],
+        color2: [f32; 4],
+        color3: [f32; 4],
+    ) -> Self {
         Self {
-            color,
+            color0,
+            color1,
+            color2,
+            color3,
             buffer: None,
         }
     }
@@ -54,19 +65,19 @@ impl ColoredComponent {
                     v.clear();
                     v.push(ColoredVertex {
                         position: top_left.into(),
-                        color: self.color,
+                        color: self.color0,
                     });
                     v.push(ColoredVertex {
                         position: top_right.into(),
-                        color: self.color,
+                        color: self.color1,
                     });
                     v.push(ColoredVertex {
                         position: bottom_left.into(),
-                        color: self.color,
+                        color: self.color2,
                     });
                     v.push(ColoredVertex {
                         position: bottom_right.into(),
-                        color: self.color,
+                        color: self.color3,
                     });
                     0..v.len()
                 };

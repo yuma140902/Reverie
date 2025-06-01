@@ -108,7 +108,12 @@ impl Game for LineDefense {
                                 rng.random_range(0.0..80.0_f32).to_radians(),
                             ),
                         ),
-                        ColoredComponent::new([1.0, 0.0, 0.0, 1.0]),
+                        ColoredComponent::new(
+                            [1.0, 0.0, 0.0, 1.0],
+                            [0.0, 1.0, 0.0, 1.0],
+                            [0.0, 0.0, 1.0, 1.0],
+                            [0.0, 1.0, 1.0, 1.0],
+                        ),
                     )
                 };
                 characters.push(character);
