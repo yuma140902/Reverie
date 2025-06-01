@@ -1,5 +1,5 @@
 //! wgpu をラップするモジュール
-use std::{borrow::Cow, num::NonZeroU32};
+use std::num::NonZeroU32;
 
 use anyhow::Context;
 use nalgebra::{Point3, Vector3};
@@ -7,7 +7,7 @@ use wgpu::{self as w, util::DeviceExt};
 
 use crate::{
     camera::{Camera, OrthographicCamera, PerspectiveCamera, Viewport},
-    model::{Vertex, sprite::SpriteVertex},
+    model::sprite::SpriteRenderPipeline,
     scene::Scene,
     texture::{TextureId, TextureRegistry},
 };
@@ -23,7 +23,7 @@ pub struct WgpuResource<'window> {
     pub texture_bind_group_layout: w::BindGroupLayout,
     pub texture_sampler: w::Sampler,
     pub uniform_bind_group: w::BindGroup,
-    pub render_pipeline: w::RenderPipeline,
+    pub render_pipeline: SpriteRenderPipeline,
     pub surface: w::Surface<'window>,
     pub surface_config: w::SurfaceConfiguration,
     pub device: w::Device,
@@ -69,9 +69,6 @@ impl<'window> WgpuResource<'window> {
             ?queue,
             "setup_instance_surface_adapter_device_queue"
         );
-
-        let shader = setup_shader(&device)?;
-        tracing::trace!(?shader, "setup_shader");
 
         let viewport = Viewport { width, height };
         let camera = if true {
@@ -120,10 +117,9 @@ impl<'window> WgpuResource<'window> {
         );
 
         let render_pipeline = setup_render_pipeline(
-            &shader,
+            &device,
             &[&texture_bind_group_layout, &uniform_bind_group_layout],
             surface_format,
-            &device,
         )?;
         tracing::trace!(?render_pipeline, "setup_render_pipeline");
 
@@ -213,7 +209,7 @@ impl<'window> WgpuResource<'window> {
                     occlusion_query_set: None,
                 });
 
-                rp.set_pipeline(&self.render_pipeline);
+                rp.set_pipeline(self.render_pipeline.get());
                 rp.set_bind_group(1, &self.uniform_bind_group, &[]);
 
                 scene.render(&mut rp, self);
@@ -304,13 +300,6 @@ where
     ))
 }
 
-fn setup_shader(device: &w::Device) -> anyhow::Result<w::ShaderModule> {
-    Ok(device.create_shader_module(w::ShaderModuleDescriptor {
-        label: Some("Shader from shader.wgsl"),
-        source: w::ShaderSource::Wgsl(Cow::Borrowed(include_str!("./shader.wgsl"))),
-    }))
-}
-
 fn setup_uniform_buffer(
     device: &w::Device,
     camera: &Camera,
@@ -368,67 +357,13 @@ fn setup_uniform_bind_group(
 }
 
 fn setup_render_pipeline(
-    shader: &w::ShaderModule,
+    device: &w::Device,
     bind_group_layouts: &[&w::BindGroupLayout],
     surface_format: w::TextureFormat,
-    device: &w::Device,
-) -> anyhow::Result<w::RenderPipeline> {
-    let render_pipeline_layout = device.create_pipeline_layout(&w::PipelineLayoutDescriptor {
-        label: Some("Render Pipeline Layout"),
+) -> anyhow::Result<SpriteRenderPipeline> {
+    Ok(SpriteRenderPipeline::new(
+        device,
         bind_group_layouts,
-        push_constant_ranges: &[],
-    });
-
-    let render_pipeline = device.create_render_pipeline(&w::RenderPipelineDescriptor {
-        label: Some("Render Pipeline"),
-        layout: Some(&render_pipeline_layout),
-        vertex: w::VertexState {
-            module: shader,
-            entry_point: Some("vs_main"),
-            compilation_options: Default::default(),
-            buffers: &[SpriteVertex::DESC],
-        },
-        fragment: Some(w::FragmentState {
-            module: shader,
-            entry_point: Some("fs_main"),
-            compilation_options: Default::default(),
-            targets: &[Some(w::ColorTargetState {
-                format: surface_format,
-                blend: Some(w::BlendState {
-                    color: w::BlendComponent {
-                        src_factor: w::BlendFactor::SrcAlpha,
-                        dst_factor: w::BlendFactor::OneMinusSrcAlpha,
-                        operation: w::BlendOperation::Add,
-                    },
-                    alpha: w::BlendComponent::OVER,
-                }),
-                write_mask: w::ColorWrites::ALL,
-            })],
-        }),
-        primitive: w::PrimitiveState {
-            topology: w::PrimitiveTopology::TriangleList,
-            strip_index_format: None,
-            front_face: w::FrontFace::Ccw,
-            cull_mode: Some(w::Face::Back),
-            unclipped_depth: false,
-            polygon_mode: w::PolygonMode::Fill,
-            conservative: false,
-        },
-        depth_stencil: Some(w::DepthStencilState {
-            format: w::TextureFormat::Depth32Float,
-            depth_write_enabled: true,
-            depth_compare: w::CompareFunction::Less,
-            stencil: w::StencilState::default(),
-            bias: w::DepthBiasState::default(),
-        }),
-        multisample: w::MultisampleState {
-            count: 1,
-            mask: !0,
-            alpha_to_coverage_enabled: true,
-        },
-        multiview: None,
-        cache: None,
-    });
-
-    Ok(render_pipeline)
+        surface_format,
+    ))
 }
