@@ -3,11 +3,11 @@ use std::num::NonZeroU32;
 
 use anyhow::Context;
 use nalgebra::{Point3, Vector3};
+use sprite::SpriteRenderPipeline;
 use wgpu::{self as w, util::DeviceExt};
 
 use crate::{
     camera::{Camera, OrthographicCamera, PerspectiveCamera, Viewport},
-    model::sprite::SpriteRenderPipeline,
     scene::Scene,
     texture::{TextureId, TextureRegistry},
 };
@@ -15,6 +15,7 @@ use crate::{
 use texture::WgpuTexture;
 
 pub(crate) mod buffer;
+pub mod sprite;
 pub(crate) mod texture;
 pub mod vertex;
 
