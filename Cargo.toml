@@ -18,7 +18,7 @@ resolver = "2"
 reverie-util = { version = "0.4.0", path = "./reverie-util" }
 reverie-engine = { version = "0.4.0", path = "./reverie-engine" }
 
-anyhow = "1.0.98"
+anyhow = "1.0.99"
 approx = "0.5.1"
 bytemuck = { version = "1.23.0", features = ["derive"] }
 dotenvy = "0.15.7"
