@@ -20,7 +20,7 @@ reverie-engine = { version = "0.4.0", path = "./reverie-engine" }
 
 anyhow = "1.0.98"
 approx = "0.5.1"
-bytemuck = { version = "1.23.0", features = ["derive"] }
+bytemuck = { version = "1.23.2", features = ["derive"] }
 dotenvy = "0.15.7"
 etagere = "0.2.15"
 hecs = "0.10.5"
