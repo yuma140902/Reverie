@@ -20,7 +20,6 @@ approx = "0.5.1"
 bytemuck = { version = "1.24.0", features = ["derive"] }
 dotenvy = "0.15.7"
 etagere = "0.2.15"
-hecs = "0.10.5"
 image = { version = "0.25.9", default-features = false }
 nalgebra = { version = "0.34.1", features = ["bytemuck"] }
 nalgebra-glm = "0.20.0"

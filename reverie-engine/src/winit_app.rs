@@ -15,7 +15,7 @@ use winit::{
 use crate::{
     game::Game,
     render::{RenderingResource, sprite},
-    scene::{Frame, Scene},
+    scene::{Scene, frame::Frame},
 };
 
 pub struct App<'window, G: Game> {
