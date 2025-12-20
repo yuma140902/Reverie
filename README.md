@@ -28,7 +28,13 @@ See [CHANGELOG.md](./CHANGELOG.md).
 To generate changelog, install [git-cliff](https://github.com/orhun/git-cliff) and run
 
 ```sh
-git cliff --config git-cliff.toml -o CHANGELOG.md
+git checkout master
+git cliff --config git-cliff.toml --tag [next version] -o CHANGELOG.md
+git commit -m "release [next version]"
+git tag [next version]
+git push --tags
+cargo publish -p reverie-engine
+cargo publish -p reverie-util
 ```
 
 ### Commit message
