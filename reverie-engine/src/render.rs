@@ -174,6 +174,7 @@ impl<'window> RenderingResource<'window> {
                             }),
                             store: wgpu::StoreOp::Store,
                         },
+                        depth_slice: None,
                     })],
                     depth_stencil_attachment: Some(w::RenderPassDepthStencilAttachment {
                         view: &self.depth_texture.view,
@@ -185,6 +186,7 @@ impl<'window> RenderingResource<'window> {
                     }),
                     timestamp_writes: None,
                     occlusion_query_set: None,
+                    multiview_mask: None,
                 });
 
                 scene.render(&mut rp, self);
@@ -239,6 +241,7 @@ where
             required_limits: w::Limits::default(),
             memory_hints: w::MemoryHints::default(),
             trace: w::Trace::Off,
+            experimental_features: Default::default(),
         })
         .await
         .context("fail: request device")?;
@@ -296,7 +299,7 @@ fn setup_sampler(device: &w::Device) -> anyhow::Result<w::Sampler> {
         address_mode_w: w::AddressMode::ClampToEdge,
         mag_filter: w::FilterMode::Nearest,
         min_filter: w::FilterMode::Nearest,
-        mipmap_filter: w::FilterMode::Nearest,
+        mipmap_filter: w::MipmapFilterMode::Nearest,
         ..Default::default()
     }))
 }

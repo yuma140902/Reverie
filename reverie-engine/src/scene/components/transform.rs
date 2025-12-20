@@ -64,7 +64,7 @@ impl TransformComponent {
         )
     }
 
-    pub fn to_isometry3(&self) -> Isometry3<f32> {
+    pub const fn to_isometry3(&self) -> Isometry3<f32> {
         Isometry3::from_parts(self.translation, self.rotation)
     }
 }
