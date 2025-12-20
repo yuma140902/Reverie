@@ -1,6 +1,6 @@
 //! テクスチャに関するモジュール
 use anyhow::Context;
-use etagere::{size2, AtlasAllocator};
+use etagere::{AtlasAllocator, size2};
 use image::{GenericImage, RgbaImage};
 use slotmap::SlotMap;
 
@@ -177,7 +177,7 @@ impl TextureRegistry {
             TextureId::Atlas(allocation) => {
                 let texture = self
                     .arena
-                    .get(allocation.0 .0)
+                    .get(allocation.0.0)
                     .with_context(|| format!("no such texture: {:?}", allocation.0))?;
                 if let Texture {
                     usage: TextureUsage::Atlas(allocator),
@@ -242,7 +242,7 @@ impl TextureRegistry {
             TextureId::Atlas(allocation) => {
                 let texture = self
                     .arena
-                    .get(allocation.0 .0)
+                    .get(allocation.0.0)
                     .with_context(|| format!("no such texture: {:?}", allocation.0))?;
                 if let Texture {
                     data: TextureData::Gpu(_, bind_group),

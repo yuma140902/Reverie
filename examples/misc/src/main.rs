@@ -153,16 +153,15 @@ impl System for RotateCharacters {
 
     fn update(&mut self, frame: &Frame, world: &mut hecs::World, _resource: &RenderingResource) {
         for e in world.iter() {
-            if self.ids.iter().any(|i| i.0 == e.entity()) {
-                if let Some(ref mut transform) = e.get::<&mut TransformComponent>() {
-                    if self.is_moving {
-                        let rot = UnitQuaternion::from_axis_angle(
-                            &Vector3::z_axis(),
-                            10.0 * frame.delta_time.as_secs_f32(),
-                        );
-                        transform.rotation *= rot;
-                    }
-                }
+            if self.ids.iter().any(|i| i.0 == e.entity())
+                && let Some(ref mut transform) = e.get::<&mut TransformComponent>()
+                && self.is_moving
+            {
+                let rot = UnitQuaternion::from_axis_angle(
+                    &Vector3::z_axis(),
+                    10.0 * frame.delta_time.as_secs_f32(),
+                );
+                transform.rotation *= rot;
             }
         }
         for (state, button, _) in frame.mouse_clicks {

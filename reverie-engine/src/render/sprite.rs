@@ -61,7 +61,7 @@ impl SpriteRenderPipeline {
         let pipeline_layout = device.create_pipeline_layout(&w::PipelineLayoutDescriptor {
             label: Some("sprite model render pipeline layout"),
             bind_group_layouts: &[&texture_bind_group_layout, &uniform_bind_group_layout],
-            push_constant_ranges: &[],
+            immediate_size: 0,
         });
 
         let pipeline = device.create_render_pipeline(&w::RenderPipelineDescriptor {
@@ -111,8 +111,8 @@ impl SpriteRenderPipeline {
                 mask: !0,
                 alpha_to_coverage_enabled: true,
             },
-            multiview: None,
             cache: None,
+            multiview_mask: None,
         });
 
         Self {

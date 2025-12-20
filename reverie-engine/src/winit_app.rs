@@ -99,10 +99,10 @@ impl<G: Game> ApplicationHandler for App<'_, G> {
         _event_loop: &winit::event_loop::ActiveEventLoop,
         cause: winit::event::StartCause,
     ) {
-        if cause == winit::event::StartCause::Poll {
-            if let Some(r) = self.resource.as_ref() {
-                r.window.0.request_redraw();
-            }
+        if cause == winit::event::StartCause::Poll
+            && let Some(r) = self.resource.as_ref()
+        {
+            r.window.0.request_redraw();
         }
     }
 
@@ -121,13 +121,12 @@ impl<G: Game> ApplicationHandler for App<'_, G> {
                 self.resource = None;
             }
             WindowEvent::Resized(size) => {
-                if let Some(r) = self.resource.as_mut() {
-                    if let (Some(width), Some(height)) =
+                if let Some(r) = self.resource.as_mut()
+                    && let (Some(width), Some(height)) =
                         (NonZeroU32::new(size.width), NonZeroU32::new(size.height))
-                    {
-                        r.render.resize(width, height);
-                        r.window.0.request_redraw();
-                    }
+                {
+                    r.render.resize(width, height);
+                    r.window.0.request_redraw();
                 }
             }
             WindowEvent::RedrawRequested => self.update(),
