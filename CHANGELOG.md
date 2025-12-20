@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0](https://github.com/yuma140902/reverie/compare/v0.4.0..v0.5.0) - 2025-12-20
+
+### 🐛 Bug Fixes
+
+- *(ci)* Fix mdbook build error ([#185](https://github.com/yuma140902/reverie/issues/185)) - ([8c2c57c](https://github.com/yuma140902/reverie/commit/8c2c57cd58bda80504c2254362a685b25c2fe6a8))
+
+### 📝 Documentation
+
+- リリース方法についてもっと細かく書く ([#184](https://github.com/yuma140902/reverie/issues/184)) - ([0243fa3](https://github.com/yuma140902/reverie/commit/0243fa3283cbb273ea0588adfc8c9d1ee598f8d7))
+
+### 👷 Build System
+
+- Add copilot instructions ([#183](https://github.com/yuma140902/reverie/issues/183)) - ([23336e2](https://github.com/yuma140902/reverie/commit/23336e23f1344e26ac52deb567789cd806adf584))
+- Update dependencies ([#182](https://github.com/yuma140902/reverie/issues/182)) - ([e1af57c](https://github.com/yuma140902/reverie/commit/e1af57cbcf06c896491338f520dc61038832cf92))
+- Update ([#181](https://github.com/yuma140902/reverie/issues/181)) - ([00b19ed](https://github.com/yuma140902/reverie/commit/00b19ed26cf58bac9988abedfb249f53f42cb236))
+
 ## [0.4.0](https://github.com/yuma140902/reverie/compare/v0.3.0..v0.4.0) - 2025-06-01
 
 ### ✨ Features
@@ -36,6 +52,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🔀 Pull Requests
 
+- [#172](https://github.com/yuma140902/reverie/pull/172)
 - [#171](https://github.com/yuma140902/reverie/pull/171)
 - [#168](https://github.com/yuma140902/reverie/pull/168)
 
