@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use nalgebra::{Affine3, Isometry3, Matrix4, Scale3, Translation3, UnitQuaternion};
 
 #[derive(Debug)]

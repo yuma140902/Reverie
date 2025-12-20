@@ -2,25 +2,24 @@
 name = "reverie-engine"
 version.workspace = true
 authors.workspace = true
-categories = ["game-engines"]
-description = "A toy game engine"
 edition.workspace = true
-license.workspace = true
+rust-version.workspace = true
+description = "A toy game engine"
 readme = "../README.md"
 repository.workspace = true
-rust-version.workspace = true
+license.workspace = true
+categories = ["game-engines"]
 
 [dependencies]
 anyhow.workspace = true
 bytemuck.workspace = true
 etagere.workspace = true
-hecs.workspace = true
 image.workspace = true
 nalgebra.workspace = true
 nalgebra-glm.workspace = true
 pollster.workspace = true
 slotmap.workspace = true
-tracing-unwrap.workspace = true
 tracing.workspace = true
+tracing-unwrap.workspace = true
 wgpu.workspace = true
 winit.workspace = true

@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use anyhow::Context;
 use nalgebra::{Matrix4, Point3};
 use tracing_unwrap::ResultExt;
