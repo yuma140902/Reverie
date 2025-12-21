@@ -19,7 +19,6 @@ image.workspace = true
 nalgebra.workspace = true
 nalgebra-glm.workspace = true
 pollster.workspace = true
-qcell.workspace = true
 slotmap.workspace = true
 tracing.workspace = true
 tracing-unwrap.workspace = true
