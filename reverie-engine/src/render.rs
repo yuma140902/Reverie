@@ -2,7 +2,6 @@
 use std::num::NonZeroU32;
 
 use anyhow::Context;
-use colored::ColoredRenderPipeline;
 use nalgebra::{Point3, Vector3};
 use sprite::SpriteRenderPipeline;
 use wgpu::{self as w, util::DeviceExt};
@@ -15,7 +14,6 @@ use crate::{
 use texture::WgpuTexture;
 
 pub(crate) mod buffer;
-pub(crate) mod colored;
 pub(crate) mod sprite;
 pub(crate) mod texture;
 pub(crate) mod uniform;
@@ -26,7 +24,6 @@ pub struct RenderingResource<'window> {
     pub transform_uniform_buffer: w::Buffer,
     pub texture_sampler: w::Sampler,
     pub sprite_pipeline: SpriteRenderPipeline,
-    pub colored_pipeline: ColoredRenderPipeline,
     pub surface: w::Surface<'window>,
     pub surface_config: w::SurfaceConfiguration,
     pub device: w::Device,
@@ -97,9 +94,6 @@ impl<'window> RenderingResource<'window> {
             SpriteRenderPipeline::new(&device, surface_format, &transform_uniform_buffer);
         tracing::trace!(?sprite_pipeline, "setup_render_pipeline");
 
-        let colored_pipeline =
-            ColoredRenderPipeline::new(&device, surface_format, &transform_uniform_buffer);
-
         let depth_texture =
             WgpuTexture::create_depth_texture(&device, width, height, Some("depth_texture"));
 
@@ -107,7 +101,6 @@ impl<'window> RenderingResource<'window> {
             transform_uniform_buffer,
             texture_sampler: sampler,
             sprite_pipeline,
-            colored_pipeline,
             surface,
             surface_config,
             device,
@@ -312,7 +305,6 @@ mod shader_test {
 
     #[rstest]
     #[case::sprite(include_str!("./render/sprite.wgsl"))]
-    #[case::colored(include_str!("./render/colored.wgsl"))]
     fn shader_compiles(#[case] source: &str) {
         let module = naga::front::wgsl::parse_str(source).expect("WGSL parse error");
         let mut validator = naga::valid::Validator::new(

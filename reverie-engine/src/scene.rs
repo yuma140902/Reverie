@@ -11,8 +11,7 @@ mod components;
 pub mod frame;
 
 pub use components::{
-    colored::ColoredComponent, model::ModelComponent, sprite::SpriteComponent,
-    transform::TransformComponent,
+    model::ModelComponent, sprite::SpriteComponent, transform::TransformComponent,
 };
 
 #[derive(Debug, Default)]
@@ -38,13 +37,6 @@ impl Scene {
     pub const fn update(&mut self, _frame: &Frame<'_>, _resource: &RenderingResource<'_>) {}
 
     pub fn render(&mut self, rp: &mut wgpu::RenderPass<'_>, resource: &RenderingResource<'_>) {
-        rp.set_pipeline(&resource.colored_pipeline.pipeline);
-        rp.set_bind_group(
-            crate::render::colored::GROUP_TRANSFORM,
-            &resource.colored_pipeline.uniform_bind_group,
-            &[],
-        );
-
         rp.set_pipeline(&resource.sprite_pipeline.pipeline);
         rp.set_bind_group(
             crate::render::sprite::GROUP_TRANSFORM,
