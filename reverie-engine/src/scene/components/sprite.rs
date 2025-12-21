@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 use anyhow::Context;
-use nalgebra::{Matrix4, Point3};
+use nalgebra::{Matrix4, Point3, Vector3};
 use tracing_unwrap::ResultExt;
 
 use crate::{
@@ -50,23 +50,16 @@ impl SpriteComponent {
                     0.0, 0.0, 0.0, 0.0, //
                     1.0, 1.0, 1.0, 1.0, //
                 );
-                const NORMALS: Matrix4<f32> = Matrix4::new(
-                    0.0, 0.0, 0.0, 0.0, //
-                    0.0, 0.0, 0.0, 0.0, //
-                    1.0, 1.0, 1.0, 1.0, //
-                    0.0, 0.0, 0.0, 0.0, //
-                );
                 let points = affine.matrix() * POINTS;
                 let tl = Point3::from_homogeneous(points.column(0).into()).unwrap();
                 let tr = Point3::from_homogeneous(points.column(1).into()).unwrap();
                 let bl = Point3::from_homogeneous(points.column(2).into()).unwrap();
                 let br = Point3::from_homogeneous(points.column(3).into()).unwrap();
 
-                let normals = affine.matrix() * NORMALS;
-                let tln = Point3::from_homogeneous(normals.column(0).into()).unwrap();
-                let trn = Point3::from_homogeneous(normals.column(1).into()).unwrap();
-                let bln = Point3::from_homogeneous(normals.column(2).into()).unwrap();
-                let brn = Point3::from_homogeneous(normals.column(3).into()).unwrap();
+                let normal = transform
+                    .rotation
+                    .transform_vector(&Vector3::new(0., 0., 1.))
+                    .into();
 
                 let range = {
                     let v = update.vertex_mut();
@@ -74,22 +67,22 @@ impl SpriteComponent {
                     v.push(Vertex {
                         position: tl.into(),
                         uv: [min_u, min_v],
-                        normal: tln.into(),
+                        normal,
                     });
                     v.push(Vertex {
                         position: tr.into(),
                         uv: [max_u, min_v],
-                        normal: trn.into(),
+                        normal,
                     });
                     v.push(Vertex {
                         position: bl.into(),
                         uv: [min_u, max_v],
-                        normal: bln.into(),
+                        normal,
                     });
                     v.push(Vertex {
                         position: br.into(),
                         uv: [max_u, max_v],
-                        normal: brn.into(),
+                        normal,
                     });
                     0..v.len()
                 };
