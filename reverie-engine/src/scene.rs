@@ -14,7 +14,7 @@ pub use components::{
 pub struct Scene {
     pub meshes: Registry<MeshKey, Mesh>,
     pub materials: Registry<MaterialKey, Material>,
-    pub game_objects: Registry<GameObjectKey, GameObject>,
+    pub game_objects: DenseRegistry<GameObjectKey, GameObject>,
 }
 
 impl Scene {
@@ -39,11 +39,33 @@ impl Scene {
     }
 }
 
+/// 汎用レジストリ
+///
+/// ## [`DenseRegistry`] との使い分け
+///
+/// イテレーションよりもランダムアクセスが多い場合は [`Registry`] を使用する。
 pub struct Registry<K: slotmap::Key, V> {
+    map: slotmap::SlotMap<K, V>,
+}
+
+/// 密な汎用レジストリ
+///
+/// ## [`Registry`] との使い分け
+///
+/// イテレーションが多くランダムアクセスが少ない場合は [`DenseRegistry`] を使用する。
+pub struct DenseRegistry<K: slotmap::Key, V> {
     map: slotmap::DenseSlotMap<K, V>,
 }
 
 impl<K: slotmap::Key, V> Default for Registry<K, V> {
+    fn default() -> Self {
+        Self {
+            map: Default::default(),
+        }
+    }
+}
+
+impl<K: slotmap::Key, V> Default for DenseRegistry<K, V> {
     fn default() -> Self {
         Self {
             map: Default::default(),
@@ -87,6 +109,15 @@ impl<K: slotmap::Key, V> std::fmt::Debug for Registry<K, V> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let Self { map } = self;
         f.debug_struct("Registry").field("len", &map.len()).finish()
+    }
+}
+
+impl<K: slotmap::Key, V> std::fmt::Debug for DenseRegistry<K, V> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { map } = self;
+        f.debug_struct("DenseRegistry")
+            .field("len", &map.len())
+            .finish()
     }
 }
 
