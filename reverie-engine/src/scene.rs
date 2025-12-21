@@ -2,8 +2,9 @@
 
 use crate::{
     model::{Material, MaterialKey, Mesh, MeshKey},
-    render::RenderingResource,
+    render::{RenderingResource, sprite},
     scene::frame::Frame,
+    texture::TextureRegistry,
 };
 
 mod components;
@@ -19,10 +20,20 @@ pub struct Scene {
     pub meshes: Registry<MeshKey, Mesh>,
     pub materials: Registry<MaterialKey, Material>,
     pub game_objects: DenseRegistry<GameObjectKey, GameObject>,
+    pub textures: TextureRegistry,
 }
 
 impl Scene {
-    pub const fn setup(&mut self, _resource: &RenderingResource<'_>) {}
+    pub fn setup(&mut self, r: &RenderingResource<'_>) {
+        self.textures.send_all_to_gpu(
+            &r.device,
+            &r.queue,
+            &r.sprite_pipeline.texture_bind_group_layout,
+            &r.texture_sampler,
+            sprite::BINDING_TEXTURE.binding,
+            sprite::BINDING_SAMPLER.binding,
+        );
+    }
 
     pub const fn update(&mut self, _frame: &Frame<'_>, _resource: &RenderingResource<'_>) {}
 

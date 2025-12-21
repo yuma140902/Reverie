@@ -6,7 +6,7 @@ use tracing_unwrap::ResultExt;
 use crate::{
     model::sprite::SpriteVertex,
     render::{RenderingResource, buffer::VertexIndexBuffer, sprite},
-    scene::TransformComponent,
+    scene::{Scene, TransformComponent},
     texture::TextureId,
 };
 
@@ -32,6 +32,7 @@ impl SpriteComponent {
 
     pub(crate) fn render(
         &mut self,
+        scene: &Scene,
         rp: &mut wgpu::RenderPass<'_>,
         resource: &RenderingResource<'_>,
         transform: &TransformComponent,
@@ -40,10 +41,8 @@ impl SpriteComponent {
             // バッファのアップデート
             {
                 let mut update = buffer.start_update(&resource.queue);
-                let (min_u, min_v, max_u, max_v) = resource
-                    .texture_registry
-                    .get_uv(self.texture)
-                    .unwrap_or_log();
+                let (min_u, min_v, max_u, max_v) =
+                    scene.textures.get_uv(self.texture).unwrap_or_log();
                 let affine = transform.to_affine3();
                 const POINTS: Matrix4<f32> = Matrix4::new(
                     -0.5, 0.5, -0.5, 0.5, //
@@ -90,8 +89,9 @@ impl SpriteComponent {
                 update.set_render_range(range.start as u32..range.end as u32);
             }
 
-            let bind_group = resource
-                .get_texture_bind_group(self.texture)
+            let bind_group = scene
+                .textures
+                .get_bind_group(self.texture)
                 .context("texture not found for index")
                 .unwrap_or_log();
             rp.set_bind_group(sprite::GROUP_TEXTURE, bind_group, &[]);
