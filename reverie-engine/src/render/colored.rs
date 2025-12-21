@@ -4,14 +4,14 @@ use wgpu as w;
 
 use crate::model::colored::ColoredVertex;
 
-use super::{BindingId, uniform, vertex::Vertex};
+use super::{BindingId, uniform, vertex::VertexLayout};
 
 pub static LOC_VERTEX: u32 = 0;
 pub static LOC_COLOR: u32 = 1;
 pub static GROUP_TRANSFORM: u32 = 0;
 pub static BINDING_TRANSFORM: BindingId = BindingId::new(GROUP_TRANSFORM, 0);
 
-impl Vertex for ColoredVertex {
+impl VertexLayout for ColoredVertex {
     const DESC: wgpu::VertexBufferLayout<'static> = w::VertexBufferLayout {
         array_stride: size_of::<Self>() as w::BufferAddress,
         step_mode: w::VertexStepMode::Vertex,

@@ -1,4 +1,4 @@
-pub trait Vertex: bytemuck::Pod + bytemuck::Zeroable {
+pub trait VertexLayout {
     /// 頂点バッファのレイアウト
     const DESC: wgpu::VertexBufferLayout<'static>;
 }
