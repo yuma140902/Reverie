@@ -14,7 +14,7 @@ use winit::{
 
 use crate::{
     game::Game,
-    render::{RenderingResource, sprite},
+    render::RenderingResource,
     scene::{Scene, frame::Frame},
 };
 
@@ -46,20 +46,12 @@ impl<G: Game> App<'_, G> {
     #[tracing::instrument(level = "trace", skip(self))]
     fn setup(&mut self, event_loop: &winit::event_loop::ActiveEventLoop) {
         if self.resource.is_none() {
-            let mut r = AppResource::new(event_loop).unwrap_or_log();
+            let r = AppResource::new(event_loop).unwrap_or_log();
             let mut scene = self
                 .game
-                .generate_scene(&mut r.render.texture_registry)
+                .generate_scene()
                 .context("failed: generate scene")
                 .unwrap_or_log();
-            r.render.texture_registry.send_all_to_gpu(
-                &r.render.device,
-                &r.render.queue,
-                &r.render.sprite_pipeline.texture_bind_group_layout,
-                &r.render.texture_sampler,
-                sprite::BINDING_TEXTURE.binding,
-                sprite::BINDING_SAMPLER.binding,
-            );
             println!("{:?}", scene);
             scene.setup(&r.render);
 

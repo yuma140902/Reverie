@@ -2,8 +2,9 @@
 
 use crate::{
     model::{Material, MaterialKey, Mesh, MeshKey},
-    render::RenderingResource,
+    render::{RenderingResource, sprite},
     scene::frame::Frame,
+    texture::TextureRegistry,
 };
 
 mod components;
@@ -19,10 +20,20 @@ pub struct Scene {
     pub meshes: Registry<MeshKey, Mesh>,
     pub materials: Registry<MaterialKey, Material>,
     pub game_objects: DenseRegistry<GameObjectKey, GameObject>,
+    pub textures: TextureRegistry,
 }
 
 impl Scene {
-    pub const fn setup(&mut self, _resource: &RenderingResource<'_>) {}
+    pub fn setup(&mut self, r: &RenderingResource<'_>) {
+        self.textures.send_all_to_gpu(
+            &r.device,
+            &r.queue,
+            &r.sprite_pipeline.texture_bind_group_layout,
+            &r.texture_sampler,
+            sprite::BINDING_TEXTURE.binding,
+            sprite::BINDING_SAMPLER.binding,
+        );
+    }
 
     pub const fn update(&mut self, _frame: &Frame<'_>, _resource: &RenderingResource<'_>) {}
 
@@ -49,7 +60,7 @@ impl Scene {
 ///
 /// イテレーションよりもランダムアクセスが多い場合は [`Registry`] を使用する。
 pub struct Registry<K: slotmap::Key, V> {
-    map: slotmap::SlotMap<K, V>,
+    pub(crate) map: slotmap::SlotMap<K, V>,
 }
 
 /// 密な汎用レジストリ
@@ -58,7 +69,7 @@ pub struct Registry<K: slotmap::Key, V> {
 ///
 /// イテレーションが多くランダムアクセスが少ない場合は [`DenseRegistry`] を使用する。
 pub struct DenseRegistry<K: slotmap::Key, V> {
-    map: slotmap::DenseSlotMap<K, V>,
+    pub(crate) map: slotmap::DenseSlotMap<K, V>,
 }
 
 impl<K: slotmap::Key, V> Default for Registry<K, V> {

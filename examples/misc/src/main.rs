@@ -22,10 +22,7 @@ fn main() -> anyhow::Result<()> {
 pub struct LineDefense {}
 
 impl Game for LineDefense {
-    fn generate_scene(
-        &mut self,
-        _registry: &mut reverie_engine::texture::TextureRegistry,
-    ) -> anyhow::Result<Scene> {
+    fn generate_scene(&mut self) -> anyhow::Result<Scene> {
         Ok(Scene::default())
     }
 }

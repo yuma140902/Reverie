@@ -10,7 +10,6 @@ use wgpu::{self as w, util::DeviceExt};
 use crate::{
     camera::{Camera, OrthographicCamera, PerspectiveCamera, Viewport},
     scene::Scene,
-    texture::{TextureId, TextureRegistry},
 };
 
 use texture::WgpuTexture;
@@ -32,7 +31,6 @@ pub struct RenderingResource<'window> {
     pub surface_config: w::SurfaceConfiguration,
     pub device: w::Device,
     pub queue: w::Queue,
-    pub texture_registry: TextureRegistry,
     pub camera: Camera,
     pub viewport: Viewport,
     pub depth_texture: WgpuTexture,
@@ -102,9 +100,6 @@ impl<'window> RenderingResource<'window> {
         let colored_pipeline =
             ColoredRenderPipeline::new(&device, surface_format, &transform_uniform_buffer);
 
-        let texture_registry = TextureRegistry::default();
-        tracing::trace!(?texture_registry, "setup_texture_registry");
-
         let depth_texture =
             WgpuTexture::create_depth_texture(&device, width, height, Some("depth_texture"));
 
@@ -117,7 +112,6 @@ impl<'window> RenderingResource<'window> {
             surface_config,
             device,
             queue,
-            texture_registry,
             camera,
             viewport,
             depth_texture,
@@ -142,10 +136,6 @@ impl<'window> RenderingResource<'window> {
 
         self.depth_texture =
             WgpuTexture::create_depth_texture(&self.device, width, height, Some("depth_texture"));
-    }
-
-    pub fn get_texture_bind_group(&self, texture: TextureId) -> anyhow::Result<&w::BindGroup> {
-        self.texture_registry.get_bind_group(texture)
     }
 
     pub fn render(&self, scene: &mut Scene) {

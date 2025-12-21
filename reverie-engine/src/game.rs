@@ -1,12 +1,12 @@
 //! Game トレイト
-use crate::{scene::Scene, texture::TextureRegistry, winit_app::App};
+use crate::{scene::Scene, winit_app::App};
 
 /// ゲームが実装すべきトレイト
 pub trait Game {
     /// シーンを生成する
     ///
     /// ゲームが開始されたときに呼ばれる。
-    fn generate_scene(&mut self, registry: &mut TextureRegistry) -> anyhow::Result<Scene>;
+    fn generate_scene(&mut self) -> anyhow::Result<Scene>;
 }
 
 pub fn start_engine<G: Game>(game: G) -> anyhow::Result<()> {

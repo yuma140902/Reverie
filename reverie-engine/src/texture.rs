@@ -2,9 +2,8 @@
 use anyhow::Context;
 use etagere::{AtlasAllocator, size2};
 use image::{GenericImage, RgbaImage};
-use slotmap::SlotMap;
 
-use crate::render::texture::WgpuTexture;
+use crate::{render::texture::WgpuTexture, scene::Registry};
 
 #[derive(Debug)]
 /// テクスチャ
@@ -83,6 +82,11 @@ impl std::fmt::Debug for TextureUsage {
     }
 }
 
+slotmap::new_key_type! {
+    /// [`TextureRegistry`]に登録された単一のテクスチャを指すインデックス
+    pub struct TextureIndex;
+}
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 /// [`TextureRegistry`]に登録されたテクスチャを指す識別子
 ///
@@ -104,9 +108,14 @@ impl From<Allocation> for TextureId {
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
-/// [`TextureRegistry`]に登録された単一のテクスチャを指すインデックス
-pub struct TextureIndex(slotmap::DefaultKey);
+impl TextureId {
+    pub const fn get_texture_index(&self) -> &TextureIndex {
+        match self {
+            Self::Single(index) => index,
+            Self::Atlas(allocation) => &allocation.0,
+        }
+    }
+}
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 /// [`TextureRegistry`]に登録されたアトラステクスチャ内のアロケーションを指す識別子
@@ -114,9 +123,7 @@ pub struct Allocation(TextureIndex, etagere::AllocId);
 
 #[derive(Debug, Default)]
 /// テクスチャを管理するレジストリ
-pub struct TextureRegistry {
-    arena: SlotMap<slotmap::DefaultKey, Texture>,
-}
+pub struct TextureRegistry(Registry<TextureIndex, Texture>);
 
 impl TextureRegistry {
     pub fn new_texture(&mut self, image: RgbaImage, label: Option<String>) -> TextureIndex {
@@ -125,7 +132,7 @@ impl TextureRegistry {
             usage: TextureUsage::Single,
             label,
         };
-        TextureIndex(self.arena.insert(texture))
+        self.0.map.insert(texture)
     }
 
     pub fn create_atlas_texture(
@@ -140,7 +147,7 @@ impl TextureRegistry {
             usage: TextureUsage::Atlas(AtlasAllocator::new(size2(width as i32, height as i32))),
             label,
         };
-        TextureIndex(self.arena.insert(texture))
+        self.0.map.insert(texture)
     }
 
     pub fn allocate_sub_image(
@@ -149,8 +156,9 @@ impl TextureRegistry {
         sub_image: RgbaImage,
     ) -> anyhow::Result<Allocation> {
         let texture = self
-            .arena
-            .get_mut(index.0)
+            .0
+            .map
+            .get_mut(index)
             .with_context(|| format!("no such texture: {:?}", index))?;
         if let Texture {
             data: TextureData::Cpu(image),
@@ -176,8 +184,9 @@ impl TextureRegistry {
             TextureId::Single(_) => Ok((0.0, 0.0, 1.0, 1.0)),
             TextureId::Atlas(allocation) => {
                 let texture = self
-                    .arena
-                    .get(allocation.0.0)
+                    .0
+                    .map
+                    .get(allocation.0)
                     .with_context(|| format!("no such texture: {:?}", allocation.0))?;
                 if let Texture {
                     usage: TextureUsage::Atlas(allocator),
@@ -210,7 +219,7 @@ impl TextureRegistry {
         texture_binding: u32,
         sampler_binding: u32,
     ) {
-        for (_, texture) in self.arena.iter_mut() {
+        for (_, texture) in self.0.map.iter_mut() {
             texture.send_to_gpu(
                 device,
                 queue,
@@ -223,37 +232,20 @@ impl TextureRegistry {
     }
 
     pub fn get_bind_group(&self, id: TextureId) -> anyhow::Result<&wgpu::BindGroup> {
-        match id {
-            TextureId::Single(index) => {
-                let texture = self
-                    .arena
-                    .get(index.0)
-                    .with_context(|| format!("no such texture: {:?}", index))?;
-                if let Texture {
-                    data: TextureData::Gpu(_, bind_group),
-                    ..
-                } = texture
-                {
-                    Ok(bind_group)
-                } else {
-                    anyhow::bail!("texture is not on GPU")
-                }
-            }
-            TextureId::Atlas(allocation) => {
-                let texture = self
-                    .arena
-                    .get(allocation.0.0)
-                    .with_context(|| format!("no such texture: {:?}", allocation.0))?;
-                if let Texture {
-                    data: TextureData::Gpu(_, bind_group),
-                    ..
-                } = texture
-                {
-                    Ok(bind_group)
-                } else {
-                    anyhow::bail!("texture is not on GPU")
-                }
-            }
+        let index = id.get_texture_index();
+        let texture = self
+            .0
+            .map
+            .get(*index)
+            .with_context(|| format!("no such texture: {:?}", index))?;
+        if let Texture {
+            data: TextureData::Gpu(_, bind_group),
+            ..
+        } = texture
+        {
+            Ok(bind_group)
+        } else {
+            anyhow::bail!("texture is not on GPU")
         }
     }
 }
