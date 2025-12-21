@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use wgpu as w;
 
-use crate::{model::sprite::SpriteVertex, render::vertex::Vertex};
+use crate::{model::sprite::SpriteVertex, render::vertex::VertexLayout};
 
 use super::{BindingId, texture::WgpuTexture, uniform};
 
@@ -14,7 +14,7 @@ pub static BINDING_SAMPLER: BindingId = BindingId::new(GROUP_TEXTURE, 1);
 pub static GROUP_TRANSFORM: u32 = 1;
 pub static BINDING_TRANSFORM: BindingId = BindingId::new(GROUP_TRANSFORM, 0);
 
-impl Vertex for SpriteVertex {
+impl VertexLayout for SpriteVertex {
     const DESC: wgpu::VertexBufferLayout<'static> = w::VertexBufferLayout {
         array_stride: size_of::<Self>() as w::BufferAddress,
         step_mode: w::VertexStepMode::Vertex,

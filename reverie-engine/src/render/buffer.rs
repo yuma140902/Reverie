@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use wgpu as w;
 
-use super::vertex::Vertex;
+use super::vertex::VertexLayout;
 
 #[derive(Debug)]
 /// 頂点バッファとインデックスバッファをまとめた構造体
@@ -14,7 +14,7 @@ pub struct VertexIndexBuffer<V> {
     pub(crate) index_buffer_range: Range<u32>,
 }
 
-impl<V: Vertex> VertexIndexBuffer<V> {
+impl<V: VertexLayout + bytemuck::Pod> VertexIndexBuffer<V> {
     pub fn new(
         device: &w::Device,
         max_vertices: usize,
@@ -83,14 +83,14 @@ impl<V: Vertex> VertexIndexBuffer<V> {
 
 #[derive(Debug)]
 /// [`VertexIndexBuffer`] の更新を行うための構造体。Drop されると GPU にデータを送信する
-pub struct VertexIndexBufferUpdater<'a, V: Vertex> {
+pub struct VertexIndexBufferUpdater<'a, V: VertexLayout + bytemuck::Pod> {
     buffer: &'a mut VertexIndexBuffer<V>,
     queue: &'a w::Queue,
     vertex_update: Range<usize>,
     index_update: Range<usize>,
 }
 
-impl<V: Vertex> VertexIndexBufferUpdater<'_, V> {
+impl<V: VertexLayout + bytemuck::Pod> VertexIndexBufferUpdater<'_, V> {
     pub const fn vertex_mut(&mut self) -> &mut Vec<V> {
         &mut self.buffer.vertex_array
     }
@@ -115,7 +115,7 @@ impl<V: Vertex> VertexIndexBufferUpdater<'_, V> {
     }
 }
 
-impl<V: Vertex> std::ops::Drop for VertexIndexBufferUpdater<'_, V> {
+impl<V: VertexLayout + bytemuck::Pod> std::ops::Drop for VertexIndexBufferUpdater<'_, V> {
     fn drop(&mut self) {
         self.buffer.send_to_gpu(
             self.queue,
