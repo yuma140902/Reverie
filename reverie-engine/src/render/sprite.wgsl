@@ -9,7 +9,7 @@ const BINDING_TRANSFORM: u32 = 0;
 
 struct VertexInput {
   @location(LOC_VERTEX) position: vec3<f32>,
-  @location(LOC_UV) uv: vec2<f32>
+  @location(LOC_UV) uv: vec2<f32>,
   @location(LOC_NORMAL) normal: vec3<f32>
 }
 
