@@ -27,4 +27,5 @@ winit.workspace = true
 
 [dev-dependencies]
 naga.workspace = true
+proptest.workspace = true
 rstest.workspace = true
