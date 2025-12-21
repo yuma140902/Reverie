@@ -117,12 +117,12 @@ impl Scene {
         let mut queue: VecDeque<GameObjectKey> = VecDeque::new();
         queue.extend(self.game_objects.map.keys_as_slice());
 
+        let mut owner = GOCellOwner::new();
         while let Some(key) = queue.pop_front() {
             if visited.contains(&key) {
                 continue;
             }
 
-            let mut owner = GOCellOwner::new();
             let Some(obj) = self.game_objects.map.get(key) else {
                 tracing::warn!("GameObject with key {:?} not found", key);
                 visited.insert(key);
@@ -137,10 +137,14 @@ impl Scene {
 
             if !visited.contains(&parent_key) {
                 queue.push_back(parent_key);
+                queue.push_back(key);
+                continue;
             }
 
             let Some(parent) = self.game_objects.map.get(parent_key) else {
                 tracing::warn!("Parent GameObject with key {:?} not found", parent_key);
+                visit(&mut owner, obj, None);
+                visited.insert(key);
                 continue;
             };
 
