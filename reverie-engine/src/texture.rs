@@ -82,6 +82,11 @@ impl std::fmt::Debug for TextureUsage {
     }
 }
 
+slotmap::new_key_type! {
+    /// [`TextureRegistry`]に登録された単一のテクスチャを指すインデックス
+    pub struct TextureIndex;
+}
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 /// [`TextureRegistry`]に登録されたテクスチャを指す識別子
 ///
@@ -103,9 +108,13 @@ impl From<Allocation> for TextureId {
     }
 }
 
-slotmap::new_key_type! {
-    /// [`TextureRegistry`]に登録された単一のテクスチャを指すインデックス
-    pub struct TextureIndex;
+impl TextureId {
+    pub const fn get_texture_index(&self) -> &TextureIndex {
+        match self {
+            Self::Single(index) => index,
+            Self::Atlas(allocation) => &allocation.0,
+        }
+    }
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -220,37 +229,19 @@ impl TextureRegistry {
     }
 
     pub fn get_bind_group(&self, id: TextureId) -> anyhow::Result<&wgpu::BindGroup> {
-        match id {
-            TextureId::Single(index) => {
-                let texture = self
-                    .map
-                    .get(index)
-                    .with_context(|| format!("no such texture: {:?}", index))?;
-                if let Texture {
-                    data: TextureData::Gpu(_, bind_group),
-                    ..
-                } = texture
-                {
-                    Ok(bind_group)
-                } else {
-                    anyhow::bail!("texture is not on GPU")
-                }
-            }
-            TextureId::Atlas(allocation) => {
-                let texture = self
-                    .map
-                    .get(allocation.0)
-                    .with_context(|| format!("no such texture: {:?}", allocation.0))?;
-                if let Texture {
-                    data: TextureData::Gpu(_, bind_group),
-                    ..
-                } = texture
-                {
-                    Ok(bind_group)
-                } else {
-                    anyhow::bail!("texture is not on GPU")
-                }
-            }
+        let index = id.get_texture_index();
+        let texture = self
+            .map
+            .get(*index)
+            .with_context(|| format!("no such texture: {:?}", index))?;
+        if let Texture {
+            data: TextureData::Gpu(_, bind_group),
+            ..
+        } = texture
+        {
+            Ok(bind_group)
+        } else {
+            anyhow::bail!("texture is not on GPU")
         }
     }
 }
