@@ -101,6 +101,7 @@ impl Scene {
     ]);
     ```
     */
+    // TODO: visit を通じてツリーではない構造が作られてしまわないようにする
     pub fn traverse_tree<F>(&mut self, mut visit: F)
     where
         F: FnMut(&mut GameObject, Option<&GameObject>),
