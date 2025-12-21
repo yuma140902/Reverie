@@ -313,7 +313,7 @@ mod shader_test {
     #[rstest]
     #[case::sprite(include_str!("./render/sprite.wgsl"))]
     #[case::colored(include_str!("./render/colored.wgsl"))]
-    fn sprite_shader_compiles(#[case] source: &str) {
+    fn shader_compiles(#[case] source: &str) {
         let module = naga::front::wgsl::parse_str(source).expect("WGSL parse error");
         let mut validator = naga::valid::Validator::new(
             naga::valid::ValidationFlags::all(),
