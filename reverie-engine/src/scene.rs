@@ -121,7 +121,7 @@ impl<K: slotmap::Key, V> TreeNode<K, V> {
         parent_key: K,
         child_key: K,
     ) -> anyhow::Result<()> {
-        if Self::has_ancestor(map, parent_key, child_key)? {
+        if Self::has_ancestor(map, parent_key, child_key) {
             anyhow::bail!(
                 "Cannot link nodes: would create a cycle (parent_key={:?}, child_key={:?})",
                 parent_key,
@@ -190,23 +190,24 @@ impl<K: slotmap::Key, V> TreeNode<K, V> {
     }
 
     /// 指定したノードが指定した祖先ノードを持つかどうかを確認する
-    fn has_ancestor(
-        map: &slotmap::DenseSlotMap<K, Self>,
-        node_key: K,
-        ancestor_key: K,
-    ) -> anyhow::Result<bool> {
+    ///
+    /// 2 つのキーが同じ場合も `true` を返す
+    fn has_ancestor(map: &slotmap::DenseSlotMap<K, Self>, node_key: K, ancestor_key: K) -> bool {
+        if node_key == ancestor_key {
+            return true;
+        }
         let mut current_key = node_key;
         while let Some(node) = map.get(current_key) {
             if let Some(parent_key) = node.parent {
                 if parent_key == ancestor_key {
-                    return Ok(true);
+                    return true;
                 }
                 current_key = parent_key;
             } else {
                 break;
             }
         }
-        Ok(false)
+        false
     }
 }
 
@@ -261,10 +262,7 @@ mod tree_pbt {
                     child_index,
                 } => {
                     let keys = map.keys_as_slice();
-                    if *parent_index >= keys.len()
-                        || *child_index >= keys.len()
-                        || parent_index == child_index
-                    {
+                    if *parent_index >= keys.len() || *child_index >= keys.len() {
                         continue;
                     }
                     let parent_key = keys[*parent_index];
@@ -287,6 +285,7 @@ mod tree_pbt {
                     let children_post: HashSet<_> =
                         map[parent_key].children.iter().copied().collect();
 
+                    // 兄弟に影響がないことを確認する
                     assert_eq!(
                         children_pre, children_post,
                         "Parent's children list not updated correctly after linking"
@@ -345,6 +344,17 @@ mod tree_pbt {
                 }
             }
         }
+
+        // children リスト内の重複がないことを確認する
+        for (key, node) in map {
+            let unique_children_len = node.children.iter().collect::<HashSet<_>>().len();
+            assert_eq!(
+                unique_children_len,
+                node.children.len(),
+                "Children uniqueness failed: duplicate children found for key {:?}",
+                key
+            );
+        }
     }
 
     fn action_strategy(tree_size: usize) -> impl Strategy<Value = Action> {
@@ -359,14 +369,14 @@ mod tree_pbt {
         #![proptest_config(ProptestConfig::with_cases(1000))]
 
         #[test]
-        fn test_tree_stateful_small_long(
+        fn test_tree_operations_with_small_tree_many_actions(
             actions in proptest::collection::vec(action_strategy(10), 1..5000)
         ) {
             execute_actions(&actions);
         }
 
         #[test]
-        fn test_tree_stateful_big_short(
+        fn test_tree_operations_with_large_tree_few_actions(
             actions in proptest::collection::vec(action_strategy(100), 1..500)
         ) {
             execute_actions(&actions);
@@ -410,6 +420,41 @@ mod tree_test {
         TreeNode::link_nodes(&mut map, a, b).unwrap();
         TreeNode::link_nodes(&mut map, b, c).unwrap();
         let result = TreeNode::link_nodes(&mut map, c, a);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn error_on_linking_invalid_key1() {
+        let mut map: slotmap::DenseSlotMap<TestKey, TreeNode<TestKey, ()>> =
+            slotmap::DenseSlotMap::default();
+        let a = map.insert(TreeNode::new(()));
+        let b = map.insert(TreeNode::new(()));
+        map.remove(b);
+        let invalid_key = b;
+        let result = TreeNode::link_nodes(&mut map, a, invalid_key);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn error_on_linking_invalid_key2() {
+        let mut map: slotmap::DenseSlotMap<TestKey, TreeNode<TestKey, ()>> =
+            slotmap::DenseSlotMap::default();
+        let a = map.insert(TreeNode::new(()));
+        let b = map.insert(TreeNode::new(()));
+        map.remove(a);
+        let invalid_key = a;
+        let result = TreeNode::link_nodes(&mut map, invalid_key, b);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn error_on_unlinking_invalid_key() {
+        let mut map: slotmap::DenseSlotMap<TestKey, TreeNode<TestKey, ()>> =
+            slotmap::DenseSlotMap::default();
+        let a = map.insert(TreeNode::new(()));
+        map.remove(a);
+        let invalid_key = a;
+        let result = TreeNode::unlink_parent(&mut map, invalid_key);
         assert!(result.is_err());
     }
 }
