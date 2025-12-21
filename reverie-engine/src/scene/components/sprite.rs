@@ -4,7 +4,7 @@ use nalgebra::{Matrix4, Point3};
 use tracing_unwrap::ResultExt;
 
 use crate::{
-    model::sprite::SpriteVertex,
+    model::Vertex,
     render::{RenderingResource, buffer::VertexIndexBuffer, sprite},
     scene::{Scene, TransformComponent},
     texture::TextureId,
@@ -14,7 +14,7 @@ use crate::{
 /// エンティティの見た目を表すコンポーネント
 pub struct SpriteComponent {
     texture: TextureId,
-    buffer: Option<VertexIndexBuffer<SpriteVertex>>,
+    buffer: Option<VertexIndexBuffer<Vertex>>,
 }
 
 impl SpriteComponent {
@@ -50,30 +50,46 @@ impl SpriteComponent {
                     0.0, 0.0, 0.0, 0.0, //
                     1.0, 1.0, 1.0, 1.0, //
                 );
+                const NORMALS: Matrix4<f32> = Matrix4::new(
+                    0.0, 0.0, 0.0, 0.0, //
+                    0.0, 0.0, 0.0, 0.0, //
+                    1.0, 1.0, 1.0, 1.0, //
+                    0.0, 0.0, 0.0, 0.0, //
+                );
                 let points = affine.matrix() * POINTS;
-                let top_left = Point3::from_homogeneous(points.column(0).into()).unwrap();
-                let top_right = Point3::from_homogeneous(points.column(1).into()).unwrap();
-                let bottom_left = Point3::from_homogeneous(points.column(2).into()).unwrap();
-                let bottom_right = Point3::from_homogeneous(points.column(3).into()).unwrap();
+                let tl = Point3::from_homogeneous(points.column(0).into()).unwrap();
+                let tr = Point3::from_homogeneous(points.column(1).into()).unwrap();
+                let bl = Point3::from_homogeneous(points.column(2).into()).unwrap();
+                let br = Point3::from_homogeneous(points.column(3).into()).unwrap();
+
+                let normals = affine.matrix() * NORMALS;
+                let tln = Point3::from_homogeneous(normals.column(0).into()).unwrap();
+                let trn = Point3::from_homogeneous(normals.column(1).into()).unwrap();
+                let bln = Point3::from_homogeneous(normals.column(2).into()).unwrap();
+                let brn = Point3::from_homogeneous(normals.column(3).into()).unwrap();
 
                 let range = {
                     let v = update.vertex_mut();
                     v.clear();
-                    v.push(SpriteVertex {
-                        position: top_left.into(),
+                    v.push(Vertex {
+                        position: tl.into(),
                         uv: [min_u, min_v],
+                        normal: tln.into(),
                     });
-                    v.push(SpriteVertex {
-                        position: top_right.into(),
+                    v.push(Vertex {
+                        position: tr.into(),
                         uv: [max_u, min_v],
+                        normal: trn.into(),
                     });
-                    v.push(SpriteVertex {
-                        position: bottom_left.into(),
+                    v.push(Vertex {
+                        position: bl.into(),
                         uv: [min_u, max_v],
+                        normal: bln.into(),
                     });
-                    v.push(SpriteVertex {
-                        position: bottom_right.into(),
+                    v.push(Vertex {
+                        position: br.into(),
                         uv: [max_u, max_v],
+                        normal: brn.into(),
                     });
                     0..v.len()
                 };

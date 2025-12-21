@@ -2,33 +2,27 @@ use std::borrow::Cow;
 
 use wgpu as w;
 
-use crate::{model::sprite::SpriteVertex, render::vertex::VertexLayout};
+use crate::{model::Vertex, render::vertex::VertexLayout};
 
 use super::{BindingId, texture::WgpuTexture, uniform};
 
 pub static LOC_VERTEX: u32 = 0;
 pub static LOC_UV: u32 = 1;
+pub static LOC_NORMAL: u32 = 2;
 pub static GROUP_TEXTURE: u32 = 0;
 pub static BINDING_TEXTURE: BindingId = BindingId::new(GROUP_TEXTURE, 0);
 pub static BINDING_SAMPLER: BindingId = BindingId::new(GROUP_TEXTURE, 1);
 pub static GROUP_TRANSFORM: u32 = 1;
 pub static BINDING_TRANSFORM: BindingId = BindingId::new(GROUP_TRANSFORM, 0);
 
-impl VertexLayout for SpriteVertex {
+impl VertexLayout for Vertex {
     const DESC: wgpu::VertexBufferLayout<'static> = w::VertexBufferLayout {
         array_stride: size_of::<Self>() as w::BufferAddress,
         step_mode: w::VertexStepMode::Vertex,
-        attributes: &[
-            w::VertexAttribute {
-                offset: 0,
-                shader_location: LOC_VERTEX,
-                format: w::VertexFormat::Float32x3,
-            },
-            w::VertexAttribute {
-                offset: size_of::<[f32; 3]>() as w::BufferAddress,
-                shader_location: LOC_UV,
-                format: w::VertexFormat::Float32x2,
-            },
+        attributes: &w::vertex_attr_array![
+            LOC_VERTEX => Float32x3,
+            LOC_UV => Float32x2,
+            LOC_NORMAL => Float32x3,
         ],
     };
 }
@@ -71,7 +65,7 @@ impl SpriteRenderPipeline {
                 module: &shader,
                 entry_point: Some("vs_main"),
                 compilation_options: Default::default(),
-                buffers: &[SpriteVertex::DESC],
+                buffers: &[Vertex::DESC],
             },
             fragment: Some(w::FragmentState {
                 module: &shader,

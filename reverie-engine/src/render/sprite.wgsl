@@ -1,5 +1,6 @@
 const LOC_VERTEX: u32 = 0;
 const LOC_UV: u32 = 1;
+const LOC_NORMAL: u32 = 2;
 const GROUP_TEXTURE: u32 = 0;
 const BINDING_TEXTURE: u32 = 0;
 const BINDING_SAMPLER: u32 = 1;
@@ -9,6 +10,7 @@ const BINDING_TRANSFORM: u32 = 0;
 struct VertexInput {
   @location(LOC_VERTEX) position: vec3<f32>,
   @location(LOC_UV) uv: vec2<f32>
+  @location(LOC_NORMAL) normal: vec3<f32>
 }
 
 struct VertexOutput {
