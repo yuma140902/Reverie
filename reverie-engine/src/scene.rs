@@ -49,7 +49,7 @@ impl Scene {
 ///
 /// イテレーションよりもランダムアクセスが多い場合は [`Registry`] を使用する。
 pub struct Registry<K: slotmap::Key, V> {
-    map: slotmap::SlotMap<K, V>,
+    pub(crate) map: slotmap::SlotMap<K, V>,
 }
 
 /// 密な汎用レジストリ
@@ -58,7 +58,7 @@ pub struct Registry<K: slotmap::Key, V> {
 ///
 /// イテレーションが多くランダムアクセスが少ない場合は [`DenseRegistry`] を使用する。
 pub struct DenseRegistry<K: slotmap::Key, V> {
-    map: slotmap::DenseSlotMap<K, V>,
+    pub(crate) map: slotmap::DenseSlotMap<K, V>,
 }
 
 impl<K: slotmap::Key, V> Default for Registry<K, V> {
