@@ -104,9 +104,10 @@ impl From<Allocation> for TextureId {
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
-/// [`TextureRegistry`]に登録された単一のテクスチャを指すインデックス
-pub struct TextureIndex(slotmap::DefaultKey);
+slotmap::new_key_type! {
+    /// [`TextureRegistry`]に登録された単一のテクスチャを指すインデックス
+    pub struct TextureIndex;
+}
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 /// [`TextureRegistry`]に登録されたアトラステクスチャ内のアロケーションを指す識別子
@@ -115,7 +116,7 @@ pub struct Allocation(TextureIndex, etagere::AllocId);
 #[derive(Debug, Default)]
 /// テクスチャを管理するレジストリ
 pub struct TextureRegistry {
-    arena: SlotMap<slotmap::DefaultKey, Texture>,
+    arena: SlotMap<TextureIndex, Texture>,
 }
 
 impl TextureRegistry {
@@ -125,7 +126,7 @@ impl TextureRegistry {
             usage: TextureUsage::Single,
             label,
         };
-        TextureIndex(self.arena.insert(texture))
+        self.arena.insert(texture)
     }
 
     pub fn create_atlas_texture(
@@ -140,7 +141,7 @@ impl TextureRegistry {
             usage: TextureUsage::Atlas(AtlasAllocator::new(size2(width as i32, height as i32))),
             label,
         };
-        TextureIndex(self.arena.insert(texture))
+        self.arena.insert(texture)
     }
 
     pub fn allocate_sub_image(
@@ -150,7 +151,7 @@ impl TextureRegistry {
     ) -> anyhow::Result<Allocation> {
         let texture = self
             .arena
-            .get_mut(index.0)
+            .get_mut(index)
             .with_context(|| format!("no such texture: {:?}", index))?;
         if let Texture {
             data: TextureData::Cpu(image),
@@ -177,7 +178,7 @@ impl TextureRegistry {
             TextureId::Atlas(allocation) => {
                 let texture = self
                     .arena
-                    .get(allocation.0.0)
+                    .get(allocation.0)
                     .with_context(|| format!("no such texture: {:?}", allocation.0))?;
                 if let Texture {
                     usage: TextureUsage::Atlas(allocator),
@@ -227,7 +228,7 @@ impl TextureRegistry {
             TextureId::Single(index) => {
                 let texture = self
                     .arena
-                    .get(index.0)
+                    .get(index)
                     .with_context(|| format!("no such texture: {:?}", index))?;
                 if let Texture {
                     data: TextureData::Gpu(_, bind_group),
@@ -242,7 +243,7 @@ impl TextureRegistry {
             TextureId::Atlas(allocation) => {
                 let texture = self
                     .arena
-                    .get(allocation.0.0)
+                    .get(allocation.0)
                     .with_context(|| format!("no such texture: {:?}", allocation.0))?;
                 if let Texture {
                     data: TextureData::Gpu(_, bind_group),
