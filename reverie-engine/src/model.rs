@@ -1,7 +1,5 @@
 use crate::texture::TextureId;
 
-pub mod colored;
-
 #[repr(C)]
 #[derive(Debug, Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
 pub struct Vertex {
