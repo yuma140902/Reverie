@@ -116,6 +116,18 @@ impl<K, V> TreeNode<K, V> {
 
 impl<K: slotmap::Key, V> TreeNode<K, V> {
     /// 親子関係を設定する
+    ///
+    /// `child_key` が既に別の親を持つ場合、その親子関係は解除される
+    ///
+    /// # Arguments
+    ///
+    /// - `map`: ノードの実体を管理するマップ
+    /// - `parent_key`: 親ノードのキー
+    /// - `child_key`: 子ノードのキー
+    ///
+    /// # Returns
+    ///
+    /// 成功時は Ok(())、サイクルが発生する場合や無効なキーの場合は Err
     pub fn link_nodes(
         map: &mut slotmap::DenseSlotMap<K, Self>,
         parent_key: K,
