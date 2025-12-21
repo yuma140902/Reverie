@@ -44,6 +44,15 @@ impl Scene {
             &[],
         );
     }
+
+    pub fn new_game_object(
+        &mut self,
+        name: String,
+        parent: Option<GameObjectKey>,
+    ) -> GameObjectKey {
+        let game_object = GameObject { name, parent };
+        self.game_objects.map.insert(game_object)
+    }
 }
 
 /// 汎用レジストリ
@@ -83,7 +92,7 @@ impl<K: slotmap::Key, V> Default for DenseRegistry<K, V> {
 #[derive(Debug)]
 pub struct GameObject {
     pub name: String,
-    pub model_component: ModelComponent,
+    pub parent: Option<GameObjectKey>,
 }
 
 slotmap::new_key_type! { pub struct GameObjectKey; }
