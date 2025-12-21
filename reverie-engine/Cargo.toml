@@ -13,6 +13,7 @@ categories = ["game-engines"]
 [dependencies]
 anyhow.workspace = true
 bytemuck.workspace = true
+encase.workspace = true
 etagere.workspace = true
 image.workspace = true
 nalgebra.workspace = true
