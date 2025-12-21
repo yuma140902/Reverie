@@ -7,7 +7,7 @@ use crate::{render::texture::WgpuTexture, scene::Registry};
 
 #[derive(Debug)]
 /// テクスチャ
-pub struct Texture {
+struct Texture {
     data: TextureData,
     usage: TextureUsage,
     label: Option<String>,
@@ -121,8 +121,9 @@ impl TextureId {
 /// [`TextureRegistry`]に登録されたアトラステクスチャ内のアロケーションを指す識別子
 pub struct Allocation(TextureIndex, etagere::AllocId);
 
+#[derive(Debug, Default)]
 /// テクスチャを管理するレジストリ
-pub type TextureRegistry = Registry<TextureIndex, Texture>;
+pub struct TextureRegistry(Registry<TextureIndex, Texture>);
 
 impl TextureRegistry {
     pub fn new_texture(&mut self, image: RgbaImage, label: Option<String>) -> TextureIndex {
@@ -131,7 +132,7 @@ impl TextureRegistry {
             usage: TextureUsage::Single,
             label,
         };
-        self.map.insert(texture)
+        self.0.map.insert(texture)
     }
 
     pub fn create_atlas_texture(
@@ -146,7 +147,7 @@ impl TextureRegistry {
             usage: TextureUsage::Atlas(AtlasAllocator::new(size2(width as i32, height as i32))),
             label,
         };
-        self.map.insert(texture)
+        self.0.map.insert(texture)
     }
 
     pub fn allocate_sub_image(
@@ -155,6 +156,7 @@ impl TextureRegistry {
         sub_image: RgbaImage,
     ) -> anyhow::Result<Allocation> {
         let texture = self
+            .0
             .map
             .get_mut(index)
             .with_context(|| format!("no such texture: {:?}", index))?;
@@ -182,6 +184,7 @@ impl TextureRegistry {
             TextureId::Single(_) => Ok((0.0, 0.0, 1.0, 1.0)),
             TextureId::Atlas(allocation) => {
                 let texture = self
+                    .0
                     .map
                     .get(allocation.0)
                     .with_context(|| format!("no such texture: {:?}", allocation.0))?;
@@ -216,7 +219,7 @@ impl TextureRegistry {
         texture_binding: u32,
         sampler_binding: u32,
     ) {
-        for (_, texture) in self.map.iter_mut() {
+        for (_, texture) in self.0.map.iter_mut() {
             texture.send_to_gpu(
                 device,
                 queue,
@@ -231,6 +234,7 @@ impl TextureRegistry {
     pub fn get_bind_group(&self, id: TextureId) -> anyhow::Result<&wgpu::BindGroup> {
         let index = id.get_texture_index();
         let texture = self
+            .0
             .map
             .get(*index)
             .with_context(|| format!("no such texture: {:?}", index))?;
