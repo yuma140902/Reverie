@@ -305,3 +305,22 @@ impl BindingId {
         Self { group, binding }
     }
 }
+
+#[cfg(test)]
+mod shader_test {
+    use rstest::rstest;
+
+    #[rstest]
+    #[case::sprite(include_str!("./render/sprite.wgsl"))]
+    #[case::colored(include_str!("./render/colored.wgsl"))]
+    fn sprite_shader_compiles(#[case] source: &str) {
+        let module = naga::front::wgsl::parse_str(source).expect("WGSL parse error");
+        let mut validator = naga::valid::Validator::new(
+            naga::valid::ValidationFlags::all(),
+            naga::valid::Capabilities::all(),
+        );
+        if let Err(e) = validator.validate(&module) {
+            panic!("WGSL validation error: {}", e.emit_to_string(source));
+        }
+    }
+}
