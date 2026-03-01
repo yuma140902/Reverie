@@ -15,7 +15,7 @@ repository = "https://github.com/yuma140902/Reverie"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 approx = "0.5.1"
 bytemuck = { version = "1.24.0", features = ["derive"] }
 dotenvy = "0.15.7"
