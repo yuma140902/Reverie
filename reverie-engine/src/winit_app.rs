@@ -12,15 +12,10 @@ use winit::{
     window::Window,
 };
 
-use crate::{
-    game::Game,
-    render::RenderingResource,
-    scene::{Scene, frame::Frame},
-};
+use crate::{game::Game, render::RenderingResource, scene::frame::Frame};
 
 pub struct App<'window, G: Game> {
     game: G,
-    scene: Option<Scene>,
     resource: Option<AppResource<'window>>,
     last_update: Instant,
     key_events: Vec<KeyEvent>,
@@ -33,7 +28,6 @@ impl<G: Game> App<'_, G> {
     pub fn new(game: G) -> Self {
         Self {
             game,
-            scene: None,
             resource: None,
             last_update: Instant::now(),
             key_events: Vec::new(),
@@ -47,21 +41,16 @@ impl<G: Game> App<'_, G> {
     fn setup(&mut self, event_loop: &winit::event_loop::ActiveEventLoop) {
         if self.resource.is_none() {
             let r = AppResource::new(event_loop).unwrap_or_log();
-            let mut scene = self
-                .game
-                .generate_scene()
-                .context("failed: generate scene")
-                .unwrap_or_log();
-            println!("{:?}", scene);
+            self.game.init();
+            let scene = self.game.get_scene_mut_for_rendering();
             scene.setup(&r.render);
 
             self.resource = Some(r);
-            self.scene = Some(scene);
         }
     }
 
     fn update(&mut self) {
-        if let (Some(r), Some(scene)) = (self.resource.as_mut(), self.scene.as_mut()) {
+        if let Some(r) = self.resource.as_mut() {
             let now = Instant::now();
             let frame = Frame {
                 delta_time: now - self.last_update,
@@ -72,6 +61,7 @@ impl<G: Game> App<'_, G> {
                 mouse_position: self.last_mouse_pos,
             };
 
+            let scene = self.game.get_scene_mut_for_rendering();
             scene.update(&frame, &r.render);
 
             self.last_update = now;
