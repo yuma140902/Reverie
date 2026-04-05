@@ -12,7 +12,7 @@ use winit::{
     window::Window,
 };
 
-use crate::{game::Game, render::RenderingResource, scene::frame::Frame};
+use crate::{camera::Camera, game::Game, render::RenderingResource, scene::frame::Frame};
 
 pub struct App<'window, G: Game> {
     game: G,
@@ -40,9 +40,9 @@ impl<G: Game> App<'_, G> {
     #[tracing::instrument(level = "trace", skip(self))]
     fn setup(&mut self, event_loop: &winit::event_loop::ActiveEventLoop) {
         if self.resource.is_none() {
-            let r = AppResource::new(event_loop).unwrap_or_log();
             self.game.init();
             let scene = self.game.get_scene_mut_for_rendering();
+            let r = AppResource::new(event_loop, &scene.camera).unwrap_or_log();
             scene.setup(&r.render);
 
             self.resource = Some(r);
@@ -108,7 +108,8 @@ impl<G: Game> ApplicationHandler for App<'_, G> {
                     && let (Some(width), Some(height)) =
                         (NonZeroU32::new(size.width), NonZeroU32::new(size.height))
                 {
-                    r.render.resize(width, height);
+                    r.render
+                        .resize(width, height, &self.game.get_scene_for_rendering().camera);
                     r.window.0.request_redraw();
                 }
             }
@@ -144,7 +145,7 @@ pub struct AppResource<'window> {
 }
 
 impl AppResource<'_> {
-    pub fn new(event_loop: &ActiveEventLoop) -> anyhow::Result<Self> {
+    pub fn new(event_loop: &ActiveEventLoop, camera: &Camera) -> anyhow::Result<Self> {
         let window = event_loop
             .create_window(Window::default_attributes())
             .unwrap_or_log();
@@ -159,8 +160,13 @@ impl AppResource<'_> {
             .try_into()
             .context("error: window inner height is zero")?;
 
-        let render = pollster::block_on(RenderingResource::setup(window.clone(), width, height))
-            .context("failed: setup wgpu")?;
+        let render = pollster::block_on(RenderingResource::setup(
+            window.clone(),
+            width,
+            height,
+            camera,
+        ))
+        .context("failed: setup wgpu")?;
 
         Ok(Self { window, render })
     }
