@@ -54,7 +54,10 @@ impl SpriteRenderPipeline {
 
         let pipeline_layout = device.create_pipeline_layout(&w::PipelineLayoutDescriptor {
             label: Some("sprite model render pipeline layout"),
-            bind_group_layouts: &[&texture_bind_group_layout, &uniform_bind_group_layout],
+            bind_group_layouts: &[
+                Some(&texture_bind_group_layout),
+                Some(&uniform_bind_group_layout),
+            ],
             immediate_size: 0,
         });
 
@@ -95,8 +98,8 @@ impl SpriteRenderPipeline {
             },
             depth_stencil: Some(w::DepthStencilState {
                 format: w::TextureFormat::Depth32Float,
-                depth_write_enabled: true,
-                depth_compare: w::CompareFunction::Less,
+                depth_write_enabled: Some(true),
+                depth_compare: Some(w::CompareFunction::Less),
                 stencil: w::StencilState::default(),
                 bias: w::DepthBiasState::default(),
             }),

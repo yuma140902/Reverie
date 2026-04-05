@@ -132,53 +132,59 @@ impl<'window> RenderingResource<'window> {
     }
 
     pub fn render(&self, scene: &mut Scene) {
-        if let Ok(surface_texture) = self.surface.get_current_texture() {
-            let output = surface_texture
-                .texture
-                .create_view(&wgpu::TextureViewDescriptor::default());
+        match self.surface.get_current_texture() {
+            wgpu::CurrentSurfaceTexture::Success(surface_texture)
+            | wgpu::CurrentSurfaceTexture::Suboptimal(surface_texture) => {
+                // TODO: warn if Suboptimal
+                // TODO: handle other variants
+                let output = surface_texture
+                    .texture
+                    .create_view(&wgpu::TextureViewDescriptor::default());
 
-            let mut encoder = self
-                .device
-                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                    label: Some("Main CommandEncoder"),
-                });
-            {
-                let mut rp = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                    label: Some("SpriteComponent Render Pass"),
-                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                        view: &output,
-                        resolve_target: None,
-                        ops: wgpu::Operations {
-                            load: wgpu::LoadOp::Clear(wgpu::Color {
-                                r: 54.0 / 255.0,
-                                g: 77.0 / 255.0,
-                                b: 118.0 / 255.0,
-                                a: 1.0,
+                let mut encoder =
+                    self.device
+                        .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                            label: Some("Main CommandEncoder"),
+                        });
+                {
+                    let mut rp = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                        label: Some("SpriteComponent Render Pass"),
+                        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                            view: &output,
+                            resolve_target: None,
+                            ops: wgpu::Operations {
+                                load: wgpu::LoadOp::Clear(wgpu::Color {
+                                    r: 54.0 / 255.0,
+                                    g: 77.0 / 255.0,
+                                    b: 118.0 / 255.0,
+                                    a: 1.0,
+                                }),
+                                store: wgpu::StoreOp::Store,
+                            },
+                            depth_slice: None,
+                        })],
+                        depth_stencil_attachment: Some(w::RenderPassDepthStencilAttachment {
+                            view: &self.depth_texture.view,
+                            depth_ops: Some(w::Operations {
+                                load: w::LoadOp::Clear(1.0),
+                                store: w::StoreOp::Store,
                             }),
-                            store: wgpu::StoreOp::Store,
-                        },
-                        depth_slice: None,
-                    })],
-                    depth_stencil_attachment: Some(w::RenderPassDepthStencilAttachment {
-                        view: &self.depth_texture.view,
-                        depth_ops: Some(w::Operations {
-                            load: w::LoadOp::Clear(1.0),
-                            store: w::StoreOp::Store,
+                            stencil_ops: None,
                         }),
-                        stencil_ops: None,
-                    }),
-                    timestamp_writes: None,
-                    occlusion_query_set: None,
-                    multiview_mask: None,
-                });
+                        timestamp_writes: None,
+                        occlusion_query_set: None,
+                        multiview_mask: None,
+                    });
 
-                scene.render(&mut rp, self);
+                    scene.render(&mut rp, self);
+                }
+                self.queue.submit(Some(encoder.finish()));
+
+                surface_texture.present();
             }
-            self.queue.submit(Some(encoder.finish()));
-
-            surface_texture.present();
-        } else {
-            tracing::warn!("no surface texture");
+            _ => {
+                tracing::warn!("no surface texture");
+            }
         }
     }
 }
