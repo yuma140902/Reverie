@@ -8,7 +8,7 @@ pub mod model;
 pub mod render;
 pub mod scene;
 pub mod texture;
-mod winit_app;
+mod window;
 
 pub use game::Game;
 pub use game::start_engine;

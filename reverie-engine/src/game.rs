@@ -1,7 +1,7 @@
 //! Game トレイト
 use crate::{
     scene::{Scene, frame::Frame},
-    winit_app::App,
+    window::App,
 };
 
 /// ゲームが実装すべきトレイト
