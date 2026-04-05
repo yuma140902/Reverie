@@ -1,12 +1,22 @@
 //! Game トレイト
-use crate::{scene::Scene, winit_app::App};
+use crate::{
+    scene::{Scene, frame::Frame},
+    winit_app::App,
+};
 
 /// ゲームが実装すべきトレイト
 pub trait Game {
-    /// シーンを生成する
-    ///
-    /// ゲームが開始されたときに呼ばれる。
-    fn generate_scene(&mut self) -> anyhow::Result<Scene>;
+    /// ゲームが初期化されたときに呼ばれる。
+    fn init(&mut self);
+
+    /// レンダリング用に現在の [`Scene`] を返す。
+    fn get_scene_for_rendering(&mut self) -> &Scene;
+
+    /// レンダリング用に現在の [`Scene`] を返す。
+    fn get_scene_mut_for_rendering(&mut self) -> &mut Scene;
+
+    /// フレームごとに呼ばれる。引数の [`Frame`] をもとにゲームの状態を更新する。
+    fn update<'a>(&mut self, frame: &'a Frame<'a>);
 }
 
 pub fn start_engine<G: Game>(game: G) -> anyhow::Result<()> {

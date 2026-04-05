@@ -19,10 +19,24 @@ fn main() -> anyhow::Result<()> {
 }
 
 #[derive(Debug, Default)]
-pub struct ExampleGame {}
+pub struct ExampleGame {
+    scene: Scene,
+}
 
 impl Game for ExampleGame {
-    fn generate_scene(&mut self) -> anyhow::Result<Scene> {
-        Ok(Scene::default())
+    fn init<'window>(&mut self) {
+        tracing::info!("ExampleGame initialized");
+    }
+
+    fn get_scene_for_rendering(&mut self) -> &Scene {
+        &self.scene
+    }
+
+    fn get_scene_mut_for_rendering(&mut self) -> &mut Scene {
+        &mut self.scene
+    }
+
+    fn update<'a>(&mut self, _frame: &'a reverie_engine::scene::frame::Frame<'a>) {
+        // pass
     }
 }
