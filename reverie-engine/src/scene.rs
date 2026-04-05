@@ -14,12 +14,31 @@ pub use components::{
     model::ModelComponent, sprite::SpriteComponent, transform::TransformComponent,
 };
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct Scene {
     pub meshes: Registry<MeshKey, Mesh>,
     pub materials: Registry<MaterialKey, Material>,
     pub game_objects: DenseRegistry<GameObjectKey, GameObject>,
     pub textures: TextureRegistry,
+    /// Skybox color
+    pub skybox: wgpu::Color,
+}
+
+impl Default for Scene {
+    fn default() -> Self {
+        Self {
+            meshes: Default::default(),
+            materials: Default::default(),
+            game_objects: Default::default(),
+            textures: Default::default(),
+            skybox: wgpu::Color {
+                r: 54.0 / 255.0,
+                g: 77.0 / 255.0,
+                b: 118.0 / 255.0,
+                a: 1.0,
+            },
+        }
+    }
 }
 
 impl Scene {

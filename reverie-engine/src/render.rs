@@ -153,12 +153,7 @@ impl<'window> RenderingResource<'window> {
                             view: &output,
                             resolve_target: None,
                             ops: wgpu::Operations {
-                                load: wgpu::LoadOp::Clear(wgpu::Color {
-                                    r: 54.0 / 255.0,
-                                    g: 77.0 / 255.0,
-                                    b: 118.0 / 255.0,
-                                    a: 1.0,
-                                }),
+                                load: wgpu::LoadOp::Clear(scene.skybox),
                                 store: wgpu::StoreOp::Store,
                             },
                             depth_slice: None,
