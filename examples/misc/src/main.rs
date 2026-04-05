@@ -14,14 +14,14 @@ fn setup_cli() {
 fn main() -> anyhow::Result<()> {
     setup_cli();
 
-    let game = LineDefense::default();
+    let game = ExampleGame::default();
     reverie_engine::start_engine(game)
 }
 
 #[derive(Debug, Default)]
-pub struct LineDefense {}
+pub struct ExampleGame {}
 
-impl Game for LineDefense {
+impl Game for ExampleGame {
     fn generate_scene(&mut self) -> anyhow::Result<Scene> {
         Ok(Scene::default())
     }
