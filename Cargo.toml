@@ -10,7 +10,7 @@ members = [
 version = "0.5.0"
 authors = ["yuma140902 <yuma140902@gmail.com>"]
 edition = "2024"
-rust-version = "1.92.0"
+rust-version = "1.94.1"
 repository = "https://github.com/yuma140902/Reverie"
 license = "MIT OR Apache-2.0"
 
