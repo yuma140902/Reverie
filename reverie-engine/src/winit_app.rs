@@ -61,6 +61,7 @@ impl<G: Game> App<'_, G> {
                 mouse_position: self.last_mouse_pos,
             };
 
+            self.game.update(&frame);
             let scene = self.game.get_scene_mut_for_rendering();
             scene.update(&frame, &r.render);
 
