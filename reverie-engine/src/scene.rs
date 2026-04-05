@@ -1,6 +1,7 @@
 //! シーンに関するモジュール
 
 use crate::{
+    camera::{Camera, OrthographicCamera, PerspectiveCamera},
     model::{Material, MaterialKey, Mesh, MeshKey},
     render::{RenderingResource, sprite},
     scene::frame::Frame,
@@ -13,6 +14,7 @@ pub mod frame;
 pub use components::{
     model::ModelComponent, sprite::SpriteComponent, transform::TransformComponent,
 };
+use nalgebra::{Point3, Vector3};
 
 #[derive(Debug)]
 pub struct Scene {
@@ -22,10 +24,33 @@ pub struct Scene {
     pub textures: TextureRegistry,
     /// Skybox color
     pub skybox: wgpu::Color,
+    /// Main (and the only for now) camera
+    pub camera: Camera,
 }
 
 impl Default for Scene {
     fn default() -> Self {
+        let camera = if true {
+            PerspectiveCamera::new(
+                &Point3::new(0.0, 0.0, -0.5),
+                &Point3::new(0.0, 0.0, 0.0),
+                &Vector3::new(0.0, 1.0, 0.0),
+                90.0_f32.to_radians(),
+                0.1,
+                100.0,
+            )
+            .into()
+        } else {
+            OrthographicCamera {
+                eye: Point3::new(0.0, 0.0, -0.5),
+                target: Point3::new(0.0, 0.0, 0.0),
+                up: Vector3::new(0.0, 1.0, 0.0),
+                size: 0.5,
+                z_near: 0.1,
+                z_far: 100.0,
+            }
+            .into()
+        };
         Self {
             meshes: Default::default(),
             materials: Default::default(),
@@ -37,6 +62,7 @@ impl Default for Scene {
                 b: 118.0 / 255.0,
                 a: 1.0,
             },
+            camera,
         }
     }
 }

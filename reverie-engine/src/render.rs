@@ -2,12 +2,11 @@
 use std::num::NonZeroU32;
 
 use anyhow::Context;
-use nalgebra::{Point3, Vector3};
 use sprite::SpriteRenderPipeline;
 use wgpu::{self as w, util::DeviceExt};
 
 use crate::{
-    camera::{Camera, OrthographicCamera, PerspectiveCamera, Viewport},
+    camera::{Camera, Viewport},
     scene::Scene,
 };
 
@@ -28,7 +27,6 @@ pub struct RenderingResource<'window> {
     pub surface_config: w::SurfaceConfiguration,
     pub device: w::Device,
     pub queue: w::Queue,
-    pub camera: Camera,
     pub viewport: Viewport,
     pub depth_texture: WgpuTexture,
 }
@@ -39,10 +37,12 @@ impl<'window> RenderingResource<'window> {
     /// * `surface_target`: 描画対象の surface
     /// * `width`: surface の幅
     /// * `height`: surface の高さ
+    /// * `camera`: カメラ
     pub async fn setup<S>(
         surface_target: S,
         width: NonZeroU32,
         height: NonZeroU32,
+        camera: &Camera,
     ) -> anyhow::Result<Self>
     where
         S: Into<w::SurfaceTarget<'window>> + Send,
@@ -64,28 +64,7 @@ impl<'window> RenderingResource<'window> {
         );
 
         let viewport = Viewport { width, height };
-        let camera = if true {
-            PerspectiveCamera::new(
-                &Point3::new(0.0, 0.0, -0.5),
-                &Point3::new(0.0, 0.0, 0.0),
-                &Vector3::new(0.0, 1.0, 0.0),
-                90.0_f32.to_radians(),
-                0.1,
-                100.0,
-            )
-            .into()
-        } else {
-            OrthographicCamera {
-                eye: Point3::new(0.0, 0.0, -0.5),
-                target: Point3::new(0.0, 0.0, 0.0),
-                up: Vector3::new(0.0, 1.0, 0.0),
-                size: 0.5,
-                z_near: 0.1,
-                z_far: 100.0,
-            }
-            .into()
-        };
-        let transform_uniform_buffer = setup_uniform_buffer(&device, &camera, &viewport)?;
+        let transform_uniform_buffer = setup_uniform_buffer(&device, camera, &viewport)?;
 
         let sampler = setup_sampler(&device)?;
         tracing::trace!(?sampler, "setup_sampler");
@@ -105,22 +84,19 @@ impl<'window> RenderingResource<'window> {
             surface_config,
             device,
             queue,
-            camera,
             viewport,
             depth_texture,
         })
     }
 
-    pub fn resize(&mut self, width: NonZeroU32, height: NonZeroU32) {
+    pub fn resize(&mut self, width: NonZeroU32, height: NonZeroU32, camera: &Camera) {
         self.surface_config.width = width.get();
         self.surface_config.height = height.get();
         self.surface.configure(&self.device, &self.surface_config);
 
         self.viewport.width = width;
         self.viewport.height = height;
-        let matrix = self
-            .camera
-            .get_matrix_world_to_render_coordinate(&self.viewport);
+        let matrix = camera.get_matrix_world_to_render_coordinate(&self.viewport);
         self.queue.write_buffer(
             &self.transform_uniform_buffer,
             0,
