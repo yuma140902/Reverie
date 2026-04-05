@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0](https://github.com/yuma140902/reverie/compare/v0.5.0..v0.6.0) - 2026-04-05
+
+### ✨ Features
+
+- *(example)* Remove scene from the example ([#186](https://github.com/yuma140902/reverie/issues/186)) - ([da6c0af](https://github.com/yuma140902/reverie/commit/da6c0af5ed01d3385133af006fd92a62e90dfaf7))
+- Add Camera to Scene ([#223](https://github.com/yuma140902/reverie/issues/223)) - ([dca38e7](https://github.com/yuma140902/reverie/commit/dca38e765eda3b495a6e012fd11fda4a596aa51c))
+- Add skybox color to scene struct ([#221](https://github.com/yuma140902/reverie/issues/221)) - ([0eaaf95](https://github.com/yuma140902/reverie/commit/0eaaf95829664ef6c1507e38e428897f21b0fbce))
+- [**breaking**] Game trait のメソッドを変更する ([#218](https://github.com/yuma140902/reverie/issues/218)) - ([268c609](https://github.com/yuma140902/reverie/commit/268c609b78ff5b4a59a99c1f04e09cf53ed11e11))
+- [**breaking**] Remove TreeNode ([#216](https://github.com/yuma140902/reverie/issues/216)) - ([b863974](https://github.com/yuma140902/reverie/commit/b863974a9f42c85462c00323686e0d53757791b1))
+- Add TreeNode ([#202](https://github.com/yuma140902/reverie/issues/202)) - ([f7c0a2c](https://github.com/yuma140902/reverie/commit/f7c0a2c2f23d17dc0b75a1f979ef0a7174a7344f))
+- GameObject が親子関係を持つようにする ([#200](https://github.com/yuma140902/reverie/issues/200)) - ([2ff7f6d](https://github.com/yuma140902/reverie/commit/2ff7f6d8442c6520361e67e2d20ae616d0ff5336))
+- [**breaking**] Remove `ColoredComponent` ([#199](https://github.com/yuma140902/reverie/issues/199)) - ([574a109](https://github.com/yuma140902/reverie/commit/574a1093049e2ba854512cb202d282be4589bd87))
+- Add DenseRegistry ([#189](https://github.com/yuma140902/reverie/issues/189)) - ([6b59440](https://github.com/yuma140902/reverie/commit/6b5944046df8a7611afd99411ea58d5178355769))
+- Scene の構造を新しくする ([#188](https://github.com/yuma140902/reverie/issues/188)) - ([8d3cf26](https://github.com/yuma140902/reverie/commit/8d3cf261f072c5b5cb1f235411c7298465579eb5))
+- [**breaking**] Remove hecs from dependency ([#187](https://github.com/yuma140902/reverie/issues/187)) - ([95eaa59](https://github.com/yuma140902/reverie/commit/95eaa59633c6e8f2e9091193b0c3f28ae557c89d))
+
+### 🐛 Bug Fixes
+
+- Game.update() の呼び出しを追加する ([#219](https://github.com/yuma140902/reverie/issues/219)) - ([2348b85](https://github.com/yuma140902/reverie/commit/2348b8559025edaf5a5ff3b68826a26f5ddb8481))
+
+### ♻️ Refactor
+
+- *(example)* Rename ExampleGame struct ([#217](https://github.com/yuma140902/reverie/issues/217)) - ([943bcec](https://github.com/yuma140902/reverie/commit/943bcec5c261f031e2ea6d45589761cdb8b39dca))
+- Rename winit_app to window ([#220](https://github.com/yuma140902/reverie/issues/220)) - ([9ad0e84](https://github.com/yuma140902/reverie/commit/9ad0e84477ff2a26833025881e1a2cc79d147375))
+- Remove `SpriteVertex` ([#193](https://github.com/yuma140902/reverie/issues/193)) - ([b79dd0c](https://github.com/yuma140902/reverie/commit/b79dd0c7236059d9692567de290956fe49c4f161))
+- `TextureRegistry` ([#191](https://github.com/yuma140902/reverie/issues/191)) - ([fca15d7](https://github.com/yuma140902/reverie/commit/fca15d73426f016dc4c7604a3f4ab67e5b8c3318))
+- Move Mesh and Material to `model` module ([#190](https://github.com/yuma140902/reverie/issues/190)) - ([c047134](https://github.com/yuma140902/reverie/commit/c0471342ed34496b7411a224580b543e09dda7c3))
+
+### 📝 Documentation
+
+- ECS に関する記述を削除 ([#222](https://github.com/yuma140902/reverie/issues/222)) - ([f0e7b73](https://github.com/yuma140902/reverie/commit/f0e7b733191bb66118f704d1663d9ea61a7d4779))
+
+### ✅ Testing
+
+- Add tests to check if shader compiles and is valid ([#198](https://github.com/yuma140902/reverie/issues/198)) - ([e07c13b](https://github.com/yuma140902/reverie/commit/e07c13b40a8ca255bce33880a86aa50e7c2ad9ee))
+
+### 👷 Build System
+
+- Update version to v0.6.0 - ([79878e0](https://github.com/yuma140902/reverie/commit/79878e04d33065a8b63c002465497751cfe33151))
+- Update MSRV to v1.94.1 ([#224](https://github.com/yuma140902/reverie/issues/224)) - ([ae8ea45](https://github.com/yuma140902/reverie/commit/ae8ea4509cd2264d054ad88d8979360f04060003))
+- Update wgpu to v29 ([#213](https://github.com/yuma140902/reverie/issues/213)) - ([a884711](https://github.com/yuma140902/reverie/commit/a884711bb4e8a14c8ead068d555fcf9d11d30b02))
+- Update dependencies ([#212](https://github.com/yuma140902/reverie/issues/212)) - ([6093748](https://github.com/yuma140902/reverie/commit/609374878a8460715935c69abb389a71ee5ba1de))
+- Setup dependabot ([#211](https://github.com/yuma140902/reverie/issues/211)) - ([109fdc3](https://github.com/yuma140902/reverie/commit/109fdc3eaddae664e76d0ee8f3056b3bd0ad4811))
+- Pin github action hash - ([516057f](https://github.com/yuma140902/reverie/commit/516057f9c8e9feee467bb8332c6ab1228bd22736))
+- Add encase as a dependency ([#192](https://github.com/yuma140902/reverie/issues/192)) - ([2b6dbf5](https://github.com/yuma140902/reverie/commit/2b6dbf528dda6fa14f40595cdc1cd10f19ae253b))
+
+### 🔧 Miscellaneous Tasks
+
+- *(deps)* Update actions/deploy-pages action to v5 ([#214](https://github.com/yuma140902/reverie/issues/214)) - ([789ec28](https://github.com/yuma140902/reverie/commit/789ec28cb325929f8cc00356d7e1dcc88c45cf0d))
+- *(deps)* Update actions/upload-pages-artifact action to v4 ([#204](https://github.com/yuma140902/reverie/issues/204)) - ([f5b87d9](https://github.com/yuma140902/reverie/commit/f5b87d95d7390c375b83ab3f6eb5e995858a5efd))
+- *(deps)* Update actions/checkout action to v6 ([#203](https://github.com/yuma140902/reverie/issues/203)) - ([b498855](https://github.com/yuma140902/reverie/commit/b498855c14c4bc2d54dc11cab249eb9ddaf72415))
+
 ## [0.5.0](https://github.com/yuma140902/reverie/compare/v0.4.0..v0.5.0) - 2025-12-20
 
 ### 🐛 Bug Fixes
