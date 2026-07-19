@@ -21,11 +21,12 @@ cargo run -p example-misc
 
 ## Development
 
-### Changelog
-
-See [CHANGELOG.md](./CHANGELOG.md).
-
 ### Commit message
 
 See [.gitmessage](./.gitmessage). It is recommended to run `git config commit.template .gitmessage`.
 
+### Release workflow
+
+1. Merge PR `chore: release v0.x.y` created by release-pr
+2. Run `Release` workflow manually
+	- <https://github.com/yuma140902/Reverie/actions/workflows/release.yml>
