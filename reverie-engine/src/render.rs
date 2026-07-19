@@ -151,7 +151,7 @@ impl<'window> RenderingResource<'window> {
                 }
                 self.queue.submit(Some(encoder.finish()));
 
-                surface_texture.present();
+                self.queue.present(surface_texture);
             }
             _ => {
                 tracing::warn!("no surface texture");
@@ -189,6 +189,7 @@ where
             power_preference: w::PowerPreference::default(),
             force_fallback_adapter: false,
             compatible_surface: Some(&surface),
+            apply_limit_buckets: false,
         })
         .await
         .context("fail: request adapter")?;
@@ -224,6 +225,7 @@ where
         desired_maximum_frame_latency: 2,
         alpha_mode: surface_caps.alpha_modes[0],
         view_formats: vec![],
+        color_space: w::SurfaceColorSpace::Auto,
     };
     surface.configure(&device, &config);
 
