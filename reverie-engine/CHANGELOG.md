@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1](https://github.com/yuma140902/Reverie/compare/reverie-engine-v0.6.0...reverie-engine-v0.6.1) - 2026-07-19
+
+### Other
+
+- CRLF to LF ([#246](https://github.com/yuma140902/Reverie/pull/246))
+- add release-plz ([#243](https://github.com/yuma140902/Reverie/pull/243))
+
 ## [0.6.0](https://github.com/yuma140902/reverie/compare/v0.5.0..v0.6.0) - 2026-04-05
 
 ### ✨ Features
