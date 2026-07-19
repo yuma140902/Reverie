@@ -21,11 +21,12 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
         cmd:
-          - build --verbose
-          - build --release --verbose
+          - build --all-targets --verbose
+          - build --all-targets --release --verbose
           - test --all-features --verbose
-          - clippy --all-features
+          - clippy --all-targets --all-features
           - doc --no-deps --all-features --document-private-items
+          - fmt --check
         exclude:
           - os: windows-latest
             cmd: clippy --all-features
