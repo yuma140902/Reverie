@@ -68,7 +68,7 @@ impl SpriteRenderPipeline {
                 module: &shader,
                 entry_point: Some("vs_main"),
                 compilation_options: Default::default(),
-                buffers: &[Vertex::DESC],
+                buffers: &[Some(Vertex::DESC)],
             },
             fragment: Some(w::FragmentState {
                 module: &shader,
