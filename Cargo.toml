@@ -26,7 +26,7 @@ naga = "30.0.0"
 nalgebra = { version = "0.34.2", features = ["bytemuck"] }
 nalgebra-glm = "0.20.0"
 newtype-ops = "0.1.5"
-pollster = "0.4.0"
+pollster = "1.0.0"
 proptest = "1.11.0"
 reverie-engine = { path = "./reverie-engine", version = "0.6.1" }
 reverie-util = { path = "./reverie-util", version = "0.6.1" }
