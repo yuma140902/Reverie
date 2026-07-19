@@ -1,0 +1,35 @@
+# release-plz release-pr を使って version と changelog を更新する
+
+name: release-pr
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release-pr:
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Push to the pull request branch.
+      contents: write
+      # Create and update pull requests.
+      pull-requests: write
+
+    concurrency:
+      group: release-plz-${{ github.ref }}
+      cancel-in-progress: false
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Create or update release PR
+        uses: release-plz/action@v0.5
+        with:
+          command: release-pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
