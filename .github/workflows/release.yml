@@ -20,6 +20,8 @@ jobs:
       # Find the release PR and generate release notes from it.
       pull-requests: read
 
+    timeout-minutes: 60
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -28,7 +30,7 @@ jobs:
           persist-credentials: false
 
       - name: Release
-        uses: release-plz/action@v0.5
+        uses: release-plz/action@2eb1d8bcb770b4c48ccfaad919734b38b51958c9 # v0.5
         with:
           command: release
         env:
