@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1](https://github.com/yuma140902/Reverie/compare/reverie-engine-v0.7.0...reverie-engine-v0.7.1) - 2026-08-13
+
+### Other
+
+- update Cargo.toml dependencies
+
 ## [0.7.0](https://github.com/yuma140902/Reverie/compare/reverie-engine-v0.6.1...reverie-engine-v0.7.0) - 2026-07-19
 
 ### Added
