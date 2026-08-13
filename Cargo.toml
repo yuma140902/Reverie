@@ -17,7 +17,7 @@ license = "MIT OR Apache-2.0"
 [workspace.dependencies]
 anyhow = "1.0.104"
 approx = "0.5.1"
-bytemuck = { version = "1.25.1", features = ["derive"] }
+bytemuck = { version = "1.25.2", features = ["derive"] }
 dotenvy = "0.15.7"
 encase = "0.12.0"
 etagere = "0.3.0"
@@ -26,7 +26,7 @@ naga = "30.0.0"
 nalgebra = { version = "0.35.0", features = ["bytemuck"] }
 nalgebra-glm = "0.21.0"
 newtype-ops = "0.1.5"
-pollster = "1.0.0"
+pollster = "1.0.1"
 proptest = "1.11.0"
 reverie-engine = { path = "./reverie-engine", version = "0.7.0" }
 reverie-util = { path = "./reverie-util", version = "0.7.0" }
