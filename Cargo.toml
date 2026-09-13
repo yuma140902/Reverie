@@ -30,7 +30,7 @@ pollster = "1.0.1"
 proptest = "1.11.0"
 reverie-engine = { path = "./reverie-engine", version = "0.7.1" }
 reverie-util = { path = "./reverie-util", version = "0.7.1" }
-rstest = "0.26.1"
+rstest = "0.27.0"
 slotmap = "1.1.1"
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
