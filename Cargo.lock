@@ -567,7 +567,7 @@ dependencies = [
 
 [[package]]
 name = "example-misc"
-version = "0.7.3"
+version = "0.7.4"
 dependencies = [
  "anyhow",
  "bytemuck",
@@ -1974,7 +1974,7 @@ checksum = "19b30a45b0cd0bcca8037f3d0dc3421eaf95327a17cad11964fb8179b4fc4832"
 
 [[package]]
 name = "reverie-engine"
-version = "0.7.3"
+version = "0.7.4"
 dependencies = [
  "anyhow",
  "bytemuck",
@@ -1996,7 +1996,7 @@ dependencies = [
 
 [[package]]
 name = "reverie-util"
-version = "0.7.3"
+version = "0.7.4"
 dependencies = [
  "approx",
  "nalgebra",
